@@ -1,0 +1,333 @@
+<!DOCTYPE html >
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>{$page_title}</title>
+	<meta name="Keywords" content="{$keywords}" />
+	<meta name="Description" content="{$description}" />
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<link rel="stylesheet" type="text/css" href="themesmobile/68ecshopcom_mobile/css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="themesmobile/68ecshopcom_mobile/css/index.css"/>
+	<script type="text/javascript" src="themesmobile/68ecshopcom_mobile/js/jquery.js"></script>
+	<script type="text/javascript" src="themesmobile/68ecshopcom_mobile/js/TouchSlide.1.1.js"></script>
+	{insert_scripts files='jquery.json.js,transport.js'}
+	<script type="text/javascript" src="themesmobile/68ecshopcom_mobile/js/touchslider.dev.js"></script>
+	<script type="text/javascript" src="themesmobile/68ecshopcom_mobile/js/jquery.more.js"></script>
+	{insert_scripts files='common.js'}
+</head>
+<body>
+	<div id="page" class="showpage">
+		
+		<div>
+			<!--网站头部-->
+			<header id="header"> <!-- #BeginLibraryItem "/library/page_header.lbi" --> <!-- #EndLibraryItem --> </header>
+			<!--banner--> 
+			<!-- #BeginLibraryItem "/library/index_ad.lbi" --> 
+			<!-- #EndLibraryItem --> 
+			<!--banner end-->
+			<!---搜索--->
+			<div id="fake-search" class="index_search">
+				<div class="index_search_mid">
+					<span><img src="themesmobile/68ecshopcom_mobile/images/xin/icosousuo.png"></span>
+					<input  type="text" id="search_text" class="search_text" value="请输入您所搜索的商品"/>
+				</div>
+			</div>
+			<!-- #BeginLibraryItem "/library/index_icon.lbi" -->
+			<!-- #EndLibraryItem --> 
+
+			<!--广告位1-->
+			<div class="floor_images">
+				<dl>
+					<dt> 
+						<!-- TemplateBeginEditable name="手机端首页广告1-1" -->
+						<!-- #BeginLibraryItem "/library/ad_position.lbi" -->
+						{insert name=ads id=$ads_id num=$ads_num}
+						<!-- #EndLibraryItem -->
+						<!-- TemplateEndEditable --> 
+					</dt>
+					<dd> 
+						<span class="Edge"> 
+							<!-- TemplateBeginEditable name="手机端首页广告1-2" -->
+							<!-- #BeginLibraryItem "/library/ad_position.lbi" -->
+							{insert name=ads id=$ads_id num=$ads_num}
+							<!-- #EndLibraryItem -->
+							<!-- TemplateEndEditable --> 
+						</span> 
+						<span> 
+							<!-- TemplateBeginEditable name="手机端首页广告1-3" -->
+							<!-- #BeginLibraryItem "/library/ad_position.lbi" -->
+							{insert name=ads id=$ads_id num=$ads_num}
+							<!-- #EndLibraryItem -->
+							<!-- TemplateEndEditable --> 
+						</span> 
+					</dd>
+				</dl>
+				<ul>
+					<li class="brom">
+						<!-- TemplateBeginEditable name="手机端首页广告2-1" -->
+						<!-- #BeginLibraryItem "/library/ad_position.lbi" -->
+						{insert name=ads id=$ads_id num=$ads_num}
+						<!-- #EndLibraryItem -->
+						<!-- TemplateEndEditable -->
+					</li>
+					<li>
+						<!-- TemplateBeginEditable name="手机端首页广告2-2" -->
+						<!-- #BeginLibraryItem "/library/ad_position.lbi" -->
+						{insert name=ads id=$ads_id num=$ads_num}
+						<!-- #EndLibraryItem -->
+						<!-- TemplateEndEditable -->
+					</li>
+				</ul>
+			</div>
+			
+			<!-- TemplateBeginEditable name="销售排行模块" -->
+			<!-- #BeginLibraryItem "/library/top10.lbi" -->
+			<!-- #EndLibraryItem -->
+			
+			<!-- TemplateBeginEditable name="精品排行模块" -->
+			<!-- #BeginLibraryItem "/library/recommend_best.lbi" -->
+			<!-- #EndLibraryItem -->
+			
+			<!-- TemplateBeginEditable name="促销商品模块" -->
+			<!-- #BeginLibraryItem "/library/recommend_promotion.lbi" -->
+			<!-- #EndLibraryItem -->
+			
+			<!-- TemplateBeginEditable name="新品上市模块" -->
+			<!-- #BeginLibraryItem "/library/recommend_new.lbi" -->
+			<!-- #EndLibraryItem -->
+			
+			<!-- TemplateBeginEditable name="热销商品模块" -->
+			<!-- #BeginLibraryItem "/library/recommend_hot.lbi" -->
+			<!-- #EndLibraryItem -->
+			
+			<!-- TemplateBeginEditable name="团购商品模块" -->
+			<!-- #BeginLibraryItem "/library/group_buy.lbi" -->
+			<!-- #EndLibraryItem -->
+			
+			<!-- TemplateBeginEditable name="拍卖商品模块" -->
+			<!-- #BeginLibraryItem "/library/auction.lbi_none" -->
+			 <!-- #EndLibraryItem -->
+			 
+			<!-- TemplateEndEditable -->
+
+			
+			<!-- TemplateBeginEditable name="推荐品牌模块" -->
+			<!-- #BeginLibraryItem "/library/brands.lbi" -->
+			 <!-- #EndLibraryItem -->
+			<!-- TemplateEndEditable --> 
+		</div>
+		<!---------------end-------------> 
+		
+		<!--商品楼层调用 start--> 
+		<!-- TemplateBeginEditable name="商品分类" -->
+		<!-- #BeginLibraryItem "/library/cat_goods.lbi" -->
+		<?php
+			$GLOBALS['smarty']->assign('thiscid1',get_wap_parent_id_tree($GLOBALS['smarty']->_var['goods_cat']['id']));
+		?>
+		<section class="index_floor_lou">
+			<div class="floor_body ">
+				<h2>
+					<em></em>{$goods_cat.name|escape:html}<div class="geng"><a href="{$goods_cat.url}" >更多</a> <span></span></div>
+				 </h2>
+				<ul>
+					{foreach from=$cat_goods item=goods name=name}
+					<li>
+						<a href="{$goods.url}" title="{$goods.name|escape:html}">
+						<div class="index_pro"> 
+							<div class="products_kuang">
+								<img src="{$option.static_path}{$goods.thumb}"></div>
+							<div class="goods_name">{$goods.name|truncate:17}</div>
+							<div class="price">
+									<a href="javascript:addToCart({$goods.id})" class="btns">
+									<img src="themesmobile/68ecshopcom_mobile/images/index_flow.png"></a>
+								<span class="price_pro">
+									{if $goods.promote_price}{$goods.promote_price}{else}{$goods.shop_price}{/if}
+								</span>
+								<span class="costprice">{$goods.market_price}</span>
+							</div>
+							</div>
+						</a>
+					</li>
+					{/foreach}
+				</ul>
+			</div>
+		</section>
+		<!-- #EndLibraryItem -->
+			
+
+		<!-- TemplateEndEditable --> 
+
+		<!--精品推荐轮播广告位--> 
+		<div id="index_banner" class="index_banner">
+			<div class="bd">
+				<ul>
+					{foreach from=$wap_index_img item=ad name=wap_index_img}
+					<li><a href="{$ad.url}"><img src="{$option.static_path}{$ad.image}" width="100%" /></a></li>
+					{/foreach}
+				</ul>
+			</div>
+			<div class="hd">
+				<ul></ul>
+			</div>
+		</div>
+		<script type="text/javascript">
+			TouchSlide({ 
+				slideCell:"#index_banner",
+				titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+				mainCell:".bd ul", 
+				effect:"leftLoop", 
+				autoPage:true,//自动分页
+				autoPlay:true //自动播放
+			});
+		</script>
+		<!--精品推荐轮播广告位end-->  
+		<script type="text/javascript">
+			var url = 'index_bestgoods.php?act=ajax';
+			$(function(){
+				$('#J_ItemList').more({'address': url});
+			});
+
+		</script> 
+		
+		
+		<!--首页精品推荐动态加载-->
+		<div class="floor_body2" >
+			<h2>————&nbsp;{$lang.best_goods}&nbsp;————</h2>
+			<div id="J_ItemList">
+				<ul class="product single_item info">
+				</ul>
+				<a href="javascript:;" class="get_more" style="text-align:center; display:block;"> 
+				<img src='themesmobile/68ecshopcom_mobile/images/category/loader.gif' width="12" height="12"> </a> 
+			</div>
+		</div>
+		<!--首页精品推荐动态加载end-->
+		
+		
+		<footer> 
+		<!-- #BeginLibraryItem "/library/page_footer.lbi" --> 
+		<!-- #EndLibraryItem --> 
+		<!-- #BeginLibraryItem "/library/footer_nav.lbi" --> 
+		<!-- #EndLibraryItem --> 
+		</footer>
+
+		<!---返回顶部-->
+		<script>
+		function goTop(){
+			$('html,body').animate({'scrollTop':0},600);
+		}
+		</script>
+		<a href="javascript:goTop();" class="gotop"><img src="themesmobile/68ecshopcom_mobile/images/topup.png"></a> 
+
+	</div>
+	<!---搜索弹出层--->
+ 
+
+	<div id="search_hide" class="search_hide">
+		<h2> <span class="close"><img src="themesmobile/68ecshopcom_mobile/images/close.png"></span>关键搜索</h2>
+
+		<div id="mallSearch" class="search_mid">
+			<div id="search_tips" style="display:none;"></div>
+			<ul class="search-type">
+				<li {if $smarty.request.type == 0} class="cur" {/if} num="0">宝贝</li>
+				<li {if $smarty.request.type == 1} class="cur" {/if} num="1">店铺</li>
+			</ul>	
+			<div class="searchdotm"> 
+				<form class="mallSearch-form" method="get" name="searchForm" id="searchForm" action="search.php" onSubmit="return checkSearchForm()">
+					<input type='hidden' name='type' id="searchtype" value="{$smarty.request.type|default:0}" >
+					<div class="mallSearch-input">
+						<div id="s-combobox-135">
+							<input aria-haspopup="true" role="combobox" class="s-combobox-input" name="keywords" id="keyword" tabindex="9" accesskey="s" onkeyup="STip(this.value, event);" autocomplete="off"  value="{if $search_keywords}{$search_keywords|escape}{else}请输入关键词{/if}" onFocus="if(this.value=='请输入关键词'){this.value='';}else{this.value=this.value;}" onBlur="if(this.value=='')this.value='请输入关键词'" type="text">
+						</div>
+						<input type="submit" value="" class="button"  >
+					</div>
+				</form>
+			</div> 
+		</div>
+
+		<!--
+		<div class="search_body">
+			<div class="search_box">
+				<form action="search.php" method="post" id="searchForm" name="searchForm">
+					<div>
+						<select id='search_type' name="search_type" style="width:15%;">
+							<option value='search'>宝贝</option>
+							<option value='stores'>店铺</option>
+						</select>
+						<input class="text" type="search" name="keywords" id="keywordBox" autofocus>
+						<button type="submit" value="搜 索" ></button>
+					</div>
+				</form>
+			</div>
+		</div>
+		-->
+                            
+		<section class="mix_recently_search"><h3>热门搜索</h3>
+		{if $searchkeywords}
+		<ul>
+			{foreach from=$searchkeywords item=val}
+			<li>
+			<a href="search.php?keywords={$val|escape:url}">{$val}</a>
+			</li>
+			{/foreach}
+		</ul>
+		{else}
+		<div class="recently_search_null">没有搜索记录</div>
+		{/if}
+		</section>
+	</div>  
+                        
+                                              
+
+
+	<script type="Text/Javascript" language="JavaScript">
+	{literal}
+		function selectPage(sel){
+			sel.form.submit();
+		}
+	{/literal}
+	</script>
+	
+	<script type="text/javascript">
+		{foreach from=$lang.compare_js item=item key=key}
+			{if $key neq 'button_compare'}
+				var {$key} = "{$item}";
+			{else}
+				var button_compare = "";
+			{/if}
+		{/foreach}
+		var compare_no_goods = "{$lang.compare_no_goods}";
+		var btn_buy = "{$lang.btn_buy}";
+		var is_cancel = "{$lang.is_cancel}";
+		var select_spe = "{$lang.select_spe}";
+	</script>
+
+	<!--搜索弹出层js---> 
+	<script type="text/javascript">
+
+		$(function() {
+
+			$('#search_text').click(function(){
+				$(".showpage").children('div').hide();
+				$("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
+			})
+			$('#get_search_box').click(function(){
+				$(".showpage").children('div').hide();
+				$("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
+			})
+			$("#search_hide .close").click(function(){
+				$(".showpage").children('div').show();
+				$("#search_hide").hide();
+			})
+		});
+	</script>
+
+	<script>
+		$('.search-type li').click(function() {
+			$(this).addClass('cur').siblings().removeClass('cur');
+			$('#searchtype').val($(this).attr('num'));
+		});
+		$('#searchtype').val($(this).attr('0'));
+	</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="themesmobile/68ecshopcom_mobile/css/public.css"/>
+<link rel="stylesheet" type="text/css" href="themesmobile/68ecshopcom_mobile/css/login.css"/>
+<script type="text/javascript" src="themesmobile/68ecshopcom_mobile/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="themesmobile/68ecshopcom_mobile/js/validate/jquery.validate.js"></script>
+<script type="text/javascript" src="themesmobile/68ecshopcom_mobile/js/validate/messages_zh.js"></script>
+{insert_scripts files='common.js,utils.js,user.js,transport.js'}
+<style>
+	.v_item {margin-top:10px;}
+
+</style>
+<div id="tbh5v0">
+	<div class="find">
+		{if $step=="step_1"}
+			<section class="innercontent">
+				<form action="user.php" method="post" id="fpForm" name="fpForm" class="c-form login-form">
+					<div class="item validate_type">
+						<label style=" font-size:14px;">请选择验证身份方式：</label>
+						<select id="validate_type" name="validate_type"  class="select">
+							<!-- {foreach from=$validate_types item=item} -->
+							<option id="validate_type_{$item.type}" value="{$item.type}" val="{$item.value}">{$item.name}</option>
+							<!-- {/foreach} -->
+						</select>
+					</div>
+					
+					<div class="v_mobile_phone v_item" style="font-size:14px;">
+						<label>手机号：</label>
+						<span id="l_mobile_phone"></span>
+					</div>
+					<div id="c_mobile_code" class="field auth-code v_item v_mobile_phone">
+						<div class="codeTxt">
+						<input type="text" id="mobile_code" name="mobile_code" placeholder="手机验证码" class="hq_phone" />
+						</div>
+						
+						<input id="zphone" type="button" value=" 获取手机验证码" class="m_phone" style=" color:#FFF" />
+						<div style="clear:both;"></div>
+					</div>
+					
+					<div class=" email v_email v_item" style="display: none; font-size:14px;">
+						<label>邮箱：</label>
+						<span id="l_email"></span>
+					</div> 			
+					<div id="c_email_code" class=" v_item v_email" style="display: none">
+						<div class="codeTxt">
+						<input type="text" id="email_code" name="email_code" class="hq_phone" value="" />
+						</div>
+						<input id="zemail" type="button" value="获取邮箱验证码" class="m_phone" style=" color:#FFF">
+						<div style="clear:both;"></div>
+					</div>
+					
+					<div class="password v_password v_item" style="display: none;font-size:14px;">
+						<label class="">用户名：</label>
+						<span id="l_password"></span>
+					</div>
+					<div class="field v_password" style=" margin-top:20px;display: none">
+						<input name="password" id="password" type="password" placeholder="请输入密码" class="c-form-txt-normal" style="width: 100%;" />
+					</div>
+					<div class="" style="margin-top:10px;">
+						<div class="codeTxt">
+							<input type="text" id="captcha" name="captcha" class="text text_te" placeholder="{$lang.comment_captcha}" style="ime-mode: disabled" autocomplete="off" MaxLength="6" />
+						</div>
+						<label class="img" style="margin-left: 5px">
+							<img src="captcha.php?{$rand}" alt="captcha" style="vertical-align: middle; cursor: pointer;" onClick="this.src='captcha.php?'+Math.random();$('#captcha').focus();" />
+						</label>
+					</div>
+					<div class="submit-btn">
+						<input type="button" id="btn_submit" name="btn_submit" class="btn_big1" value="提 交" />
+						<input type="hidden" name="act" value="to_mobile_binding" />
+					</div>
+					
+
+				</form>
+			</section>
+			<script type="text/javascript">
+				function show_validate_type(validate_type_obj){
+					var type = $(validate_type_obj).val();
+					var value = $("#validate_type_"+type).attr("val");
+					$("#l_"+type).html(value);
+					$(".v_item").hide();
+					$(".v_"+type).show();
+				}
+				
+				function send_email_code(emailCodeObj, sendButton){
+					// 发送邮件
+					var url = 'validate.php';
+					$.post(url, {
+						act: 'send_email_code'
+					}, function(result) {
+						if (result == 'ok') {
+							//倒计时
+							countdown(sendButton);
+						} else {
+							alert(result);
+						}
+					}, 'text');
+				}
+				
+				function send_mobile_code(mobileCodeObj, sendButton) {
+					// 发送邮件
+					var url = 'validate.php';
+					$.post(url, {
+						act: 'send_mobile_code'
+					}, function(result) {
+						if (result == 'ok') {
+							//倒计时
+							countdown(sendButton);
+						} else {
+							alert(result);
+						}
+					}, 'text');
+				}
+				
+				$().ready(function(){
+					
+					show_validate_type($("#validate_type"));
+					
+					var validator = $("#fpForm").validate({
+						debug: false,
+						rules: {
+							mobile_code: {
+								required: true
+							},
+							email_code: {
+								required: true
+							},
+							captcha: {
+								required: true
+							}
+						},
+						messages: {
+							mobile_code: {
+								required: "请输入手机验证码"
+							},
+							email_code: {
+								required: "请输入邮箱验证码"
+							},
+							captcha: {
+								required: "请输入验证码"
+							}
+						},
+						errorPlacement: function(error, element) {
+							error.appendTo(element.parent());  
+						}
+					});
+					
+					$("#validate_type").change(function(){
+						show_validate_type($(this));
+					});
+					
+					$("#zphone").click(function(){
+						send_mobile_code($("#mobile_code"), $(this));
+					});
+					
+					$("#zemail").click(function(){
+						send_email_code($("#email_code"), $(this));
+					});
+					
+					$("#btn_submit").click(function(){
+						if(!validator.form()){
+							return;
+						}
+						var type = $("#validate_type").val();		
+						var url = "user.php";
+						var validate_type = $("#validate_type").val();
+						$.post(url, {act: "validate", mobile_code: $("#mobile_code").val(), email_code: $("#email_code").val(),password: $("#password").val(), validate_type: validate_type, captcha: $("#captcha").val()}, function(data){
+							if(data.error == 1){
+								alert(data.content);
+								if(data.url != undefined && data.url.length > 0){
+									window.location.href = data.url;
+								}
+							}else{
+								$("#fpForm").submit();
+							}
+						}, "json");
+					});
+					
+				});
+			</script>
+		{/if}
+		{if $step eq 'step_2'}
+			<section class="innercontent">
+			<form action="user.php" method="post" id="fpForm" name="fpForm">
+				<div class="field pwd" style=" margin-top:20px">
+					<input name="mobile" id="mobile" type="text" tabindex="1" placeholder="请输入手机号码" class="c-form-txt-normal" style="width: 100%;" />
+				</div>
+				<div class=" v_item" >
+						<div class="codeTxt">
+						<input type="text" id="mobile_code" name="mobile_code" class="hq_phone" value="" placeholder="请输入手机验证码" />
+						</div>
+						<input id="zphone" type="button" value="获取短信验证码" class="m_phone" style=" color:#FFF">
+						<div style="clear:both;"></div>
+					</div>
+				<div class="submit-btn">
+					<input type="button" id="btn_submit" name="btn_submit" class="btn_big1" value="提 交" />
+					<input type="hidden" name="act" value="mobile_binding_success" />
+				</div>
+			</form>
+			</section>
+			<script type="text/javascript">
+				function send_mobile_code(mobileCodeObj, sendButton){
+					// 发送邮件
+					var url = 'user.php';
+					$.post(url, {
+						act: 'send_mobile_code', 
+						mobile_phone: $("#mobile").val()
+					}, function(result) {
+						if (result == 'ok') {
+							//倒计时
+							countdown(sendButton);
+						} else {
+							alert(result);
+						}
+					}, 'text');
+				}
+				
+				$().ready(function(){
+					
+					$.validator.addMethod("mobile", function(value, element){
+						return Utils.isMobile(value);
+					});
+					
+					var validator = $("#fpForm").validate({
+						debug: false,
+						rules: {
+							mobile: {
+								required: true,
+								mobile: true,
+								remote: {  
+									url: "user.php",     //后台处理程序  
+									type: "post",               //数据发送方式  
+									dataType: "json",           //接受数据格式     
+									data: {                     //要传递的数据  
+										act: 'check_mobile_exist',
+										mobile: function() {  
+											return $("#mobile").val();  
+										}
+									}
+								}
+							},
+							mobile_code: {
+								required: true
+							}
+						},
+						messages: {
+							mobile: {
+								required: "请输入手机号码",
+								mobile: "手机号码格式不正确",
+								remote: "手机号码已存在"
+							},
+							mobile_code: {
+								required: "请输入手机验证码"
+							}
+						},
+						errorPlacement: function(error, element) {
+							error.appendTo(element.parent());  
+						}
+					});
+					
+					$("#mobile").blur(function(){
+						$(this).valid();
+					});
+					
+					$("#zphone").click(function(){
+						if(!$("#mobile").valid()){
+							return;
+						}
+						send_mobile_code($("#mobile_code"), $(this));
+					});
+					
+					$("#btn_submit").click(function(){
+						if(!validator.form()){
+							return;
+						}
+						var url = "user.php";
+						$.post(url, {act: "do_mobile_binding", mobile: $("#mobile").val(), mobile_code: $("#mobile_code").val()}, function(data){
+							if(data.error == 1){
+								alert(data.content);
+								if(data.url != undefined && data.url.length > 0){
+									window.location.href = data.url;
+								}
+							}else{
+								$("#fpForm").submit();
+							}
+						}, "json");
+					});
+					
+				});
+		 </script>
+		{/if}
+		{if $step eq 'step_3'}
+			<section class="innercontent">
+			<div class="find_box_end">
+				<p>绑定手机成功！</p>
+				<p class="on_go">
+					<a href="user.php?act=re_binding" title="立即购物" class="btn_big1" style=" color:#FFF">个人安全中心&gt;&gt;</a>
+				</p>
+			</div>
+			</section>
+		{/if}
+	</div>
+</div>

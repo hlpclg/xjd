@@ -1,0 +1,81 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<style >
+		.Top dl dt {
+			width: 25%;
+			height: 40px;
+			float: left;
+			font-size: 14px;
+			line-height: 40px;
+			color: #666;
+		}
+		.Top dl dd {
+			width: 75%;
+			float: left;
+			height: 40px;
+			font-size: 16px;
+		}
+		.pj_zhuangtai{
+			border-top:none;
+			border-bottom:1px solid #eee;
+		}
+		.pj_zhuangtai a {
+			line-height: 30px;
+			height: 30px;
+			padding: 0 5px;
+			background: #ED5854;
+			color: #fff;
+			font-size: 12px;
+			border: none;
+		}
+	</style>
+	<div class="Top">
+	
+		<dl>
+			<dt>登录密码：</dt>
+			<dd></dd>
+		</dl>
+		<div class="pj_zhuangtai">
+			<a href="user.php?act=password_reset">修改</a>
+		</div>
+		<dl>
+			<dt>邮箱验证：</dt>
+			<dd>{if $info.is_validated eq 0}未验证{else}{$info.email}{/if}</dd>
+		</dl>
+		<div class="pj_zhuangtai">
+			{if $info.email eq ''}
+				<a href="user.php?act=email_binding">绑定邮箱</a>
+			{elseif $info.is_validated eq 0}
+				<a href="user.php?act=email_validate">验证邮箱</a>
+				<a href="user.php?act=email_binding">修改</a>
+			{else}
+				<a href="user.php?act=email_binding">修改</a>
+			{/if}
+		</div>
+		<dl>
+			<dt>手机验证：</dt>
+			<dd>{if $info.validated eq 0}未验证{else}{$info.mobile_phone}{/if}</dd>
+		</dl>
+		<div class="pj_zhuangtai">
+			{if $info.mobile_phone eq ''}
+				<a href="user.php?act=mobile_binding">绑定手机</a>
+			{elseif $info.validated eq 0}
+				<a href="user.php?act=mobile_validate">验证手机</a>
+				<a href="user.php?act=mobile_binding">修改</a>
+			{else}
+				<a href="user.php?act=mobile_binding">修改</a>
+			{/if}
+		</div>
+		
+		<!--<dl>
+			<dt>余额支付：</dt>
+			<dd>{if $info.is_surplus_open eq 0}未开启{else}已开启{/if}</dd>
+		</dl>
+		<div class="pj_zhuangtai">
+			{if $info.is_surplus_open eq 0}
+				<a href="user.php?act=payment_password_reset">开启支付密码</a>
+			{else}
+				<a href="user.php?act=payment_password_close">关闭支付密码</a>
+			{/if}
+		</div>-->
+		
+	</div>

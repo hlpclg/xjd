@@ -1,0 +1,44 @@
+{if $brand_list}
+<link rel="stylesheet" type="text/css" href="themesmobile/68ecshopcom_mobile/css/brand_list.css">
+<section class="index_floor">
+	<div class="floor_body1">
+		<h2><em></em>推荐品牌<div ></div></h2>
+		<div class="ccontainer" style="padding-bottom:10px;padding-top:0px;">
+			<!--<div class="brand-title">
+				<h3 >推荐品牌</h3>
+			</div>-->
+			
+			<?php
+				$child_cat_index = 0;
+				$GLOBALS['smarty']->assign('child_cat_index', $child_cat_index);
+			?>
+			<div class="jxyh_logo clearfix"> 
+				{foreach from=$brand_list item=brand_data name=brand_list_foreach}
+				{if $brand_data.brand_logo && !$brand_data.brand_img}
+					<?php
+						$child_cat_index = $child_cat_index +1;
+						$GLOBALS['smarty']->assign('child_cat_index', $child_cat_index);
+					?>
+					<a href="{$brand_data.url}" {if $child_cat_index%4 neq 0}class="brandLink"{else}class="brandRightLink"{/if}> <img src="{$brand_data.brand_logo}" alt="{$brand_data.brand_name}" width="100%"> </a> 
+				{/if}
+				{/foreach} 
+			</div>
+			<?php
+				$child_cat_index = 0;
+				$GLOBALS['smarty']->assign('child_cat_index1', $child_cat_index);
+			?>
+			<div class="brand_bd clearfix"> 
+				{foreach from=$brand_list item=brand_data name=brand_list_foreach}
+				{if !$brand_data.brand_logo && !$brand_data.brand_img}
+					<?php
+						$child_cat_index = $child_cat_index1 +1;
+						$GLOBALS['smarty']->assign('child_cat_index1', $child_cat_index);
+					?>
+					<a href="{$brand_data.url}" {if $child_cat_index1%4 neq 0}class="brandLink"{else}class="brandRightLink"{/if}>{$brand_data.brand_name}</a>
+				{/if}
+				{/foreach} 
+			</div>
+		</div>
+	</div>
+</section>
+{/if}

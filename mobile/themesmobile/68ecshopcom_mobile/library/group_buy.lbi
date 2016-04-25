@@ -1,0 +1,84 @@
+
+
+{if $group_buy_goods}
+<link rel="stylesheet" type="text/css" href="themesmobile/68ecshopcom_mobile/css/group_buy.css"/>
+<section class="index_floor">
+	<div class="group_buy_goods box">
+		<div class="hd"><h3>{$lang.group_buy_goods}</h3><div class="extra"><a href="group_buy.php">{$lang.more}</a></div></div>
+		<div class="bd product_list">
+			<ul>
+				{foreach from=$group_buy_goods item=goods name=group_buy_goods}
+					{if $goods.goods_id}
+					<li> 
+						<a class="url" href="{$goods.url}"> <img src="{$option.static_path}{$goods.thumb}" alt="{$goods.name|escape:html} /></a>
+						<a href="{$goods.url}" class="info_wrap">
+							<div class="fn good">{$goods.name|escape:html}</div>
+							<div class="price_wrap"> 
+								<i class="discount" style="display:;">{$goods.zhekou}</i> <span class="price" style="display:;">{$goods.promote_price}</span> <del class="old_price" style="display:;">{$goods.shop_price}</del> 
+							</div>
+							<div class="bottom_info">
+								<span class="remain_num" style="display:;">已售{$goods.count1}件</span>
+								{if $goods.goods_number>0} <span class="sg_g_time last_g_time" id="jstimerBox{$key}"></span>{/if}
+							</div> 
+						</a> 
+						{if $goods.goods_number<=0}
+						<i class="icon_state"></i> 
+						{/if}					
+					</li>
+					{/if}
+					<script>
+						Tday[{$key}] = new Date("{$goods.gmt_end_time}");  
+						window.setInterval(function()    
+						{clock11({$key});}, 1000);  
+					</script>
+				{/foreach}
+			</ul>
+		</div>
+	</div>
+</section>
+{/if}
+
+
+<script >
+	var Tday = new Array();
+	var daysms = 24 * 60 * 60 * 1000
+	var hoursms = 60 * 60 * 1000
+	var Secondms = 60 * 1000
+	var microsecond = 1000
+	var DifferHour = -1
+	var DifferMinute = -1
+	var DifferSecond = -1
+
+	function clock11(key){
+		var time = new Date()
+		var hour = time.getHours()
+		var minute = time.getMinutes()
+		var second = time.getSeconds()
+		var timevalue = ""+((hour > 12) ? hour-12:hour)
+		timevalue +=((minute < 10) ? ":0":":")+minute
+		timevalue +=((second < 10) ? ":0":":")+second
+		timevalue +=((hour >12 ) ? " PM":" AM")
+		var convertHour = DifferHour
+		var convertMinute = DifferMinute
+		var convertSecond = DifferSecond
+		var Diffms = Tday[key].getTime() - time.getTime()
+		DifferHour = Math.floor(Diffms / daysms)
+		Diffms -= DifferHour * daysms
+		DifferMinute = Math.floor(Diffms / hoursms)
+		Diffms -= DifferMinute * hoursms
+		DifferSecond = Math.floor(Diffms / Secondms)
+		Diffms -= DifferSecond * Secondms
+		var dSecs = Math.floor(Diffms / microsecond)
+
+		if(convertHour != DifferHour) e="<span class=hour>"+DifferHour+"</span>天";
+		if(convertMinute != DifferMinute) f="<span class=min>"+DifferMinute+"</span>时";
+		if(convertSecond != DifferSecond) g="<span class=sec>"+DifferSecond+"</span>分";
+		h="<span class=msec>"+dSecs+"</span>秒";
+
+		if (DifferHour>0) {e=e}
+		else {e=''}
+		document.getElementById("jstimerBox"+key).innerHTML = e + f + g + h; 
+	}
+
+</script>
+

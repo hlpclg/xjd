@@ -1,0 +1,48 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+{if $cat_list_data}
+
+{foreach from=$cat_list_data item=cat_list name=name}
+	{if $cat_list.goods}
+	<section class="index_floor_lou">
+		<div class="floor_body ">
+			<h2>
+				<em></em>{$cat_list.name|escape:html}<div class="geng"><a href="{$cat_list.url}" >更多</a> <span></span></div>
+			</h2>
+		</div>
+		<div class="floor_body2 ">
+			{foreach from=$cat_list.goods item=goods name=name}
+			<ul class="product single_item info" id="more_element_1">
+				<li>
+				<a href="{$goods.url}" title="{$goods.name|escape:html}">
+					<div class="index_pro">
+						<div class="products_kuang">
+						<img src="{$option.static_path}../{$goods.thumb}">
+						</div>
+						 <div class="goods_name">{$goods.name|truncate:17}</div>
+					</div>
+				</a>
+				<div class="price">
+					
+					<a href="javascript:addToCart({$goods.id})" class="btns">
+					<img src="themesmobile/68ecshopcom_mobile/images/index_flow.png">
+					</a>
+					<span class="price_pro" style="height:21px;overflow:hidden">
+						{if $goods.promote_price}{$goods.promote_price}{else}{$goods.shop_price}{/if}
+					</span>
+					<span class="costprice">{$goods.market_price}</span>
+				</div>
+				</li>
+			</ul>
+			{/foreach}
+		</div>
+	</section>
+	{/if}
+{/foreach}
+{/if}
+
+
+
+
+
+
