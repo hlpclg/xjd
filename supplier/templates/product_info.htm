@@ -25,8 +25,6 @@
         <td scope="col">&nbsp;</td>
       {/foreach}
       <!-- end for specifications -->
-	  <td scope="col"><div align="center"><strong>属性价格</strong></div></td>
-	  <td scope="col"><div align="center"><strong>属性供货价</strong></div></td>
       <td class="label_2">{$lang.goods_sn}</td>
       <td class="label_2">{$lang.goods_number}</td>
       <td class="label_2">&nbsp;</td>
@@ -37,8 +35,6 @@
       {foreach from=$product.goods_attr item=goods_attr}
       <td scope="col"><div align="center">{$goods_attr}</div></td>
       {/foreach}
-	  <td scope="col"><div align="center">{$product.attr_price}</div></td>
-	    <td scope="col"><div align="center">{$product.wholesale_price}</div></td>
       <td class="td_1"><span onclick="listTable.edit(this, 'edit_product_sn', {$product.product_id})">{$product.product_sn|default:$lang.n_a}</span></td>
       <td class="td_1"><span onclick="listTable.edit(this, 'edit_product_number', {$product.product_id})">{$product.product_number}</span></td>
       <td><input type="button" class="button" value=" - " onclick="listTable.remove({$product.product_id}, '{$lang.trash_product_confirm}', 'product_remove')"/></td>

@@ -10,6 +10,8 @@ var microsecond = 1000
 var DifferHour = -1
 var DifferMinute = -1
 var DifferSecond = -1
+var day = new Array();
+
 function clock(key){
 	var time = new Date()
 	var hour = time.getHours()
@@ -22,7 +24,8 @@ function clock(key){
 	var convertHour = DifferHour
 	var convertMinute = DifferMinute
 	var convertSecond = DifferSecond
-	var Diffms = Tday[key].getTime() - time.getTime()
+	//var Diffms = Tday[key].getTime() - time.getTime()
+	var Diffms = day[key].getTime() - time.getTime()
 	DifferHour = Math.floor(Diffms / daysms)
 	Diffms -= DifferHour * daysms
 	DifferMinute = Math.floor(Diffms / hoursms)
@@ -31,13 +34,13 @@ function clock(key){
 	Diffms -= DifferSecond * Secondms
 	var dSecs = Math.floor(Diffms / microsecond)
 
-	if(convertHour != DifferHour) a=DifferHour+":";
-	if(convertMinute != DifferMinute) b=DifferMinute+":";
+	if(convertHour != DifferHour) a=DifferHour+"天";
+	if(convertMinute != DifferMinute) b=DifferMinute+"时";
 	if(convertSecond != DifferSecond) c=DifferSecond+"分"
-	d=dSecs
+	d=dSecs+"秒"
 	if (DifferHour>0) {a=a}
 	else {a=''}
-	document.getElementById("jstimerBox"+key).innerHTML = a + b + c ; //显示倒计时信息
+	document.getElementById("jstimerBox"+key).innerHTML = a + b + c + d; //显示倒计时信息
 }
 </script>
 
@@ -68,9 +71,11 @@ function clock(key){
 						<span class="costprice">{$goods.market_price}</span>
 					</div>
 					<script>
-						Tday[{$key}] = new Date("{$goods.gmt_end_time}");  
-						window.setInterval(function()    
-						{clock({$key});}, 1000);  
+						//Tday[{$key}] = new Date("{$goods.gmt_end_time}");  
+						day[{$key}] = new Date("{$goods.gmt_end_time}");
+						window.setInterval(function(){
+							clock({$key});
+						}, 1000);  
 					</script>
 				</li>
 			{if $smarty.foreach.promotion_goods.iteration % 3 eq 0 && $smarty.foreach.promotion_goods.iteration neq $smarty.foreach.promotion_goods.total}

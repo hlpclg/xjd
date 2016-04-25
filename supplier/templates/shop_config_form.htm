@@ -61,21 +61,21 @@
                 {foreach from=$countries item=region}
                   <option value="{$region.region_id}" {if $region.region_id eq $cfg.shop_country}selected{/if}>{$region.region_name}</option>
                 {/foreach}
-              </select>
+              </select><span style="color:#FF0000;">*请务必选择该信息</span>
                   {elseif $var.code eq "shop_province"}
               <select name="value[{$var.id}]" id="selProvinces" onchange="region.changed(this, 2, 'selCities')">
                 <option value=''>{$lang.select_please}</option>
                 {foreach from=$provinces item=region}
                   <option value="{$region.region_id}" {if $region.region_id eq $cfg.shop_province}selected{/if}>{$region.region_name}</option>
                 {/foreach}
-              </select>
+              </select><span style="color:#FF0000;">*请务必选择该信息</span>
             {elseif $var.code eq "shop_city"}
               <select name="value[{$var.id}]" id="selCities">
                 <option value=''>{$lang.select_please}</option>
                 {foreach from=$cities item=region}
                   <option value="{$region.region_id}" {if $region.region_id eq $cfg.shop_city}selected{/if}>{$region.region_name}</option>
                 {/foreach}
-              </select>
+              </select><span style="color:#FF0000;">*请务必选择该信息</span>
             {elseif $var.code eq "lang"}
                   <select name="value[{$var.id}]">
                   {html_options values=$lang_list output=$lang_list selected=$var.value}

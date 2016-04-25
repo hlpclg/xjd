@@ -28,6 +28,7 @@ $separate_on = $affiliate['on'];
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
+	$affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
     $logdb = get_affiliate_ck();
     $smarty->assign('full_page',  1);
     $smarty->assign('ur_here', $_LANG['affiliate_ck']);

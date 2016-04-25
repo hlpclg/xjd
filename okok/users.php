@@ -523,6 +523,7 @@ function action_update ()
 	$district = $_POST['district'];
 	$address = empty($_POST['address']) ? '' : trim($_POST['address']);
 	$status = $_POST['status'];
+	$parent_id = $_POST['parent_id'];
 	/* 代码增加2014-12-23 by www.68ecshop.com _end */
 	
 	$users = & init_users();
@@ -587,7 +588,14 @@ function action_update ()
 		}
 	}
 	
-	$sql = "update " . $ecs->table('users') . " set `real_name`='$real_name',`card`='$card',`country`='$country',`province`='$province',`city`='$city',`district`='$district',`address`='$address',`status`='$status' where user_name = '" . $username . "'";
+	/* 2016-2-17 新增 */
+	if($parent_id){
+		$row = $db->GetOne("SELECT user_id FROM " . $ecs->table('users') . " WHERE user_id = ".$parent_id);
+		$now = $db->GetOne("SELECT user_id FROM " . $ecs->table('users') . " WHERE user_name = '".$username."'");
+		if(!$row || $row == $now)	$parent_id = 0;
+	}
+	
+	$sql = "update " . $ecs->table('users') . " set `real_name`='$real_name',`card`='$card',`country`='$country',`province`='$province',`city`='$city',`district`='$district',`parent_id`='$parent_id',`address`='$address',`status`='$status' where user_name = '" . $username . "'";
 	$db->query($sql);
 	
 	if($face_card != '')

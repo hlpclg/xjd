@@ -65,7 +65,7 @@ function action_send_email_code ()
 	
 	// 生成邮箱验证码
 	$email_code = rand_number(6);
-	$result = send_mail($email, $email, $template['template_subject'], $content, $template['is_html']);
+
 	$GLOBALS['smarty']->assign('email_code', $email_code);
 	$GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
 	$GLOBALS['smarty']->assign('send_date', date($GLOBALS['_CFG']['date_format']));

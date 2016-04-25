@@ -15,7 +15,9 @@ if($id > 0){
 $baseurl = $weburl = $_SERVER['SERVER_NAME'] ? "http://".$_SERVER['SERVER_NAME']."/" : "http://".$_SERVER['HTTP_HOST']."/";
 //$weburl .= $weixinconfig['wap_url'] ? $weixinconfig['wap_url'] : "";
 $weixin = new core_lib_wechat($weixinconfig);
+
 $weixin->valid();
+
 $api = new weixinapi();
 $weburl .= $api->dir;
 $type = $weixin->getRev()->getRevType();
@@ -57,13 +59,14 @@ if(!$followInfo or $followInfo['expire_in']-21000<time()){
 }
 if ($event['event'] == "subscribe") { //用户关注
 	if(intval($followInfo['ecuid']) == 0 && $weixinconfig['reg_type'] == 1){
-		$username = $username ? $username :"hng".date('md').mt_rand(1, 99999);
+		$username = $username ? $username :"hng".date('md').mt_rand(1, 99999); 
 		$pwd = mt_rand(100000, 999999);
 		$rs = $api->bindUser($wxid,$username.'@qq.com',$pwd,$username);
 		if($rs === false){
 			echo $weixin->text("系统出错了")->reply();exit;
 		}
-		$weixinconfig['followmsg'] .= "\r\n系统已经为您自动注册并绑定了帐号：$username 密码：$pwd\r\n";
+		$edit_url = "请及时修改密码<a href='{$weburl}mobile/user.php?act=re_binding'>点此修改密码</a>";
+		$weixinconfig['followmsg'] .= "\r\n系统已经为您自动注册并绑定了帐号：$username 密码：$pwd \r\n $edit_url";
 		if(!empty($data['Ticket']))
 		{
 			$sql = "select content from ".$GLOBALS['ecs']->table('weixin_qcode')." where qcode = '".$data['Ticket']."'";
@@ -77,9 +80,29 @@ if ($event['event'] == "subscribe") { //用户关注
 				 }
 				 $sql = "SELECT user_name FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$uid'";
 				 $distribor = $GLOBALS['db']->getOne($sql);
-				 if(!empty($distribor))
-				 {
-				 	$weixinconfig['followmsg'] .= "\r\n您已成为[".$distribor."]的一级会员 \r\n";
+				 if(!empty($distribor)) {
+				 	$weixinconfig['followmsg'] .= "\r\n您已成为[".$distribor."]的会员 \r\n";
+					// 向推荐人发送消息
+					$user1 = $GLOBALS['db']->getRow("SELECT fake_id,user_id,parent_id FROM " . $GLOBALS['ecs']->table('weixin_user') . " wu inner join".$GLOBALS['ecs']->table('users')." u on wu.ecuid=u.user_id WHERE ecuid = ".$uid);
+					$message['touser'] = $user1['fake_id'];
+					$message['msgtype'] = 'text';
+					$message['text'] = array('content'=>$username.'成为您的一级会员');
+					$weixin->sendCustomMessage($message);
+					if($user1['parent_id']){
+						$user2 = $GLOBALS['db']->getRow("SELECT fake_id,user_id,parent_id FROM " . $GLOBALS['ecs']->table('weixin_user') . " wu inner join".$GLOBALS['ecs']->table('users')." u on wu.ecuid=u.user_id WHERE ecuid = ".$user1['parent_id']);
+						$message['touser'] = $user2['fake_id'];
+						$message['msgtype'] = 'text';
+						$message['text'] = array('content'=>$username.'成为您的二级会员');
+						$weixin->sendCustomMessage($message);
+						
+						if($user2['parent_id']){
+							$user3 = $GLOBALS['db']->getRow("SELECT fake_id,user_id,parent_id FROM " . $GLOBALS['ecs']->table('weixin_user') . " wu inner join".$GLOBALS['ecs']->table('users')." u on wu.ecuid=u.user_id WHERE ecuid = ".$user2['parent_id']);
+							$message['touser'] = $user3['fake_id'];
+							$message['msgtype'] = 'text';
+							$message['text'] = array('content'=>$username.'成为您的三级会员');
+							$weixin->sendCustomMessage($message);
+						}
+					}
 				 }
 			}
 		}
@@ -168,7 +191,7 @@ if ($event['event'] == "CLICK"){
 				$text = "昵称：{$reMsg['user_name']}\r\n";
 				$text .= "邮箱：{$reMsg['email']}\r\n";
 				$text .= "余额：{$reMsg['user_money']}\r\n";
-				$text .= "积分：{$reMsg['pay_points']}\r\n";
+				$text .= "金币：{$reMsg['pay_points']}\r\n";
 				$text .="<a href='{$weburl}mobile/user.php'>查看详情</a>";
 			}
 			echo $weixin->text($text)->reply();exit;
@@ -177,7 +200,7 @@ if ($event['event'] == "CLICK"){
 			if(($num = $api->userSign($wxid)) === false){
 				$text = join('', (array)$GLOBALS['err']->last_message());
 			}else{
-				$text = "签到成功！获取积分{$num}。";
+				$text = "签到成功！获取金币{$num}。";
 			}
 			echo $weixin->text($text)->reply();exit;
 			break;
@@ -238,13 +261,14 @@ if ($event['event'] == "SCAN"){
 			echo $weixin->text($res['content'])->reply();exit;
 		}elseif($res['type'] == 4){
 			if(intval($followInfo['ecuid']) == 0){
-				$username = $username ? $username :"hng_".date('md').mt_rand(1, 99999);
+				$username = $username ? $username :"hng".date('md').mt_rand(1, 99999);
 				$pwd = mt_rand(100000, 999999);
-				$rs = $api->bindUser($wxid,$username.'@163.com',$pwd,$username);
+				$rs = $api->bindUser($wxid,$username.'@qq.com',$pwd,$username);
 				if($rs === false){
 					echo $weixin->text("系统出错了")->reply();exit;
 				}
-				$weixinconfig['followmsg'] .= "\r\n系统已经为您自动注册并绑定了帐号：$username 密码：$pwd\r\n";
+				$edit_url = "请及时修改密码<a href='{$weburl}mobile/user.php?act=re_binding'>点此修改密码</a>";
+				$weixinconfig['followmsg'] .= "\r\n系统已经为您自动注册并绑定了帐号：$username 密码：$pwd \r\n $edit_url";
 				$r = $api->bind_distrib($wxid,$res['content']);
 				if($r === false)
 				 {
@@ -252,9 +276,29 @@ if ($event['event'] == "SCAN"){
 				 }
 				 $sql = "SELECT user_name FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = ".$res['content'];
 				 $distribor = $GLOBALS['db']->getOne($sql);
-				 if(!empty($distribor))
-				 {
-				 	$weixinconfig['followmsg'] .= "\r\n您已成为[".$distribor."]的一级会员 \r\n";
+				 if(!empty($distribor)){
+				 	$weixinconfig['followmsg'] .= "\r\n您已成为[".$distribor."]的会员 \r\n";
+					// 向推荐人发送消息
+					$user1 = $GLOBALS['db']->getRow("SELECT fake_id,user_id,parent_id FROM " . $GLOBALS['ecs']->table('weixin_user') . " wu inner join".$GLOBALS['ecs']->table('users')." u on wu.ecuid=u.user_id WHERE ecuid = ".$res['content']);
+					$message['touser'] = $user1['fake_id'];
+					$message['msgtype'] = 'text';
+					$message['text'] = array('content'=>$username.'成为您的一级会员');
+					$weixin->sendCustomMessage($message);
+					if($user1['parent_id']){
+						$user2 = $GLOBALS['db']->getRow("SELECT fake_id,user_id,parent_id FROM " . $GLOBALS['ecs']->table('weixin_user') . " wu inner join".$GLOBALS['ecs']->table('users')." u on wu.ecuid=u.user_id WHERE ecuid = ".$user1['parent_id']);
+						$message['touser'] = $user2['fake_id'];
+						$message['msgtype'] = 'text';
+						$message['text'] = array('content'=>$username.'成为您的二级会员');
+						$weixin->sendCustomMessage($message);
+						
+						if($user2['parent_id']){
+							$user3 = $GLOBALS['db']->getRow("SELECT fake_id,user_id,parent_id FROM " . $GLOBALS['ecs']->table('weixin_user') . " wu inner join".$GLOBALS['ecs']->table('users')." u on wu.ecuid=u.user_id WHERE ecuid = ".$user2['parent_id']);
+							$message['touser'] = $user3['fake_id'];
+							$message['msgtype'] = 'text';
+							$message['text'] = array('content'=>$username.'成为您的三级会员');
+							$weixin->sendCustomMessage($message);
+						}
+					}
 				 }
 				if($weixinconfig['bonustype'] > 0){
 					$api->sendBonus($wxid,$weixinconfig['bonustype']);
@@ -285,7 +329,7 @@ if($content){
 	$username = '';
 	if(preg_match($RegExp,$bindInfo[0]) && $weixinconfig['reg_type'] == 3){
 		$username = $bindInfo[0];
-		$bindInfo[0] .= "@163.com";
+		$bindInfo[0] .= "@qq.com";
 	}
 	if(is_email($bindInfo[0]) && $api->isBindUser($wxid)===false){
 		if(strlen($bindInfo[1])<6){
@@ -327,3 +371,6 @@ if($content){
 		}
 	}
 }
+
+
+

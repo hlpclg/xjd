@@ -28,7 +28,7 @@ if (isset ( $set_modules ) && $set_modules == TRUE) {
 	$modules [$i] ['is_online'] = '1';
 	
 	/* 作者 */
-	$modules [$i] ['author'] = '68ecshop';
+	$modules [$i] ['author'] = '';
 	
 	/* 网址 */
 	$modules [$i] ['website'] = '';
@@ -95,7 +95,7 @@ class weixin {
 	 *        	支付方式信息
 	 */
 	function get_code($order, $payment) {
-		$return_url = 'http://' . $_SERVER ['HTTP_HOST'].'/respond.php';
+		$return_url = 'http://' . $_SERVER ['HTTP_HOST'].'/wx_native_callback.php';
 		define ( APPID, $payment ['appId'] ); // appid
 		define ( APPSECRET, $payment ['appSecret'] ); // appSecret
 		define ( MCHID, $payment ['partnerId'] );
@@ -136,7 +136,7 @@ class weixin {
 		$unifiedOrder->setParameter ( "total_fee", $order['order_amount'] * 100 ); // 总金额
 		$unifiedOrder->setParameter ( "notify_url", NOTIFY_URL ); // 通知地址
 		$unifiedOrder->setParameter ( "trade_type", "JSAPI" ); // 交易类型
-		
+
 		$prepay_id = $unifiedOrder->getPrepayId();
 		$jsApi->setPrepayId($prepay_id);
 		return $jsApi->getParameters();
@@ -156,21 +156,40 @@ class weixin {
 		define ( KEY, $payment ['partnerKey'] ); // 通加密串
 		if ($notify->checkSign() == TRUE) {
 			if ($notify->data ["return_code"] == "FAIL") {
+				$return['return_code'] = 'FAIL';
+				$return['return_msg'] = '';
 				$this->addLog ( $notify, 401 );
+				echo $notify->arrayToXml($return);exit;
 			} elseif ($notify->data ["result_code"] == "FAIL") {
+				$return['return_code'] = 'FAIL';
+				$return['return_msg'] = '';
 				$this->addLog ( $notify, 402 );
+				echo $notify->arrayToXml($return);exit;
 			} else {
-				$this->addLog ( $notify, 200 );
+				
 				$sns = $notify->data['out_trade_no'];
 				$order_sns = explode('-',$sns);
 				$order_sn = $order_sns[0];
 				$log_id = $GLOBALS ['db']->getOne ( "SELECT log_id FROM " . $GLOBALS ['ecs']->table ( 'pay_log' ) . "where order_id='{$order_sn}' and is_paid=0 order by log_id desc" );
+				if(!$log_id){
+					$this->addLog ( $notify, 405 );
+					$return['return_code'] = 'FAIL';
+					$return['return_msg'] = '订单已支付或不存在';
+					echo $notify->arrayToXml($return);exit;
+				}
 				/* 检查支付的金额是否相符 */
-				if (! check_money ( $log_id, $notify->data ['total_fee']/100 )) {
+				if (!check_money ( $log_id, $notify->data['total_fee']/100 )){
 					$this->addLog ( $notify, 404 );
+					$return['return_code'] = 'FAIL';
+					$return['return_msg'] = '';
+					echo $notify->arrayToXml($return);exit;
 					return true;
 				}
 				order_paid ( $log_id, 2 );
+				$this->addLog ( $notify, 200 );
+				$return['return_code'] = 'SUCCESS';
+				$return['return_msg'] = 'OK';
+				echo $notify->arrayToXml($return);exit;
 				echo 'success';exit;
 				//新接口无需发货
 				/**
@@ -199,7 +218,7 @@ class weixin {
 		$log ['get'] = $_REQUEST;
 		$log ['other'] = $other;
 		$log = serialize ( $log );
-		return $GLOBALS ['db']->query ( "INSERT INTO `weixin_paylog` (`log`,`type`) VALUES ('$log','$type')" );
+		return $GLOBALS ['db']->query ( "INSERT INTO ". $GLOBALS ['ecs']->table ( 'weixin_paylog' )." (`log`,`type`) VALUES ('$log','$type')" );
 	}
 	// 生成原生支付二维码
 	function natpayHtml($order) {
@@ -207,10 +226,11 @@ class weixin {
 			$unifiedOrder = new UnifiedOrder_pub();
 			//dqy add start 2015-5-27
 			//后台可修改订单金额，防止订单号重复
+			$order_id = $order['order_id'];
 			$order['order_id'] = $order['order_id'].'-'.$order['order_amount']*100;
 			//dqy add end 2015-5-27
 			// 设置统一支付接口参数
-			$return_url = 'http://' . $_SERVER ['HTTP_HOST'].'/respond.php';
+			$return_url = 'http://' . $_SERVER ['HTTP_HOST'].'/wx_native_callback.php';
 			$unifiedOrder->setParameter ( "body", $order ['order_sn'] );
 			$unifiedOrder->setParameter ( "out_trade_no", $order ['order_id'] ); // 商户订单号
 			$unifiedOrder->setParameter ( "total_fee", $order ['order_amount'] * 100 ); // 总金额
@@ -220,14 +240,14 @@ class weixin {
 			if ($unifiedOrderResult["return_code"] == "FAIL") {
 				return "通信出错：".$unifiedOrderResult['return_msg']."<br>";
 			}elseif($unifiedOrderResult["result_code"] == "FAIL"){
-				$log_id = $GLOBALS ['db']->getOne ( "SELECT log_id FROM " . $GLOBALS ['ecs']->table ( 'pay_log' ) . "where order_id='{$order ['order_id']}' and is_paid=0 order by log_id desc" );
+				$log_id = $GLOBALS ['db']->getOne ( "SELECT log_id FROM " . $GLOBALS ['ecs']->table ( 'pay_log' ) . "where order_id='{$order_id}' and is_paid=0 order by log_id desc" );
 				if($log_id > 0 && $unifiedOrderResult['err_code'] == 'ORDERPAID'){
 					order_paid ( $log_id, 2 );
 				}
 				return "错误代码描述：".$unifiedOrderResult['err_code_des']."<br>";
 			}
 			$product_url = $unifiedOrderResult["code_url"];
-			return "<img src='http://qr.liantu.com/api.php?text=" . $product_url . "' alt='扫描进行支付'><iframe src='weixin_order_check.php?oid={$order['order_id']}' style='display:none'></iframe>";
+			return "<div class='wx_qrcode' style='text-align:center'><img src='http://qr.liantu.com/api.php?text=" . $product_url . "' alt='扫描进行支付'><p>支付后点击<a href=\"user.php?act=order_detail&order_id=".$order_id."\">此处</a>查看我的订单</p></div>";
 		}
 	}
 }

@@ -43,7 +43,7 @@ if (!$smarty->is_cached('v_user_shouyi.dwt', $cache_id))
     $smarty->assign('description',     htmlspecialchars($_CFG['shop_desc']));
 	$smarty->assign('yes_distrib_list',get_all_distrib_order_by_user_id($_SESSION['user_id'],1)); //已分成订单信息
 	$smarty->assign('no_distrib_list',get_all_distrib_order_by_user_id($_SESSION['user_id'],0)); //未分成订单信息
-	$smarty->assign('cancel_distrib_list',get_all_distrib_order_by_user_id($_SESSION['user_id'],2)); //撤销分成订单信息
+	$smarty->assign('cancel_distrib_list',get_all_distrib_order_by_user_id($_SESSION['user_id'],2)); //撤销分成订单信息die;
 	$yes_total_money = get_total_money_by_user_id($_SESSION['user_id'],1);
 	$no_total_money = get_total_money_by_user_id($_SESSION['user_id'],0);
 	$total_money = $yes_total_money+$no_total_money;

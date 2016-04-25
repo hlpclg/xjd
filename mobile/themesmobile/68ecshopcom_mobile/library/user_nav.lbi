@@ -3,10 +3,13 @@
 <!--top-->
 <div class="com_top">
 <h2><a href="user.php?act=profile">设置</a></h2>
-<dl style="top: 25px;">
+<dl style="bottom: 25px;">
 <dt>{if $headimgurl neq ''}<img src="{$headimgurl}">{else}<img src="themesmobile/68ecshopcom_mobile/images/user68.jpg">{/if}
-    <span>{$info.username}</span>
-    <dd>{$rank_name}</dd>
+    <span style="position: absolute; top:  0px; left: 100px;font-size:14px;">用户名称：{$info.username}</span>
+    <span style="position: absolute; top: 25px; left: 100px;font-size:14px;">微信昵称：{$wx_info.nickname}</span>
+    <!--<span style="position: absolute; top: 40px; left: 100px;font-size:14px;">是否关注：{if $wx_info['isfollow']}是{else}否{/if}</span>-->
+    {if $wx_info['isfollow']}<span style="position: absolute; top: 50px; left: 100px;font-size:14px;">关注时间：{$wx_info.createymd}</span>{/if}
+    <dd style="position: absolute; top: 50px; right: 10px;">{$rank_name}</dd>
     </dt>
 
 </dl>

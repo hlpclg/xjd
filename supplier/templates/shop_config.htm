@@ -10,7 +10,7 @@
   </div>
   <!-- tab body -->
   <div id="tabbody-div">
-    <form enctype="multipart/form-data" name="theForm" action="?act=post" method="post">
+    <form enctype="multipart/form-data" name="theForm" action="?act=post" method="post" onSubmit="return config()" >
     {foreach from=$group_list item=group name="body_group"}
     <table width="90%" id="{$group.code}-table" {if $smarty.foreach.body_group.iteration neq 1}style="display:none"{/if}>
       {foreach from=$group.vars item=var key=key}
@@ -64,6 +64,22 @@ function ReWriterConfirm(sender)
   }
   return res;
 }
+
+
+</script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>
+function config(){
+	var country = $("#selCountries").val();
+	var provinc = $("#selProvinces").val();
+	var city    = $("#selCities").val();
+	if(country == ""||provinc == ""||city == ""){
+		alert("联系地址不完整");
+		return false;
+	}
+}
+
+
 </script>
 {/literal}
 {include file="pagefooter.htm"}

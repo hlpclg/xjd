@@ -434,10 +434,10 @@
 					<td class="label" id="promote_5">{$lang.lab_promote_date}</td>
 					<td id="promote_6">
 						<input name="promote_start_date" type="text" id="promote_start_date" size="12" value='{$goods.promote_start_date}' readonly="readonly" />
-						<input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('promote_start_date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button" />
+						<input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('promote_start_date', '%Y-%m-%d %H:%M:%S', '24', false, 'selbtn1');" value="{$lang.btn_select}" class="button" />
 						-
 						<input name="promote_end_date" type="text" id="promote_end_date" size="12" value='{$goods.promote_end_date}' readonly="readonly" />
-						<input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('promote_end_date', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button" />
+						<input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('promote_end_date', '%Y-%m-%d %H:%M:%S', '24', false, 'selbtn2');" value="{$lang.btn_select}" class="button" />
 					</td>
 				</tr>
 
@@ -459,10 +459,10 @@
 					<td class="label">限购日期：</td>
 					<td>
 						<input name="buymax_start_date" type="text" id="buymax_start_date" size="12" value='{$goods.buymax_start_date}' readonly="readonly" />
-						<input name="selbtn3" type="button" id="selbtn3" onclick="return showCalendar('buymax_start_date', '%Y-%m-%d', false, false, 'selbtn3');" value="{$lang.btn_select}" class="button" {if $goods.is_buy eq 0} disabled="disabled" {/if}/>
+						<input name="selbtn3" type="button" id="selbtn3" onclick="return showCalendar('buymax_start_date', '%Y-%m-%d %H:%M:%S', '24', false, 'selbtn3');" value="{$lang.btn_select}" class="button" {if $goods.is_buy eq 0} disabled="disabled" {/if}/>
 						-
 						<input name="buymax_end_date" type="text" id="buymax_end_date" size="12" value='{$goods.buymax_end_date}' readonly="readonly" />
-						<input name="selbtn4" type="button" id="selbtn4" onclick="return showCalendar('buymax_end_date', '%Y-%m-%d', false, false, 'selbtn4');" value="{$lang.btn_select}" class="button" {if $goods.is_buy eq 0} disabled="disabled" {/if}/>
+						<input name="selbtn4" type="button" id="selbtn4" onclick="return showCalendar('buymax_end_date', '%Y-%m-%d %H:%M:%S', '24', false, 'selbtn4');" value="{$lang.btn_select}" class="button" {if $goods.is_buy eq 0} disabled="disabled" {/if}/>
 					</td>
 				</tr>
 
@@ -1136,7 +1136,7 @@ function chu (result)
 				var cost_price = shop_price - wholesale_price;		// 分成金额
 				cost_price = cost_price.toFixed(2);
 				document.forms['theForm'].elements['cost_price'].value = cost_price;
-				console.log(cost_price);
+				//console.log(cost_price);
 			}else{
 				alert('本店售价应大于商品供货价');
 			}

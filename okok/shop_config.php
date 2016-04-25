@@ -44,8 +44,10 @@ if ($_REQUEST['act'] == 'list_edit')
     /* 可选语言 */
     $dir = opendir('../languages');
     $lang_list = array();
-    while (@$file = readdir($dir)){
-        if ($file != '.' && $file != '..' &&  $file != '.svn' && $file != '_svn' && is_dir('../languages/' .$file)){
+    while (@$file = readdir($dir))
+    {
+        if ($file != '.' && $file != '..' &&  $file != '.svn' && $file != '_svn' && is_dir('../languages/' .$file))
+        {
             $lang_list[] = $file;
         }
     }
@@ -56,10 +58,12 @@ if ($_REQUEST['act'] == 'list_edit')
     $smarty->assign('group_list',   get_settings(null, array('5'), array('chat')));
     $smarty->assign('countries',    get_regions());
 
-    if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'iis') !== false){
+    if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'iis') !== false)
+    {
         $rewrite_confirm = $_LANG['rewrite_confirm_iis'];
     }
-    else{
+    else
+    {
         $rewrite_confirm = $_LANG['rewrite_confirm_apache'];
     }
     $smarty->assign('rewrite_confirm', $rewrite_confirm);
@@ -67,7 +71,8 @@ if ($_REQUEST['act'] == 'list_edit')
     if ($_CFG['shop_country'] > 0)
     {
         $smarty->assign('provinces', get_regions(1, $_CFG['shop_country']));
-        if ($_CFG['shop_province']){
+        if ($_CFG['shop_province'])
+        {
             $smarty->assign('cities', get_regions(2, $_CFG['shop_province']));
         }
     }
@@ -354,17 +359,22 @@ function get_settings($groups=null, $excludes=null, $excludeCodes=null)
     $config_groups = '';
     $excludes_groups = '';
 
-    if (!empty($groups)){
-        foreach ($groups AS $key=>$val){
+    if (!empty($groups))
+    {
+        foreach ($groups AS $key=>$val)
+        {
             $config_groups .= " AND (id='$val' OR parent_id='$val')";
         }
     }
 
-    if (!empty($excludes)){
-        foreach ($excludes AS $key=>$val){
+    if (!empty($excludes))
+    {
+        foreach ($excludes AS $key=>$val)
+        {
             $excludes_groups .= " AND (parent_id<>'$val' AND id<>'$val')";
         }
-    } 
+    }
+    
     if (!empty($excludeCodes))
     {
         foreach ($excludeCodes AS $key=>$val)
@@ -380,32 +390,43 @@ function get_settings($groups=null, $excludes=null, $excludeCodes=null)
 
     /* 整理数据 */
     $group_list = array();
-    foreach ($item_list AS $key => $item){
+    foreach ($item_list AS $key => $item)
+    {
         $pid = $item['parent_id'];
         $item['name'] = isset($_LANG['cfg_name'][$item['code']]) ? $_LANG['cfg_name'][$item['code']] : $item['code'];
         $item['desc'] = isset($_LANG['cfg_desc'][$item['code']]) ? $_LANG['cfg_desc'][$item['code']] : '';
-        if ($item['code'] == 'sms_shop_mobile'){
+
+        if ($item['code'] == 'sms_shop_mobile')
+        {
             $item['url'] = 1;
         }
-        if ($pid == 0){
+        if ($pid == 0)
+        {
             /* 分组 */
-            if ($item['type'] == 'group'){
+            if ($item['type'] == 'group')
+            {
                 $group_list[$item['id']] = $item;
             }
         }
-        else {
+        else
+        {
             /* 变量 */
-            if (isset($group_list[$pid])){
-                if ($item['store_range']){
+            if (isset($group_list[$pid]))
+            {
+                if ($item['store_range'])
+                {
                     $item['store_options'] = explode(',', $item['store_range']);
 
-                    foreach ($item['store_options'] AS $k => $v) {
-                        $item['display_options'][$k] = isset($_LANG['cfg_range'][$item['code']][$v]) ? $_LANG['cfg_range'][$item['code']][$v] : $v;
+                    foreach ($item['store_options'] AS $k => $v)
+                    {
+                        $item['display_options'][$k] = isset($_LANG['cfg_range'][$item['code']][$v]) ?
+                                $_LANG['cfg_range'][$item['code']][$v] : $v;
                     }
                 }
                 $group_list[$pid]['vars'][] = $item;
             }
         }
+
     }
 
     return $group_list;

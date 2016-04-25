@@ -234,6 +234,12 @@ region.isAdmin=true;
   <td><div align="right">{$shipping.insure}</div></td>
   </tr>
   {/foreach}
+  <tr>
+    <td colspan="6"><strong>{$lang.shipping_note}</strong></td>
+    </tr>
+  <tr>
+    <td colspan="6"><a href="javascript:showNotice('noticeinvoiceno');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a><strong>{$lang.label_invoice_no}</strong><input name="invoice_no" type="text" value="{$order.invoice_no}" size="30"/><br/><span class="notice-span" id="noticeinvoiceno" style="display:block;">{$lang.invoice_no_mall}</span></td>
+  </tr>
 </table>
 </div>
 

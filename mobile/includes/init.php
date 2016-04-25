@@ -260,6 +260,7 @@ if ((DEBUG_MODE & 4) == 4)
 /* 判断是否支持 Gzip 模式 */
 if (!defined('INIT_NO_SMARTY') && gzip_enabled())
 {
+	ob_end_clean();
     ob_start('ob_gzhandler');
 }
 else

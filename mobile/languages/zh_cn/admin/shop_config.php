@@ -460,4 +460,14 @@ $_LANG['cfg_name']['distrib_rank'] = '成为分销商的会员等级';
 $_LANG['cfg_name']['call_username'] = '会员名称调用';
 $_LANG['cfg_range']['call_username'][1] = '会员ID';
 $_LANG['cfg_range']['call_username'][0] = '会员名称';
+
+
+/* 分销设置 */
+//$_LANG['cfg_name']['distribe_setting'] = '分销设置';
+$_LANG['cfg_name']['min_amount'] = '最小提现金额';
+$_LANG['cfg_name']['min_overage'] = '提现预留金额';
+$_LANG['cfg_name']['auto_divided'] = '是否自动分成';
+$_LANG['cfg_range']['auto_divided'][0] = '否';
+$_LANG['cfg_range']['auto_divided'][1] = '是';
+$_LANG['cfg_desc']['auto_divided'] = '自动分成是客户确认收货之后就自动分成；手动分成是订单发货后，管理员手动去分成管理点击分成';
 ?>

@@ -45,21 +45,43 @@ function addToCart1(goodsId, parentId)
 
 
   }
+	if (isSelectAttr(spec_arr)) {
+		quick = 1;
 
-  quick = 1;
+		goods.quick    = quick;
 
-  goods.quick    = quick;
+		goods.spec     = spec_arr;
 
-  goods.spec     = spec_arr;
+		goods.goods_id = goodsId;
 
-  goods.goods_id = goodsId;
+		goods.number   = number;
 
-  goods.number   = number;
+		goods.parent   = (typeof(parentId) == "undefined") ? 0 : parseInt(parentId);
 
-  goods.parent   = (typeof(parentId) == "undefined") ? 0 : parseInt(parentId);
+		Ajax.call('flow.php?step=add_to_cart1', 'goods=' + $.toJSON(goods), addToCartResponse1, 'POST', 'JSON');
+	}
+}
 
-  Ajax.call('flow.php?step=add_to_cart1', 'goods=' + $.toJSON(goods), addToCartResponse1, 'POST', 'JSON');
-
+function isSelectAttr(spec_arr) {
+	var ret = true;
+	var num = $("div[class='item catt']").length;
+	var par = document.getElementById("choose");
+	if (num > 0) {
+		$("div[class='item catt']").each(function() {
+			$("#choose").removeClass("catt_photo");
+			if ($(this).children("a[class='hover']").length <= 0) {
+				$("#choose").addClass("catt_photo");
+				ret = false;
+				return false;
+			} else {
+				$("#choose").removeClass("catt_photo");
+			}
+		})
+		if ($('#choose').is('.catt_photo')) {
+			alert("请一定要选择商品属性！");
+		}
+	}
+	return ret;
 }
 
 function addToCartResponse1(result)
@@ -195,21 +217,20 @@ number = 1;
  }
 
  }
+	if (isSelectAttr(spec_arr)) {
+		
+		goods.quick    = quick;
 
-  goods.quick    = quick;
+		goods.spec     = spec_arr;
 
-  goods.spec     = spec_arr;
+		goods.goods_id = goodsId;
 
-  goods.goods_id = goodsId;
+		goods.number   = number;
 
-  goods.number   = number;
+		goods.parent   = (typeof(parentId) == "undefined") ? 0 : parseInt(parentId);
 
-  goods.parent   = (typeof(parentId) == "undefined") ? 0 : parseInt(parentId);
-
-
-
-  Ajax.call('flow.php?step=add_to_cart', 'goods=' + $.toJSON(goods), addToCartResponse, 'POST', 'JSON');
-
+		Ajax.call('flow.php?step=add_to_cart', 'goods=' + $.toJSON(goods), addToCartResponse, 'POST', 'JSON');
+	}
 }
 
 

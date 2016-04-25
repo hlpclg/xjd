@@ -974,8 +974,10 @@ function goods_list($is_delete, $real_goods=1, $conditions = '')
                         .$GLOBALS['ecs']->table('supplier_goods_cat')." as sgc, ".$GLOBALS['ecs']->table('virtual_district')." as dis, ".
                         $GLOBALS['ecs']->table('virtual_goods_district')." as dig".
                         " WHERE dis.supplier_id = ".$_SESSION['supplier_id']." AND sgc.goods_id=g.goods_id  and dis.goods_id = g.goods_id and dis.district_id = dig.district_id AND is_delete='$is_delete' AND sgc.supplier_id='". $_SESSION['supplier_id'] ."' $where";
+						file_put_contents('./31113.txt',$sql);
             }else{
                 $sql = "SELECT COUNT(distinct(g.goods_id)) FROM " .$GLOBALS['ecs']->table('goods'). " AS g,".$GLOBALS['ecs']->table('supplier_goods_cat')." as sgc WHERE sgc.goods_id=g.goods_id AND is_delete='$is_delete' AND sgc.supplier_id='". $_SESSION['supplier_id'] ."' $where";
+				file_put_contents('./322223.txt',$sql);
             }
 	 /* 代码增加_虚拟团购_END  www.68ecshop.com */	
         $filter['record_count'] = $GLOBALS['db']->getOne($sql);
@@ -1214,12 +1216,6 @@ function product_list($goods_id, $conditions = '')
                  $_temp[] = $goods_attr[$_goods_attr_value];
             }
             $row[$key]['goods_attr'] = $_temp;
-			
-			$sql = "SELECT sum(attr_price) as attr_price,sum(wholesale_price) as wholesale_price FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE goods_id = '$goods_id' AND goods_attr_id in (".implode(',',$_goods_attr_array).") ";
-			$res = $GLOBALS['db']->query($sql);
-			$more_price = $GLOBALS['db']->fetchRow($res);
-			$row[$key]['attr_price'] = $more_price['attr_price'];
-			$row[$key]['wholesale_price'] = $more_price['wholesale_price'];
         }
     }
 

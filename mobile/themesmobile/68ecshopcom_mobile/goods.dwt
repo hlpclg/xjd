@@ -205,16 +205,16 @@ document.getElementById("share_form").submit();
 <!---属性---->
 <div class="ui-sx bian1"> 
 <div class="subNavBox"> 
-	<div class="subNav"><strong>选择商品属性</strong></div>
-    <ul class="navContent"> 
+	<div class="subNav on"><strong>选择商品属性</strong></div>
+    <ul class="navContent" style="display:block;" id="choose"> 
     {foreach from=$specification item=spec key=spec_key name=specification}
     <li>   
           <div class="title">{$spec.name}</div>
-          <div class="item">
+          <div class="item catt">
           {if $spec.attr_type eq 1}
           {foreach from=$spec.values item=value key=key}
-          <a {if $key eq 0}class="hover"{/if} href="javascript:;" name="{$value.id}" onclick="changeAtt(this);" for="spec_value_{$value.id}" title="{if $value.price gt 0}{$lang.plus}{$value.format_price|abs}{elseif $value.price lt 0}{$lang.minus}{$value.format_price|abs}{/if}"><input style="display:none" id="spec_value_{$value.id}" type="radio" name="spec_{$spec_key}" value="{$value.id}" {if $key eq 0}checked{/if} />
-          {$value.label}  {if $value.price gt 0}<font>+ {$value.format_price|abs}</font>{elseif $value.price lt 0}<font>- {$value.format_price|abs}</font>{/if}
+          <a href="javascript:;" name="{$value.id}" onclick="changeAtt(this);" for="spec_value_{$value.id}" title="{if $value.price gt 0}{$lang.plus}{$value.format_price|abs}{elseif $value.price lt 0}{$lang.minus}{$value.format_price|abs}{/if}"><input style="display:none" id="spec_value_{$value.id}" type="radio" name="spec_{$spec_key}" value="{$value.id}"  />
+          {$value.label}  {if $value.price gt 0}<!-- <font>+ {$value.format_price|abs}</font> -->{elseif $value.price lt 0}<!-- <font>- {$value.format_price|abs}</font> -->{/if}
           
           </a>
            {/foreach}
@@ -317,19 +317,21 @@ $(function(){
 						  }
 				  }
 function changeAtt(t) {
-t.lastChild.checked='checked';
-for (var i = 0; i<t.parentNode.childNodes.length;i++) {
-        if (t.parentNode.childNodes[i].className == 'hover') {
-            t.parentNode.childNodes[i].className = '';
+	t.className = "hover";
+	//t.lastChild.checked='checked';
+	for (var i = 0; i<t.parentNode.childNodes.length;i++) {
+		if (t.parentNode.childNodes[i].className == 'hover') {
+			t.parentNode.childNodes[i].className = '';
 			t.childNodes[0].checked="checked";
 		}
-    }
-t.className = "hover";
-changePrice();
+	}
+	t.className = "hover";
+	changePrice();
 }
 function changeAtt1(t) {
-t.lastChild.checked='checked';
-for (var i = 0; i<t.parentNode.childNodes.length;i++) {
+	t.className = "hover";
+	t.lastChild.checked='checked';
+	for (var i = 0; i<t.parentNode.childNodes.length;i++) {
         if (t.className == 'hover') {
             t.className = '';
 			t.childNodes[0].checked = false;
@@ -338,11 +340,8 @@ for (var i = 0; i<t.parentNode.childNodes.length;i++) {
 			t.className="hover";
 			t.childNodes[0].checked = true;
 		}
-		
-	
-}
-
-changePrice();
+	}
+	changePrice();
 }
 </script> 
 

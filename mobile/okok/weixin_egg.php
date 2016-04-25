@@ -87,10 +87,9 @@ switch ($act){
 			$link [] = array ('href' => 'weixin_egg.php?act=log','text' => '获奖管理');
 			sys_msg ( '处理成功', 0, $link );
 		} 
-		$sql = "SELECT " . $GLOBALS['ecs']->table('weixin_actlog') . ".*," . $GLOBALS['ecs']->table('weixin_user') . ".nickname FROM " . $GLOBALS['ecs']->table('weixin_actlog') . " 
-		left join " . $GLOBALS['ecs']->table('weixin_user') . " on " . $GLOBALS['ecs']->table('weixin_actlog') . ".uid=" . $GLOBALS['ecs']->table('weixin_user') . ".ecuid 
+		$sql = "SELECT " . $GLOBALS['ecs']->table('weixin_actlog') . ".*," . $GLOBALS['ecs']->table('weixin_user') . ".nickname ,". $GLOBALS['ecs']->table('users') . ".user_name FROM " . $GLOBALS['ecs']->table('weixin_actlog') . " left join ".$GLOBALS['ecs']->table('users')." on ".$GLOBALS['ecs']->table('users').".user_id = ".$GLOBALS['ecs']->table('weixin_actlog').".uid left join " . $GLOBALS['ecs']->table('weixin_user') . " on " . $GLOBALS['ecs']->table('weixin_actlog') . ".uid=" . $GLOBALS['ecs']->table('weixin_user') . ".ecuid 
 		where code!='' order by lid desc";
-		$log = $db->getAll ( $sql );
+		//$log = $db->getAll ( $sql );
 		
 		$qcode_list = qcode_list();
 		$smarty->assign('log',   $qcode_list['qcode_list']);
@@ -116,14 +115,13 @@ function qcode_list(){
 	if($filter['keywords']){
 		$where = " and " . $GLOBALS['ecs']->table('weixin_actlog') . ".code like '%{$filter['keywords']}%'";
 	}
-	$sql =  $GLOBALS['ecs']->table('weixin_actlog') . " left join " . $GLOBALS['ecs']->table('weixin_user') ." on " . $GLOBALS['ecs']->table('weixin_actlog') . ".uid=" . $GLOBALS['ecs']->table('weixin_user') . ".ecuid left join " . $GLOBALS['ecs']->table('weixin_act') . " on " . $GLOBALS['ecs']->table('weixin_actlog') . ".aid=" . $GLOBALS['ecs']->table('weixin_act') . ".aid
-		where code!='' {$where} order by lid desc";
+	$sql =  $GLOBALS['ecs']->table('weixin_actlog') . " left join " . $GLOBALS['ecs']->table('weixin_user') ." on " . $GLOBALS['ecs']->table('weixin_actlog') . ".uid=" . $GLOBALS['ecs']->table('weixin_user') . ".ecuid left join " . $GLOBALS['ecs']->table('weixin_act') . " on " . $GLOBALS['ecs']->table('weixin_actlog') . ".aid=" . $GLOBALS['ecs']->table('weixin_act') . ".aid left join ".$GLOBALS['ecs']->table('users')." on ".$GLOBALS['ecs']->table('users').".user_id = ".$GLOBALS['ecs']->table('weixin_actlog').".uid	where code!='' {$where} order by lid desc";
 
 	$filter['record_count'] = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('weixin_actlog'));
 	$filter = page_and_size($filter);
 	$filter['start'] = intval($filter['start']);
 	$filter['page_size'] = intval($filter['page_size']);
-	$user_list = $GLOBALS['db']->getAll("SELECT " . $GLOBALS['ecs']->table('weixin_actlog') . ".*," . $GLOBALS['ecs']->table('weixin_user') . ".nickname," . $GLOBALS['ecs']->table('weixin_act') . ".title,". $GLOBALS['ecs']->table('weixin_act') .".overymd FROM".$sql." limit {$filter['start']},{$filter['page_size']}");
+	$user_list = $GLOBALS['db']->getAll("SELECT " . $GLOBALS['ecs']->table('weixin_actlog') . ".*," . $GLOBALS['ecs']->table('weixin_user') . ".nickname," . $GLOBALS['ecs']->table('weixin_act') . ".title,". $GLOBALS['ecs']->table('weixin_act') .".overymd ,". $GLOBALS['ecs']->table('users') . ".user_name FROM".$sql." limit {$filter['start']},{$filter['page_size']}");
 	$arr = array('qcode_list' => $user_list, 'filter' => $filter,
 			'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
 	return $arr;

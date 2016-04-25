@@ -44,11 +44,11 @@ if (isset($set_modules) && $set_modules == TRUE)
     /* 是否支持在线支付 */
     $modules[$i]['is_online']  = '1';
 
-    /* 作者 */
-    $modules[$i]['author']  = 'ECSHOP TEAM';
+	/* 作者 */
+    $modules[$i]['author']  = '';
 
     /* 网址 */
-    $modules[$i]['website'] = 'http://www.alipay.com';
+    $modules[$i]['website'] = '';
 
     /* 版本号 */
     $modules[$i]['version'] = '1.0.2';
@@ -180,7 +180,7 @@ class alipay
         $payment  = get_payment($_GET['code']);
         $seller_email = rawurldecode($_GET['seller_email']);
         $order_sn = str_replace($_GET['subject'], '', $_GET['out_trade_no']);
-        $order_sn = trim($order_sn);
+        $order_sn = trim(addslashes($order_sn));
 
         /* 检查数字签名是否正确 */
         ksort($_GET);

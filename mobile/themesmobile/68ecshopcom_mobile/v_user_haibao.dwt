@@ -6,7 +6,15 @@
 <title>{$page_title}</title>
 <!--v_shop.css-->
 <link href="themesmobile/68ecshopcom_mobile/css/v_user.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" ></script>
 </head>
+<script>
+	
+	document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+		WeixinJSBridge.call('hideOptionMenu');
+	});
+	
+</script>
 <body style=" background:#F5F5F5">
 <!--header-->
 <div class="dianpu">
@@ -18,14 +26,16 @@
 <!--main-->
 <div class="main">
 <div class="haibao" style="width:100%;padding:0;">
-<div class="h_er" style="bottom: 8%;left:8%; margin-left: 30%;width: 50%;"><img style="" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={$erweima.qcode}"  alt="二维码"/></div>
-<div class="h_name" style="margin-left: 8%;">{if $user_info.headimgurl}<img src="{$user_info.headimgurl}" alt="头像" style="width: 50%;" />{else}<img src="themesmobile/68ecshopcom_mobile/images/v-shop/logo.png" alt="头像" style="width: 50%;" />{/if}<!--<span>{$user_info.nickname}</span>--></div>
+<!-- <div class="h_er" style="bottom: 8%;left:8%; margin-left: 30%;width: 50%;"><img style="" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={$erweima.qcode}"  alt="二维码"/></div> -->
+<!-- <div class="h_name" style="margin-left: 8%;">{if $user_info.headimgurl}<img src="{$user_info.headimgurl}" alt="头像" style="width: 50%;" />{else}<img src="themesmobile/68ecshopcom_mobile/images/v-shop/logo.png" alt="头像" style="width: 50%;" />{/if}<span>{$user_info.nickname}</span></div> -->
 <div class="h_img">
-<img src="themesmobile/68ecshopcom_mobile/images/v-shop/bg.jpg" alt="海报" style="width:100%;" />
+<!-- <img src="themesmobile/68ecshopcom_mobile/images/v-shop/bg.jpg" alt="海报" style="width:100%;" /> -->
+<img src="{$user_pic}" alt="海报" style="width:100%;" />
 </div>
 </div>
 </div>
 <!-----底部悬浮菜单---->
 <!-- #BeginLibraryItem "/library/footer_nav1.lbi" --><!-- #EndLibraryItem --> 
+
 </body>
 </html>

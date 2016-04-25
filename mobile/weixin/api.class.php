@@ -139,7 +139,7 @@ class weixinapi{
 				return false;
 			}
 		}else{
-			$username = $username ? $username :"hng_".date('md').mt_rand(1, 99999);
+			$username = $username ? $username :"hng".date('md').mt_rand(1, 99999);
 			if(register($username, $pwd, $email, array()) === false){
 				//通过 $GLOBALS['err']->last_message(); 获取错误提示内容
 				return false;
@@ -269,7 +269,7 @@ class weixinapi{
 	}
 	//更新token时间
 	function updateTokenExpire($wxid,$token){
-		$expire_in = time()+40*3600;
+		$expire_in = time()+24*3600;
 		$sql = "update ".$GLOBALS['ecs']->table('weixin_user')." set access_token='$token',expire_in='$expire_in', where fake_id='{$wxid}'";
 		$GLOBALS['db']->query($sql);
 		return true;

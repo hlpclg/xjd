@@ -319,8 +319,7 @@ function orderSelectedResponse(result)
 /* *
  * 改变余额
  */
-function changeSurplus(val)
-{
+function changeSurplus(val){
   if (selectedSurplus == val)
   {
     //return;
@@ -336,8 +335,7 @@ function changeSurplus(val)
 /* *
  * 改变余额回调函数
  */
-function changeSurplusResponse(obj)
-{
+function changeSurplusResponse(obj){
 	if (obj.error) {
 		try {
 			alert(obj.error);
@@ -366,44 +364,36 @@ function changeSurplusResponse(obj)
 /* *
  * 改变积分
  */
-function changeIntegral(val,suppid)
-{
-  if (selectedIntegral == val)
-  {
-    return;
-  }
-  else
-  {
-    selectedIntegral = val;
-  }
-
-  Ajax.call('flow.php?step=change_integral', 'points=' + val + '&suppid=' + suppid, changeIntegralResponse, 'GET', 'JSON');
+function changeIntegral(val,suppid){
+	if (selectedIntegral == val){
+		return;
+	}
+	else{
+		selectedIntegral = val;
+	}
+	Ajax.call('flow.php?step=change_integral', 'points=' + val + '&suppid=' + suppid, changeIntegralResponse, 'GET', 'JSON');
 }
 
 /* *
  * 改变积分回调函数
  */
-function changeIntegralResponse(obj)
-{
-  if (obj.error)
-  {
-    try
-    {
-      document.getElementById('ECS_INTEGRAL_NOTICE_'+obj.suppid).innerHTML = obj.error;
-      document.getElementById('ECS_INTEGRAL_'+obj.suppid).value = '0';
-      document.getElementById('ECS_INTEGRAL_'+obj.suppid).focus();
-    }
-    catch (ex) { }
-  }
-  else
-  {
-    try
-    {
-      document.getElementById('ECS_INTEGRAL_NOTICE_'+obj.suppid).innerHTML = '';
-    }
-    catch (ex) { }
-    orderSelectedResponse(obj.content);
-  }
+function changeIntegralResponse(obj){
+	if (obj.error){
+		alert(obj.error);
+		try{
+			//document.getElementById('ECS_INTEGRAL_NOTICE_'+obj.suppid).innerHTML = obj.error;
+			document.getElementById('ECS_INTEGRAL_'+obj.suppid).value = '0';
+			document.getElementById('ECS_INTEGRAL_'+obj.suppid).focus();
+		}
+		catch (ex) { }
+	}
+	else{
+		try{
+			document.getElementById('ECS_INTEGRAL_NOTICE_'+obj.suppid).innerHTML = '';
+		}
+		catch (ex) { }
+		orderSelectedResponse(obj.content);
+	}
 }
 
 /* *

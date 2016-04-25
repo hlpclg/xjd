@@ -12,14 +12,13 @@ $modules['02_cat_and_goods']['03_goods_add']			  = 'goods.php?act=add';         
 $modules['02_cat_and_goods']['05_comment_manage']		  = 'comment_manage.php?act=list'; //评论
 $modules['02_cat_and_goods']['05_shaidan_manage']   = 'shaidan.php?act=list';
 $modules['02_cat_and_goods']['11_goods_trash']			  = 'goods.php?act=trash';        // 商品回收站
-$modules['02_cat_and_goods']['13_batch_add']        = 'goods_batch.php?act=add';    // 商品批量上传
 $modules['02_cat_and_goods']['04_category_list']		  = 'category.php?act=list';
 //代码增加  评论详情
 $modules['02_cat_and_goods']['05_order_comment']   = 'order_comment.php?act=list';
 
 $modules['02_rebate_manage']['03_rebate_nopay']       = 'supplier_rebate.php?act=list&is_pay_ok=0'; 
 $modules['02_rebate_manage']['03_rebate_pay']       = 'supplier_rebate.php?act=list&is_pay_ok=1';
-
+$modules['02_cat_and_goods']['13_batch_add']        = 'goods_batch.php?act=add';    // 商品批量上传
 $modules['03_promotion']['04_bonustype_list']       = 'bonus.php?act=list';
 //$modules['03_promotion']['08_group_buy']            = 'group_buy.php?act=list';
 $modules['03_promotion']['10_auction']              = 'auction.php?act=list';

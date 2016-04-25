@@ -213,7 +213,7 @@ class alipay
         $payment  = get_payment($_GET['code']);
         $seller_email = rawurldecode($_GET['seller_email']);
         $order_sn = str_replace($_GET['subject'], '', $_GET['out_trade_no']);
-        $order_sn = trim($order_sn);
+        $order_sn = trim(addslashes($order_sn));
 
         /* 检查支付的金额是否相符 */
         if (!check_money($order_sn, $_GET['total_fee']))

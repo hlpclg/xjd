@@ -48,9 +48,9 @@ if($_SESSION['user_id'] != $user_id && $user_id > 0)
 		$rows = $GLOBALS['db']->getRow($sql);
 		if(empty($rows) || $rows['ecuid'] == 0)
 		{
-			$username = "hng_".date('md').mt_rand(1, 99999);
+			$username = "hng".date('md').mt_rand(1, 99999);
 			$pwd = mt_rand(100000, 999999);
-			$email = $username."@163.com";
+			$email = $username."@qq.com";
 			include_once('includes/lib_passport.php');
 			if(register($username, $pwd, $email, array()) === false){
 				show_message('自动注册出现错误！');

@@ -951,9 +951,9 @@ function update_order($order_id, $order)
 function get_order_sn()
 {
     /* 选择一个随机的方案 */
+    usleep(200);
     mt_srand((double) microtime() * 1000000);
-
-   return date('YmdHis') . str_shuffle(str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT));
+    return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
 }
 
 /**
@@ -1277,7 +1277,7 @@ function addto_cart($goods_id, $num = 1, $spec = array(), $parent = 0)
         'extension_code'=> $goods['extension_code'],
         'is_gift'       => 0,
         'is_shipping'   => $goods['is_shipping'],
-		'add_time'  	=> gmtime(),
+	'add_time'   => gmtime(),
         'rec_type'      => CART_GENERAL_GOODS
     );
 

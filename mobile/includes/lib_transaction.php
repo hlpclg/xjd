@@ -695,10 +695,7 @@ function get_order_detail($order_id, $user_id = 0)
     $order['exist_real_goods'] = exist_real_goods($order_id);
 
     /* 如果是未付款状态，生成支付按钮 */
-    if ($order['pay_status'] == PS_UNPAYED &&
-        ($order['order_status'] == OS_UNCONFIRMED ||
-        $order['order_status'] == OS_CONFIRMED))
-    {
+    if ($order['pay_status'] == PS_UNPAYED && ($order['order_status'] == OS_UNCONFIRMED || $order['order_status'] == OS_CONFIRMED)){
         /*
          * 在线支付按钮
          */
@@ -707,12 +704,10 @@ function get_order_detail($order_id, $user_id = 0)
         $payment_info = payment_info($order['pay_id']);
 
         //无效支付方式
-        if ($payment_info === false)
-        {
+        if ($payment_info === false){
             $order['pay_online'] = '';
         }
-        else
-        {
+        else{
             //取得支付信息，生成支付代码
             $payment = unserialize_config($payment_info['pay_config']);
 
@@ -729,8 +724,7 @@ function get_order_detail($order_id, $user_id = 0)
             $order['pay_online'] = $pay_obj->get_code($order, $payment);
         }
     }
-    else
-    {
+    else{
         $order['pay_online'] = '';
     }
 

@@ -47,10 +47,10 @@ if (isset($set_modules) && $set_modules == true)
     $modules[$i]['is_online'] = '1';
 
     /* 作者 */
-    $modules[$i]['author']  = 'ECSHOP TEAM';
+    $modules[$i]['author']  = '';
 
     /* 网址 */
-    $modules[$i]['website'] = 'http://www.99bill.com';
+    $modules[$i]['website'] = '';
 
     /* 版本号 */
     $modules[$i]['version'] = '1.0.0';

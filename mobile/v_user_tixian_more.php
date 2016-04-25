@@ -106,6 +106,7 @@ if(isset($_REQUEST['act']) && $_REQUEST['act'] == 'del')
 if(isset($_REQUEST['act']) && $_REQUEST['act'] == 'act_deposit')
 {
 	$deposit_money = $_POST['deposit_money'];
+	
 	$id = intval($_POST['deposit_id']);
 	if(is_numeric($deposit_money))
 	{
@@ -113,11 +114,18 @@ if(isset($_REQUEST['act']) && $_REQUEST['act'] == 'act_deposit')
 		 $rows = $GLOBALS['db']->getRow($sql);
 		 if($rows)
 		 {
-			 $user_money = get_user_money_by_user_id($_SESSION['user_id']); 
+			if($deposit_money < $_CFG['min_amount']){
+				show_message('提现失败：最小提现额度为'.$_CFG['min_amount'].'！');
+			}
+			$user_money = get_user_money_by_user_id($_SESSION['user_id']); 
+			if(($deposit_money+$_CFG['min_overage']) > $user_money){
+				show_message('提现失败：超出预留金额，最小预留金额为'.$_CFG['min_overage'].'！');
+			}
+			 /* $user_money = get_user_money_by_user_id($_SESSION['user_id']); 
 			 if($deposit_money > $user_money)
 			 {
 				show_message('您的余额不足，请重新输入！');
-			 }
+			 } */
 			 $sql = "INSERT INTO " . $GLOBALS['ecs']->table('deposit') . 			 "(`deposit_money`,`real_name`,`account_name`,`bank_account`,`phone`,`remark`,`add_time`,`user_id`,`status`) ".
 			 " values('$deposit_money','" . $rows['real_name'] . "','" . $rows['account_name'] . "','" . $rows['bank_account'] . "','" . $rows['phone'] . "','" . $rows['remark'] . "','" . gmtime() . "','" . $_SESSION['user_id'] . "',0)";
 			 $num = $GLOBALS['db']->query($sql);

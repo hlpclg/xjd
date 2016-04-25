@@ -42,7 +42,6 @@ function set_default_show($sid,$supplier_id=0)
 //获取当前平台下所有已经安装的非默认，非同城快递，非门店自提配送地址
 function get_all_install_shipping($supplier_id=0){
 	global $db,$ecs;
-
 	return $db->getCol("select shipping_id from ".$ecs->table('shipping')." where supplier_id=".$supplier_id." and is_default_show=0 and enabled=1 and shipping_code not in('pups','tc_express')");
 }
 
@@ -58,6 +57,7 @@ function del_no_default($supplier_id=0){
 
 			$db->query("delete from ".$ecs->table("shipping_area")." where shipping_area_id in(".implode(',',$shipping_area_ids).")");
 		}
+		
 	}
 	return true;
 }

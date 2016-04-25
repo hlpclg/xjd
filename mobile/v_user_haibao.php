@@ -48,9 +48,9 @@ if($_SESSION['user_id'] != $user_id && $user_id > 0)
 		$rows = $GLOBALS['db']->getRow($sql);
 		if(empty($rows) || $rows['ecuid'] == 0)
 		{
-			$username = "hng_".date('md').mt_rand(1, 99999);
+			$username = "hng".date('md').mt_rand(1, 99999);
 			$pwd = mt_rand(100000, 999999);
-			$email = $username."@163.com";
+			$email = $username."@qq.com";
 			include_once('includes/lib_passport.php');
 			if(register($username, $pwd, $email, array()) === false){
 				show_message('自动注册出现错误！');
@@ -138,9 +138,52 @@ if (!$smarty->is_cached('v_user_haibao.dwt', $cache_id))
     /* meta information */
     $smarty->assign('keywords',        htmlspecialchars($_CFG['shop_keywords']));
     $smarty->assign('description',     htmlspecialchars($_CFG['shop_desc']));
-	$smarty->assign('user_info',get_user_info_by_user_id($user_id)); 
-	$smarty->assign('erweima',get_erweima_by_user_id($user_id));
+	$user_info = get_user_info_by_user_id($user_id);
+	$erweima = get_erweima_by_user_id($user_id);
+	$user_pic = 'headimg/U'.$user_info['uid'].'_user.jpg';
+	$a_time = time() + 86400;
+	if(!file_exists($user_pic) ||  (time() > $user_info['user_pic_time']) ){
+		$logo = ROOT_PATH .'headimg/U'.$user_info['uid'].'_logo.jpg';	
+		if(function_exists('curl_init')) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $user_info['headimgurl']);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			$data = curl_exec($ch);
+		}else{
+			$data = file_get_contents($user_info['headimgurl']);
+		}			
+		file_put_contents($logo,$data); 
+		if(file_exists($logo) && filesize($logo) == 0){
+			unlink($logo);
+			$logo = ROOT_PATH.'/default.jpg';
+			clearstatcache();
+		}
+		
+		
+		$ticket = ROOT_PATH .'headimg/U'.$user_info['uid'].'_ticket.jpg';
+		if(!file_exists($ticket)){
+			$data = file_get_contents('https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='.$erweima['qcode']);
+			file_put_contents($ticket,$data);
+		}
+	
+		require(ROOT_PATH .'includes/image/Image.class.php');
+		$bg = ROOT_PATH .'/bg.jpg';
+		$img = new Image(1, $bg);
+		$img->open($ticket)->thumb(240, 260)->save($ticket);
+		$img->open($logo)->thumb(100, 100)->save($logo);
+		
+		$name = '注意：由于系统升级，3月13号之前的二维码失效';
+		$img->open($bg)->water($ticket, array(187,310))->water($logo, array(32,288))->text($name,ROOT_PATH.'/hei.ttf','20','#FFFF66', 2)->save($user_pic);
+		$sql = "UPDATE " . $GLOBALS['ecs']->table('weixin_user') . " SET user_pic_time = '$a_time' WHERE uid = '$user_info[uid]'";
+		$GLOBALS['db']->query($sql);
+		//$img->open($bg)->water($ticket, 9)->water($logo, array(95,560))->text($name,'../hei.ttf','16','#FFFF66', array(95,510))->save($user_pic);
+	}
+	
+	$smarty->assign('user_info',$user_info); 
+	$smarty->assign('erweima',$erweima);
 	$smarty->assign('user_id',$user_id);
+	$smarty->assign('user_pic',$user_pic);
 	
     /* 页面中的动态内容 */
     assign_dynamic('v_user_haibao');

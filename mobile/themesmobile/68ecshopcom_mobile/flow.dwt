@@ -282,68 +282,59 @@ $('.quanxuan .cart-checkbox').removeClass('checked');
     {* 代码增加_End    By  www.68ecshop.com *}
     <!--增加代码_start By www.68ecshop.com-->
     <script>
-  function add_num(rec_id,goods_id)
-   {
-    document.getElementById("goods_number_"+rec_id+"").value++;
-    if(document.getElementById("goods_number_"+rec_id+"").value > 1)
-    {
-      document.getElementById("jiannum"+rec_id).className = 'input-sub active';
-      }else
-      {
-      document.getElementById("jiannum"+rec_id).className = 'input-sub';
-      }
-    var number = document.getElementById("goods_number_"+rec_id+"").value;
-    Ajax.call('flow.php', 'step=update_group_cart&rec_id=' + rec_id +'&number=' + number+'&goods_id=' + goods_id, changePriceResponse, 'GET', 'JSON');
-   }
-  function minus_num(rec_id,goods_id)
-  {
-    if (document.getElementById("goods_number_"+rec_id+"").value>1)
-    {
-      document.getElementById("goods_number_"+rec_id+"").value--;
-      if(document.getElementById("goods_number_"+rec_id+"").value > 1)
-    {
-      document.getElementById("jiannum"+rec_id).className = 'input-sub active';
-      }else
-      {
-      document.getElementById("jiannum"+rec_id).className = 'input-sub';
-      }
-    }
-    var number = document.getElementById("goods_number_"+rec_id+"").value;
-    Ajax.call('flow.php', 'step=update_group_cart&rec_id=' + rec_id +'&number=' + number+'&goods_id=' + goods_id, changePriceResponse, 'GET', 'JSON');
-  }
+	function add_num(rec_id,goods_id){
+		document.getElementById("goods_number_"+rec_id+"").value++;
+		if(document.getElementById("goods_number_"+rec_id+"").value > 1){
+			document.getElementById("jiannum"+rec_id).className = 'input-sub active';
+		}else{
+			document.getElementById("jiannum"+rec_id).className = 'input-sub';
+		}
+		var number = document.getElementById("goods_number_"+rec_id+"").value;
+		Ajax.call('flow.php', 'step=update_group_cart&rec_id=' + rec_id +'&number=' + number+'&goods_id=' + goods_id, changePriceResponse, 'GET', 'JSON');
+	}
+	function minus_num(rec_id,goods_id){
+		if (document.getElementById("goods_number_"+rec_id+"").value>1){
+			document.getElementById("goods_number_"+rec_id+"").value--;
+			if(document.getElementById("goods_number_"+rec_id+"").value > 1){
+				document.getElementById("jiannum"+rec_id).className = 'input-sub active';
+			}else{
+				document.getElementById("jiannum"+rec_id).className = 'input-sub';
+			}
+		}
+		var number = document.getElementById("goods_number_"+rec_id+"").value;
+		Ajax.call('flow.php', 'step=update_group_cart&rec_id=' + rec_id +'&number=' + number+'&goods_id=' + goods_id, changePriceResponse, 'GET', 'JSON');
+	}
 
-function change_price(rec_id,goods_id)
-{
-  var r = /^[1-9]+[0-9]*]*$/;
-  var number = document.getElementById("goods_number_"+rec_id+"").value;
-  if (!r.test(number))
-  {
-    alert("您输入的格式不正确！");
-    document.getElementById("goods_number_"+rec_id+"").value=document.getElementById("hidden_"+rec_id+"").value;
-  }
-  else
-  {
-    Ajax.call('flow.php','step=update_group_cart&rec_id=' + rec_id +'&number=' + number+'&goods_id=' + goods_id, changePriceResponse, 'GET', 'JSON');
-  }
-}
+	function change_price(rec_id,goods_id){
+		var r = /^[1-9]+[0-9]*]*$/;
+		var number = document.getElementById("goods_number_"+rec_id+"").value;
+		if (!r.test(number)){
+			alert("您输入的格式不正确！");
+			document.getElementById("goods_number_"+rec_id+"").value=document.getElementById("hidden_"+rec_id+"").value;
+		}
+		else{
+			Ajax.call('flow.php','step=update_group_cart&rec_id=' + rec_id +'&number=' + number+'&goods_id=' + goods_id, changePriceResponse, 'GET', 'JSON');
+		}
+	}
 
-function changePriceResponse(result)
-{
-if(result.error == 1)
-{
-  alert(result.content);
-  document.getElementById("goods_number_"+result.rec_id+"").value =result.number;
-  document.getElementById("hidden_"+result.rec_id+"").value =result.number;
-}
-else
-{
-  document.getElementById("hidden_"+result.rec_id+"").value =result.number;
-  document.getElementById('cart_amount_desc').innerHTML = result.cart_amount_desc;//购物车商品总价说明
-  show_div_text = "恭喜您！ 商品数量修改成功！ ";
+	function changePriceResponse(result){
+		if(result.error == 1){
+			alert(result.content);
+			document.getElementById("goods_number_"+result.rec_id+"").value =result.number;
+			document.getElementById("hidden_"+result.rec_id+"").value =result.number;
+		}
+		else if(result.error == 888 || result.error == 999){
+			alert(result.message);
+			document.getElementById("goods_number_"+result.rec_id+"").value =result.number;
+			document.getElementById("hidden_"+result.rec_id+"").value =result.number;
+		}
+		else{
+			document.getElementById("hidden_"+result.rec_id+"").value =result.number;
+			document.getElementById('cart_amount_desc').innerHTML = result.cart_amount_desc;//购物车商品总价说明
+			show_div_text = "恭喜您！ 商品数量修改成功！ ";
+		}
 
-}
-
-}
+	}
 </script>
 
 {else}
@@ -518,19 +509,36 @@ function close_gift(suitId){
               <table class="subbox_other sub_bonus" width="100%">
                 <!-- {if $allow_use_bonus} 是否使用优惠券 -->
                 <tr>
-             
-                  <td  colspan="2"><select name="bonus[{$key}]" onchange="changeBonus(this.value,{$key})" id="ECS_BONUS_{$key}" >
-                      <option value="0" {if $order.bonus_id eq 0}selected{/if}>{$lang.please_select}优惠券</option>
-                      <!-- {foreach from=$goodsinfo.redbag item=bonus} -->
-                      <option value="{$bonus.bonus_id}" {if $order.bonus_id_info[$key] eq $bonus.bonus_id}selected{/if}>{$bonus.type_name}[{$bonus.bonus_money_formated}]</option>
-                      <!-- {/foreach} -->
-                      
-                    </select></td>
-                  <td> &nbsp;或 &nbsp;<a href="javascript:void(0);" onclick="javascript:document.getElementById('Bonus_span_{$key}').style.display='block';document.getElementById('Bonus_a_{$key}').style.display='none';" class="a_other1_h" id="Bonus_a_{$key}">直接输入优惠券号</a></td>
-                  <td><label id="Bonus_span_{$key}" style="display:none;">
-                      <input name="bonus_sn[{$key}]" id="bonus_sn_{$key}" type="text"   value="{if $order.bonus_sn_info[$key]}{$order.bonus_sn_info[$key]}{else}输入优惠券{/if}" onfocus="if (value =='输入优惠券'){value =''}" onblur="if (value ==''){value='输入优惠券'}" class="txt1" style="width:100px;"/><input name="validate_bonus" type="button" value="使用" onclick="validateBonus(document.getElementById('bonus_sn_{$key}').value,{$key})" class="BonusButton" />
-                    </label></td>
-                </tr>
+					<td  colspan="2">
+						<select name="bonus[{$key}]" onchange="changeBonus(this.value,{$key})" id="ECS_BONUS_{$key}" >
+							<option value="0" {if $order.bonus_id eq 0}selected{/if}>{$lang.please_select}优惠券</option>
+							<!-- {foreach from=$goodsinfo.redbag item=bonus} -->
+							<option value="{$bonus.bonus_id}" {if $order.bonus_id_info[$key] eq $bonus.bonus_id}selected{/if}>{$bonus.type_name}[{$bonus.bonus_money_formated}]</option>
+							<!-- {/foreach} -->
+						</select>
+					</td>
+					<td> 
+						&nbsp;或 &nbsp;<a href="javascript:void(0);" onclick="javascript:document.getElementById('Bonus_span_{$key}').style.display='block';document.getElementById('Bonus_a_{$key}').style.display='none';" class="a_other1_h" id="Bonus_a_{$key}">直接输入优惠券号</a>
+					</td>
+					<td>
+						<label id="Bonus_span_{$key}" style="display:none;">
+							<input name="bonus_sn[{$key}]" id="bonus_sn_{$key}" type="text"   value="{if $order.bonus_sn_info[$key]}{$order.bonus_sn_info[$key]}{else}输入优惠券{/if}" onfocus="if (value =='输入优惠券'){value =''}" onblur="if (value ==''){value='输入优惠券'}" class="txt1" style="width:100px;"/>
+							<input name="validate_bonus" type="button" value="使用" onclick="validateBonus(document.getElementById('bonus_sn_{$key}').value,{$key})" class="BonusButton" />
+						</label>
+					</td>
+				</tr>
+				 
+				<tr>
+					<td>
+						使用积分：
+					</td>
+					<td>
+						<label id="Bonus_span_{$key}">
+							<input name="integral[{$key}]" type="text" class="txt1" id="ECS_INTEGRAL_{$key}" onblur="changeIntegral(this.value,{$key})" value="0" style="width:100px;">
+						</label>
+					</td>
+                </tr> 
+				
                 <!-- {/if} --> 
             
               </table>
@@ -709,29 +717,28 @@ function close_gift(suitId){
       </td>
       </tr>
         <tr>
-          <td colspan=4 class="tdother2">
-        <div class="checkout_other" > 
-           <div class="jmbag" href="javascript:void(0);" onclick="showCheckoutOther(this);"><span class="right_arrow_flow"></span>订单附言</div>
-                <div class=" subbox_other">
-                  <div class="flow_bottom_list">
-                      <textarea name="postscript" cols="80" rows="3" id="postscript" style=" border:1px solid #e5e5e5">{$order.postscript|escape}</textarea>
-                    </div>
-                  </div>
-                
-            </div>
-          </td>
+			<td colspan=4 class="tdother2">
+				<div class="checkout_other" > 
+					<div class="jmbag" href="javascript:void(0);" onclick="showCheckoutOther(this);"><span class="right_arrow_flow"></span>订单附言</div>
+					<div class=" subbox_other">
+						<div class="flow_bottom_list">
+							<textarea name="postscript" cols="80" rows="3" id="postscript" style=" border:1px solid #e5e5e5">{$order.postscript|escape}</textarea>
+						</div>
+					</div>
+				</div>
+			</td>
         </tr>
-    <script type="text/javascript">
-    var fapiao_con = document.getElementById('ECS_INVCONTENT');
-    if (fapiao_con.value=='0')
-    {
-      document.getElementById('ECS_INVPAYEE').disabled=true;
-    }
-    else
-    {
-      document.getElementById('ECS_INVPAYEE').disabled=false;
-    }
-    </script>
+		<script type="text/javascript">
+			/**
+			var fapiao_con = document.getElementById('ECS_INVCONTENT');
+			if (fapiao_con.value=='0'){
+				document.getElementById('ECS_INVPAYEE').disabled=true;
+			}
+			else{
+				document.getElementById('ECS_INVPAYEE').disabled=false;
+			}
+			*/
+		</script>
     </table>
 <!--积分余额-->
 <div style="height:10px; line-height:10px; clear:both;"></div>
@@ -900,139 +907,144 @@ function close_gift(suitId){
 <div class="content_success " >
     <div class="con-ct   fo-con">
         <h4 class="successtijiao">订单已经提交成功！</h4>
-      <ul class="ct-list">
-        {if $split_order.sub_order_count gt 1}
-                <li style="height:auto;">由于您的商品由不同的商家发出，此订单将分为<font style="color:#ff3300;">{$split_order.sub_order_count}</font>个不同的子订单配送：</li>
-                  {else}
-                <li>您的商品将由{$order.shipping_name}为您配送：</li>
-                {/if}
-                  {foreach from=$split_order.suborder_list item=suborder}
-                 <li >订单号：<em>{$suborder.order_sn}</em>
-
-                </li>  
-
-        <li>
-         {$order.pay_name}：
-          <em>{$suborder.order_amount_formated}</em>
-        </li>
-        <li>
-          配送方式：
-          <em class="price">{$order.shipping_name}</em>
-        </li>          
-          {/foreach}
-      </ul>
-
+		<ul class="ct-list">
+			{if $split_order.sub_order_count gt 1}
+			<li style="height:auto;">由于您的商品由不同的商家发出，此订单将分为<font style="color:#ff3300;">{$split_order.sub_order_count}</font>个不同的子订单配送：</li>
+			{else}
+			<li>您的商品将由{$order.shipping_name}为您配送：</li>
+			{/if}
+			{foreach from=$split_order.suborder_list item=suborder}
+			<li >订单号：<em>{$suborder.order_sn}</em></li>  
+			<li>
+				{$order.pay_name}：
+				<em>{$suborder.order_amount_formated}</em>
+			</li>
+			<li>
+				配送方式：
+				<em class="price">{$order.shipping_name}</em>
+			</li>          
+			{/foreach}
+		</ul>
     </div>
     {if $pay_online}
     <div class="pay-btn">{$pay_online} </div>
-      {/if}
-      
-      
-{if $virtual_card}
-  <div class="con-ct radius shadow fo-con">
-    <ul class="ct-list">
-      {foreach from=$virtual_card item=vgoods name=virtual_card}
-          {foreach from=$vgoods.info item=card name=vgoods_info}
-      <li>
-        <span class="type">{$vgoods.goods_name}</span>
-        {if $card.card_sn}
-        <span class="id"> <strong>{$lang.card_sn}{$lang.colon}</strong>
-          {$card.card_sn}</em> 
-      </span>
-      {/if}
-            {if $card.card_password}
-      <span class="serial_code"> <strong>{$lang.card_password}{$lang.colon}</strong>
-        <em>{$card.card_password}</em>
-      </span>
-      {/if}
-            {if $card.end_date}
-      <span class="expire_date">
-        <strong>{$lang.end_date}{$lang.colon}</strong>
-        <em>{$card.end_date}</em>
-      </span>
-      {/if}
-    </li>
-    {/foreach}
-          {/foreach}
-  </ul>
-</div>
-  <div class="con-ct radius shadow fo-con">
-    <ul class="ct-list">
-      <li>{$order_submit_back}</li>
-    </ul>
-  </div>
-{/if}
+	{/if}
+	{if $virtual_card}
+	<div class="con-ct radius shadow fo-con">
+		<ul class="ct-list">
+		{foreach from=$virtual_card item=vgoods name=virtual_card}
+			{foreach from=$vgoods.info item=card name=vgoods_info}
+			<li>
+				<span class="type">{$vgoods.goods_name}</span>
+				{if $card.card_sn}
+					<span class="id"> <strong>{$lang.card_sn}{$lang.colon}</strong>{$card.card_sn}</em> </span>
+				{/if}
+				{if $card.card_password}
+					<span class="serial_code"> <strong>{$lang.card_password}{$lang.colon}</strong><em>{$card.card_password}</em></span>
+				{/if}
+				{if $card.end_date}
+					<span class="expire_date"><strong>{$lang.end_date}{$lang.colon}</strong><em>{$card.end_date}</em></span>
+				{/if}
+			</li>
+			{/foreach}
+		{/foreach}
+		</ul>
+	</div>
+	<div class="con-ct radius shadow fo-con">
+		<ul class="ct-list">
+			<li>{$order_submit_back}</li>
+		</ul>
+	</div>
+	{/if}
 </div>
 {/if}
 
 {if $step eq 'ok'}
 <div class="content_success " >
     <div class="con-ct   fo-con">
-        <h4 class="successtijiao">订单已经提交成功！若已支付成功 <a href="user.php?act=order_list" >返回我的订单</a> </h4>
-       <ul class="ct-list">
-     <li>您的商品将由{$order.shipping_name}为您配送：</li>
-     
-     <li >订单号：<em>{$order.order_sn}</em> </li>  
-
-        <li>
-         {$order.pay_name}：
-          <em>{$order.order_amount_formated}</em>
-        </li>
-        <li>
-          配送方式：
-          <em class="price">{$order.shipping_name}</em>
-        </li>          
-   
-      </ul>
+		{if !$split_order}
+        <h4 class="successtijiao" style="height:auto;">订单已经提交成功！若已支付成功 <a href="user.php?act=order_list" >返回我的订单</a> </h4>
+		<ul class="ct-list">
+			<li>您的商品将由{$order.shipping_name}为您配送：</li>
+			<li >订单号：<em>{$order.order_sn}</em> </li>  
+			<li>
+				{$order.pay_name}：
+				<em>{$order.order_amount_formated}</em>
+			</li>
+			<li>
+				配送方式：
+				<em class="price">{$order.shipping_name}</em>
+			</li>   
+		</ul>
+		{/if}
+		
+		{if $split_order.sub_order_count gt 1}
+		<h4 class="successtijiao" style="height:auto;">由于您的商品由不同的商家发出，此订单将分为<font style="color:#ff3300;">{$split_order.sub_order_count}</font>个不同的子订单配送 <a href="user.php?act=order_list" >返回我的订单</a> </h4>
+		<ul class="ct-list">
+			
+			{foreach from=$split_order.list item=suborder}
+			<li >订单号：<em>{$suborder.order_sn}</em></li>  
+			<li>
+				{$order.pay_name}：
+				<em>{$suborder.order_amount_formated}</em>
+			</li>
+			<li>
+				配送方式：
+				<em class="price">{$suborder.shipping_name}</em>
+			</li>          
+			{/foreach}
+		</ul>
+		{/if}
+	  
 
 
     </div>
     {if $pay_online}
       <div class="pay-btn">{$pay_online}</div>
       {/if}
-{if $virtual_card}
-  <div class="con-ct radius shadow fo-con">
-    <ul class="ct-list">
-      {foreach from=$virtual_card item=vgoods name=virtual_card}
-          {foreach from=$vgoods.info item=card name=vgoods_info}
-      <li>
-        <span class="type">{$vgoods.goods_name}</span>
-        {if $card.card_sn}
-        <span class="id"> <strong>{$lang.card_sn}{$lang.colon}</strong>
-          {$card.card_sn}</em> 
-      </span>
-      {/if}
-            {if $card.card_password}
-      <span class="serial_code"> <strong>{$lang.card_password}{$lang.colon}</strong>
-        <em>{$card.card_password}</em>
-      </span>
-      {/if}
-            {if $card.end_date}
-      <span class="expire_date">
-        <strong>{$lang.end_date}{$lang.colon}</strong>
-        <em>{$card.end_date}</em>
-      </span>
-      {/if}
-    </li>
-    {/foreach}
-          {/foreach}
-  </ul>
-</div>
-  <div class="con-ct radius shadow fo-con">
-    <ul class="ct-list">
-      <li>{$order_submit_back}</li>
-    </ul>
-  </div>
-{/if}
+	{if $virtual_card}
+		<div class="con-ct radius shadow fo-con">
+			<ul class="ct-list">
+			{foreach from=$virtual_card item=vgoods name=virtual_card}
+				{foreach from=$vgoods.info item=card name=vgoods_info}
+				<li>
+					<span class="type">{$vgoods.goods_name}</span>
+					{if $card.card_sn}
+					<span class="id"> <strong>{$lang.card_sn}{$lang.colon}</strong>
+					{$card.card_sn}</em> 
+					</span>
+					{/if}
+					{if $card.card_password}
+					<span class="serial_code"> <strong>{$lang.card_password}{$lang.colon}</strong>
+					<em>{$card.card_password}</em>
+					</span>
+					{/if}
+					{if $card.end_date}
+					<span class="expire_date">
+					<strong>{$lang.end_date}{$lang.colon}</strong>
+					<em>{$card.end_date}</em>
+					</span>
+					{/if}
+				</li>
+				{/foreach}
+			{/foreach}
+			</ul>
+		</div>
+		<div class="con-ct radius shadow fo-con">
+			<ul class="ct-list">
+				<li>{$order_submit_back}</li>
+			</ul>
+		</div>
+	{/if}
 </div>
 
 {/if}
     {if $step neq 'cart'} <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem --> {/if}
     {if $step neq 'cart'} <!-- #BeginLibraryItem "/library/footer_nav.lbi" --><!-- #EndLibraryItem --> {/if} </div>
 
-  </div>
+</div>
   
- </div>
+</div>
 </div>
 
 <div class="f_block" id="pop" style="position: fixed; bottom: 0px; left: 0px; height: 0px; z-index: 99999999; overflow: hidden; width: 100%; background: rgb(255, 255, 255);">

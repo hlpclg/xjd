@@ -4037,7 +4037,7 @@ function Recordkeyword($word_www_68ecshop_com, $items = 0, $searchengine = 'ecsh
  * 
  */
 function send_sms($supplierinfo='',$content='',$position=1){
-
+	//require(ROOT_PATH.'send.php');
 	if(empty($supplierinfo) || empty($position)){
 		return;
 	}
@@ -4054,7 +4054,7 @@ function send_sms($supplierinfo='',$content='',$position=1){
 		    	//$content1 = str_replace(array('ordersn','shopname'),array($supplierinfo[0],$_CFG['shop_name']),$content);
 
 		    	foreach($phones as $phone){
-		    		sendSMS($phone,$content1);
+		    		sendSMS($phone,$content1); 
 		    	}
 		    }
 		}elseif ($position == 2){
@@ -4075,7 +4075,6 @@ function send_sms($supplierinfo='',$content='',$position=1){
 	foreach($supplier_ids as $val){
 		
 		$info = get_supplier_info($val);
-
 		if ($position == 1){
 			if ($info['sms_order_placed'] == '1' && $info['sms_shop_mobile'] != '')
 		    {
@@ -4120,7 +4119,9 @@ function get_supplier_info($suppid){
 }
 //推送到消息队列中 微信商城添加
 function pushUserMsg($ecuid,$msg=array(),$type=1){
-	$weixinconfig = $GLOBALS['db']->getRow ( "SELECT * FROM `weixin_config` WHERE `id` = 1" );
+	$weixinconfig = $GLOBALS['db']->getRow ( "SELECT * FROM `weixin_config` WHERE `id` 
+
+= 1" );
 
 	if($type == 1 && $weixinconfig['buynotice'] == 1){
 

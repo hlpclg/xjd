@@ -169,8 +169,7 @@ if (file_exists(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/' . basename(
 {
     include(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/' . basename(PHP_SELF));
 }
-/* var_dump(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/' . basename(PHP_SELF));die;
-print_r($_LANG);die; */
+
 if (!file_exists('../temp/caches'))
 {
     @mkdir('../temp/caches', 0777);

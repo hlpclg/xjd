@@ -351,12 +351,14 @@ elseif ($_REQUEST['act'] == 'main')
     //今日数据
     $today = array();
     //今日销售总额
-	$sql = 'SELECT  SUM(money_paid) AS sales FROM ' .$ecs->table('order_info'). ' WHERE `confirm_time` BETWEEN '.$today_start.' AND '.$today_end.'  AND supplier_id=0  '.order_query_sql('finished');
+	//$sql = 'SELECT  SUM(money_paid) AS sales FROM ' .$ecs->table('order_info'). ' WHERE `confirm_time` BETWEEN '.$today_start.' AND '.$today_end.'  AND supplier_id=0  '.order_query_sql('finished');
+	$sql = 'SELECT  SUM(money_paid) AS sales FROM ' .$ecs->table('order_info'). ' WHERE `confirm_time` BETWEEN '.$today_start.' AND '.$today_end. order_query_sql('finished');
     $today['money'] = $db->GetOne($sql);
     $today['formatted_money'] = price_format($today['money']);
     //今日订单数
     /* 代码修改_68ECSHOP_20150729_STAR */
-    $today['order'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('order_info'). ' WHERE `confirm_time` BETWEEN '.$today_start.' AND '.$today_end.' AND supplier_id=0');
+    //$today['order'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('order_info'). ' WHERE `confirm_time` BETWEEN '.$today_start.' AND '.$today_end.' AND supplier_id=0');
+    $today['order'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('order_info'). ' WHERE `confirm_time` BETWEEN '.$today_start.' AND '.$today_end);
    /* 代码修改_68ECSHOP_20150729_END */
 //今日注册会员
     $today['user'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('users'). ' WHERE `reg_time` BETWEEN '.$today_start.' AND '.$today_end);
@@ -498,35 +500,24 @@ elseif ($_REQUEST['act'] == 'main')
     //订单总数
     $order['total'] = $db->GetOne('SELECT COUNT(*) FROM '.$ecs->table('order_info'). ' WHERE supplier_id=0');
     //待发货订单
-    $order['await_ship']   = $db->GetOne('SELECT COUNT(*)'.
-    ' FROM ' .$ecs->table('order_info') .
-        // 代码修改   By  www.68ecshop.com Start
-//    " WHERE supplier_id=0  " . order_query_sql('await_ship'));
-    " WHERE supplier_id=0 AND extension_code != 'virtual_good' " . order_query_sql('await_ship'));
+    $order['await_ship']   = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('order_info') . " WHERE supplier_id=0 AND extension_code != 'virtual_good' " . order_query_sql('await_ship'));
     // 代码修改   By  www.68ecshop.com End
     $status['await_ship']  = CS_AWAIT_SHIP;
     //待支付订单
-    $order['await_pay']    = $db->GetOne('SELECT COUNT(*)'.
-    ' FROM ' .$ecs->table('order_info') .
-    // 代码修改   By  www.68ecshop.com Start
-//    " WHERE supplier_id=0  " . order_query_sql('await_pay'));
-    " WHERE supplier_id=0 AND extension_code != 'virtual_good' " . order_query_sql('await_pay'));
+    $order['await_pay']    = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('order_info') .  " WHERE supplier_id=0 AND extension_code != 'virtual_good' " . order_query_sql('await_pay'));
     // 代码修改   By  www.68ecshop.com End
     // 代码修改   By  www.68ecshop.com End
     $status['await_pay']   = CS_AWAIT_PAY;
     //待确认订单
-    $sql = 'SELECT COUNT(*) FROM ' .$ecs->table('order_info').
-    " WHERE supplier_id=0 " . order_query_sql('unconfirmed');
+    $sql = 'SELECT COUNT(*) FROM ' .$ecs->table('order_info')." WHERE supplier_id=0 " . order_query_sql('unconfirmed');
     $order['unconfirmed']  = $db->getOne($sql);
     $status['unconfirmed'] = OS_UNCONFIRMED;
     //部分发货的订单
-    $order['shipped_part']  = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('order_info').
-    " WHERE supplier_id=0 AND shipping_status=" .SS_SHIPPED_PART);
+    $order['shipped_part']  = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('order_info'). " WHERE supplier_id=0 AND shipping_status=" .SS_SHIPPED_PART);
     $status['shipped_part'] = OS_SHIPPED_PART;
     //退款申请
     // 代码修改   By  www.68ecshop.com Start
-    $sql = "SELECT COUNT(*) FROM " .$GLOBALS['ecs']->table('user_account'). " AS ua, ".
-        $GLOBALS['ecs']->table('users') . " AS u WHERE  ua.process_type = '1'  AND ua.is_paid = '0' ";
+    $sql = "SELECT COUNT(*) FROM " .$GLOBALS['ecs']->table('user_account'). " AS ua, ".   $GLOBALS['ecs']->table('users') . " AS u WHERE  ua.process_type = '1'  AND ua.is_paid = '0' ";
     //    $order['new_repay'] = $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('back_order') . ' WHERE status_back=5 AND back_type=4 AND supplier_id=0');
     $order['new_repay'] = $db->getOne($sql);
     // 代码修改   By  www.68ecshop.com End

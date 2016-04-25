@@ -42,8 +42,7 @@ if(isset($_REQUEST['act']) && $_REQUEST['act'] == 'act_tixian')
             'user_id'       => $_SESSION['user_id'],
             'status'        => 0,
         );
-	if($tixian['deposit_money'] <= 0)
-	{
+	if($tixian['deposit_money'] <= 0){
 		show_message('您输入的提现金额不正确！'); 
 	}
 	if($tixian['real_name'] == '' || $tixian['account_name'] == '' || $tixian['bank_account'] == '')
@@ -54,11 +53,16 @@ if(isset($_REQUEST['act']) && $_REQUEST['act'] == 'act_tixian')
 	{
 		show_message('手机号格式不正确！'); 
 	}
-	$user_money = get_user_money_by_user_id($_SESSION['user_id']); 
-	if($tixian['deposit_money'] > $user_money)
-	{
-		show_message('您的余额不足，请重新输入！');
+	if($tixian['deposit_money'] < $_CFG['min_amount']){
+		show_message('提现失败：最小提现额度为'.$_CFG['min_amount'].'！');
 	}
+	$user_money = get_user_money_by_user_id($_SESSION['user_id']); 
+	if(($tixian['deposit_money']+$_CFG['min_overage']) > $user_money){
+		show_message('提现失败：超出预留金额，最小预留金额为'.$_CFG['min_overage'].'！');
+	}
+	/* if($tixian['deposit_money'] > $user_money){
+		show_message('您的余额不足，请重新输入！');
+	} */
 	$GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('deposit'), $tixian, 'INSERT');
 	$error_no = $GLOBALS['db']->errno();
     if ($error_no > 0)

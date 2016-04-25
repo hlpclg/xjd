@@ -988,6 +988,8 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 		}
 	}
 	$cost_price = $c_price > 0 ? $c_price : 0;
+	$integral = !empty($_POST['integral']) ? $_POST['integral'] : 0;
+	if($integral > $cost_price)	sys_msg('积分购买金额应小于分成金额',1, array(), false);
     $promote_price = !empty($_POST['promote_price']) ? floatval($_POST['promote_price'] ) : 0;
     $is_promote = empty($promote_price) ? 0 : 1;
     $zhekou = ($promote_price == 0 ? 10.0 : (number_format(($promote_price/$shop_price),2))*10);

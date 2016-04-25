@@ -33,7 +33,7 @@ if($rs){
 				  $message['msgtype'] = $content['msgtype'];
 				  $message['text'] = array('content'=>$content['text']['content']);
 				  $ret = $weixin->sendCustomMessage($message);
-				  $db->query("UPDATE " . $GLOBALS['ecs']->table('weixin_corn') . " SET issend=2 where id ={$val['id']}");
+				  $db->query("UPDATE " . $GLOBALS['ecs']->table('weixin_corn') . " SET issend=1 where id ={$val['id']}");
 			 }
 		}
 		else
@@ -49,7 +49,7 @@ if($rs){
 			$ret = $weixin->sendCustomMessage($msg);
 			if(!$_GET['ajax']) var_dump($ret);
 		}
-		$db->query("UPDATE " . $GLOBALS['ecs']->table('weixin_corn') . " SET issend=2 where id ={$rs['id']}");
+		$db->query("UPDATE " . $GLOBALS['ecs']->table('weixin_corn') . " SET issend=1 where id ={$rs['id']}");
 	}
 	if($_GET['ajax'] == 1){
 		$result = array('error'=>0,'content'=>'');

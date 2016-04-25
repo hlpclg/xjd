@@ -2338,7 +2338,7 @@ elseif ($_REQUEST['step'] == 'done')
 	$order_integral = isset($_POST['integral']) ? $_POST['integral'] : array();
 	$order_bonus_id = isset($_POST['bonus']) ? $_POST['bonus'] : array();
 	$order_bonus_sn = isset($_POST['bonus_sn']) ? $_POST['bonus_sn'] : array();
-	$order_surplus = isset($_POST['surplus']) ? $_POST['surplus'] : 0;
+	$order_surplus = isset($_POST['surplus']) ? $_POST['surplus'] : 0;				// 使用余额
 
     //此订单拆分订单后的订单信息
     $order_info = array();
@@ -2437,58 +2437,45 @@ elseif ($_REQUEST['step'] == 'done')
 
 	    /* 检查积分余额是否合法 */
 	    $user_id = $_SESSION['user_id'];
-	    if ($user_id > 0)
-	    {
+	    if ($user_id > 0){
 	        $user_info = user_info($user_id);
-
 	        $order['surplus'] = min($order['surplus'], $user_info['user_money'] + $user_info['credit_line']);
-	        if ($order['surplus'] < 0)
-	        {
+	        if ($order['surplus'] < 0){
 	            $order['surplus'] = 0;
 	        }
-
 	        // 查询用户有多少积分
 	        $flow_points = flow_available_points();  // 该订单允许使用的积分
 	        $user_points = $user_info['pay_points']; // 用户的积分总数
-
 	        $order['integral'] = min($order['integral'], $user_points, $flow_points[$ckey]);
-	        if ($order['integral'] < 0)
-	        {
+	        if ($order['integral'] < 0){
 	            $order['integral'] = 0;
 	        }
 	    }
-	    else
-	    {
+	    else{
 	        $order['surplus']  = 0;
 	        $order['integral'] = 0;
 	    }
 
 	    /* 检查红包是否存在 */
-	    if ($order['bonus_id'] > 0)
-	    {
+	    if ($order['bonus_id'] > 0){
 	        $bonus = bonus_info($order['bonus_id']);
 	        //|| $bonus['min_goods_amount'] > cart_amount_new(array_keys($cart_goods),true, $flow_type)
-
-	        if (empty($bonus) || $bonus['user_id'] != $user_id || $bonus['order_id'] > 0 )
-	        {
+	        if (empty($bonus) || $bonus['user_id'] != $user_id || $bonus['order_id'] > 0 ){
 	            $order['bonus_id'] = 0;
 	        }else{
 
 	        }
 	    }
-	    elseif (isset($_POST['bonus_sn'][$ckey]))
-	    {
+	    elseif (isset($_POST['bonus_sn'][$ckey])){
 	        $bonus_sn = intval($_POST['bonus_sn'][$ckey]);
 	        $bonus = bonus_info(0, $bonus_sn);
 			$now = gmtime();
 	        //|| $bonus['min_goods_amount'] > cart_amount_new(array_keys($cart_goods),true, $flow_type)
-	        if (empty($bonus) || $bonus['user_id'] > 0 || $bonus['order_id'] > 0  || $now > $bonus['use_end_date'])
-	        {
-	        }
-	        else
-	        {
-	            if ($user_id > 0)
-	            {
+	        if (empty($bonus) || $bonus['user_id'] > 0 || $bonus['order_id'] > 0  || $now > $bonus['use_end_date']){
+	       
+			}
+	        else{
+	            if ($user_id > 0){
 	                $sql = "UPDATE " . $ecs->table('user_bonus') . " SET user_id = '$user_id' WHERE bonus_id = '$bonus[bonus_id]' LIMIT 1";
 					$db->query($sql);
 	            }

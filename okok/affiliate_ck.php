@@ -123,7 +123,7 @@ elseif ($_REQUEST['act'] == 'separate')
     $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
                     " LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id".
             " WHERE order_id = '$oid'");
-	if($separate_by==0)
+	/* if($separate_by==0)
 	{
 		$pid = $row['parent_id'];
 	}
@@ -133,14 +133,14 @@ elseif ($_REQUEST['act'] == 'separate')
 	}
 	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
 	$user_rank = $db->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users')." WHERE user_id  = '$pid'");
-	$recom_rank = $GLOBALS['_CFG']['recom_rank'];
+	$recom_rank = $GLOBALS['_CFG']['recom_rank']; */
 
     $order_sn = $row['order_sn'];
     if (empty($row['is_separate']))
     {
-        $affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
+         /* $affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
         $affiliate['config']['level_money_all'] = (float)$affiliate['config']['level_money_all'];
-        if($affiliate['config']['level_money_all']==100  )
+       if($affiliate['config']['level_money_all']==100  )
         {	
 	         
             for($i=0;$i<count($row1);$i++)
@@ -180,42 +180,42 @@ elseif ($_REQUEST['act'] == 'separate')
 	        $money = round($affiliate['config']['level_money_all'] * $row['goods_amount'],2);
 	        $integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));
 	        $point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
-        }
+        } */
+		$integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));
+		$point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
         if(empty($separate_by))
         {
             //推荐注册分成
             $num = count($affiliate['item']);
-            for ($i=0; $i < $num; $i++)
-            {
+            for ($i=0; $i < $num; $i++) {
                 $affiliate['item'][$i]['level_point'] = (float)$affiliate['item'][$i]['level_point'];
                 $affiliate['item'][$i]['level_money'] = (float)$affiliate['item'][$i]['level_money'];
-                if($affiliate['config']['level_money_all']==100 )
-                {
-               			$setmoney = $split_money;
-                    	//$setmoney=$money;
-				        if ($affiliate['item'][$i]['level_point'])
-                        {
-                            $affiliate['item'][$i]['level_point'] /= 100;
-                        }
+                if($affiliate['config']['level_money_all']==100 ){
+					$setmoney = $split_money;
+					//$setmoney=$money;
+					if ($affiliate['item'][$i]['level_point']){
+						$affiliate['item'][$i]['level_point'] /= 100;
+					}
                 }
-                else 
-                {
-	                if ($affiliate['item'][$i]['level_point'])
-	                {
+                else {
+	                if ($affiliate['item'][$i]['level_point']){
 	                    $affiliate['item'][$i]['level_point'] /= 100;
 	                }
-	                if ($affiliate['item'][$i]['level_money'])
-	                {
+	                if ($affiliate['item'][$i]['level_money']){
 	                    $affiliate['item'][$i]['level_money'] /= 100;
 	                }
 	                $setmoney = round($split_money * $affiliate['item'][$i]['level_money'], 2);
                 }
 		
                 $setpoint = round($point * $affiliate['item'][$i]['level_point'], 0);
+			echo "SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o" .
+                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id".
+                        " WHERE o.user_id = '$row[user_id]'";die;
                 $row = $db->getRow("SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o" .
                         " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id".
                         " WHERE o.user_id = '$row[user_id]'"
                     );
+			var_dump($row);die;
                 $up_uid = $row['user_id'];
                 if (empty($up_uid) || empty($row['user_name']))
                 {

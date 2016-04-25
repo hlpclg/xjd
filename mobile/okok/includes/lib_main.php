@@ -136,6 +136,7 @@ function set_admin_session($user_id, $username, $action_list, $last_time)
     $_SESSION['admin_name']  = $username;
     $_SESSION['action_list'] = $action_list;
     $_SESSION['last_check']  = $last_time; // 用于保存最后一次检查订单的时间
+	ini_set('session.gc_maxlifetime', 86400);
 }
 
 /**

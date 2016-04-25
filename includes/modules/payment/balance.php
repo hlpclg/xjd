@@ -44,11 +44,11 @@ if (isset($set_modules) && $set_modules == TRUE)
     /* 是否支持在线支付 */
     $modules[$i]['is_online']  = '1';
 
-    /* 作者 */
-    $modules[$i]['author']  = 'ECSHOP TEAM';
+	/* 作者 */
+    $modules[$i]['author']  = '';
 
     /* 网址 */
-    $modules[$i]['website'] = 'http://www.ecshop.com';
+    $modules[$i]['website'] = '';
 
     /* 版本号 */
     $modules[$i]['version'] = '1.0.0';

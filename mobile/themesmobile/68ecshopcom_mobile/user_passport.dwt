@@ -54,9 +54,9 @@
 									</label>
               </div>
               <div class="ng-link-area" >
-                <span style=" margin-right:5px; border-right:1px solid #eeeeee">
+                <!-- <span style=" margin-right:5px; border-right:1px solid #eeeeee">
                   <a href="register.php" >免费注册</a>
-                </span>
+                </span> -->
                  <span class="user_line"></span>
                    <span >
                   <a href="findPwd.php" >忘记密码？</a>

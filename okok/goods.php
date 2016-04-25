@@ -868,6 +868,10 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 
 	//$cost_price = !empty($_POST['cost_price']) ? $_POST['cost_price'] : 0;
 	$cost_price = $c_price > 0 ? $c_price : 0;
+	
+	$integral = !empty($_POST['integral']) ? $_POST['integral'] : 0;
+	if($integral > $cost_price)	sys_msg('积分购买金额应小于分成金额',1, array(), false);
+	
     $goods_name_style = $_POST['goods_name_color'] . '+' . $_POST['goods_name_style'];
 
     $catgory_id = empty($_POST['cat_id']) ? '' : intval($_POST['cat_id']);

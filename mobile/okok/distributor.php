@@ -272,6 +272,7 @@ elseif ($_REQUEST['act'] == 'update')
     $district = $_POST['district'];
     $address =  empty($_POST['address']) ? '' : trim($_POST['address']);
     $status = $_POST['status'];
+    $parent_id = $_POST['parent_id'];
 
     $users  =& init_users();
 
@@ -308,8 +309,14 @@ elseif ($_REQUEST['act'] == 'update')
             sys_msg($image->error_msg(), 1, array(), false);
         }
 	}
+	/* 2016-2-17 新增 */
+	if($parent_id){
+		$row = $db->GetOne("SELECT user_id FROM " . $ecs->table('users') . " WHERE user_id = ".$parent_id);
+		$now = $db->GetOne("SELECT user_id FROM " . $ecs->table('users') . " WHERE user_name = '".$username."'");
+		if(!$row || $row == $now)	$parent_id = 0;
+	}
 	
-	$sql = "update ".$ecs->table('users')." set `real_name`='$real_name',`card`='$card',`country`='$country',`province`='$province',`city`='$city',`district`='$district',`address`='$address',`status`='$status' where user_name = '".$username."'";
+	$sql = "update ".$ecs->table('users')." set `real_name`='$real_name',`card`='$card',`country`='$country',`province`='$province',`city`='$city',`district`='$district',`address`='$address',`status`='$status' ,`parent_id`='$parent_id' where user_name = '".$username."'";
 	$db->query($sql);
 	
 	if($face_card != '')

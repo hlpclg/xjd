@@ -153,7 +153,6 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
             $sql = 'UPDATE ' . $GLOBALS['ecs']->table('pay_log') .
                     " SET is_paid = '1' WHERE log_id = '$log_id'";
             $GLOBALS['db']->query($sql);
-
             /* 根据记录类型做相应处理 */
             if ($pay_log['order_type'] == PAY_ORDER)
             {
@@ -178,8 +177,7 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
 	                                " money_paid = order_amount," .
 	                                " order_amount = 0 ".
 	                       "WHERE order_id = '$order_id'";
-	                $GLOBALS['db']->query($sql);
-	
+	               $GLOBALS['db']->query($sql);
 	                /* 记录订单操作记录 */
 	                order_action($order_sn, OS_CONFIRMED, SS_UNSHIPPED, $pay_status, $note, $GLOBALS['_LANG']['buyer']);
 	
@@ -188,8 +186,7 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
 				   //付款给商家发短信
 				   send_sms($supplier,$_CFG['sms_order_payed_tpl'],2);
 				   //付款给客户发短信
-				   if($GLOBALS['_CFG']['sms_order_pay'] == 1)
-				   {
+				   if($GLOBALS['_CFG']['sms_order_pay'] == 1){
 					   $content = sprintf($GLOBALS['_CFG']['sms_order_pay_tpl'],$order_sn,$GLOBALS['_CFG']['sms_sign']);
 					   sendSMS($mobile,$content); 
 				   }
@@ -225,6 +222,7 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
             }
             elseif ($pay_log['order_type'] == PAY_SURPLUS)
             {
+				file_put_contents('aa2',1);
                 $sql = 'SELECT `id` FROM ' . $GLOBALS['ecs']->table('user_account') .  " WHERE `id` = '$pay_log[order_id]' AND `is_paid` = 1  LIMIT 1";
                 $res_id=$GLOBALS['db']->getOne($sql);
                 if(empty($res_id))

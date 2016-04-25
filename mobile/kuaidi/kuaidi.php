@@ -62,6 +62,12 @@ class Express {
 				break;		
 			case "DHL":
 				$postcom = 'dhl';
+				break;	
+			case "全峰快递":
+				$postcom = 'quanfengkuaidi';
+				break;	
+			case "优速快递":
+				$postcom = 'youshuwuliu';
 				break;		
 			default:
 				$postcom = '';
@@ -92,8 +98,17 @@ class Express {
         }
     }
     public function getorder($name,$order){
-        $keywords = $this->getshipping($name);
-        $result = $this->getcontent("http://www.kuaidi100.com/query?type={$keywords}&postid={$order}");
+		$keywords = $this->getshipping($name);
+		$result = $this->getcontent("http://api.kuaidi100.com/api?id=b0c887c349f3d126&com={$keywords}&nu={$order}");
+		
+		/* if(in_array($keywords,array('quanfengkuaidi','youshuwuliu'))){
+			$result = $this->getcontent("http://api.kuaidi100.com/api?id=b0c887c349f3d126&com={$keywords}&nu={$order}");
+		}else{
+			$result = $this->getcontent("http://www.kuaidi100.com/query?type={$keywords}&postid={$order}");
+		} */
+		
+        //$result = $this->getcontent("http://www.kuaidi100.com/query?type={$keywords}&postid={$order}");
+        
         $result = json_decode($result);
         $data = $this->json_array($result);
         return $data;

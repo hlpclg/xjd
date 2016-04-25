@@ -1213,7 +1213,7 @@ function create_shop_settiongs()
 				(118, 1, 'shop_logo', 'file', '', '../themes/".'{$template}'."/images/', '', 1, ".$_SESSION['supplier_id']."),
 				(119, 1, 'licensed', 'hidden', '0,1', '', '1', 1, ".$_SESSION['supplier_id']."),
 				(120, 1, 'user_notice', 'hidden', '', '', '用户中心公告！', 1, ".$_SESSION['supplier_id']."),
-				(121, 1, 'shop_notice', 'textarea', '', '', '商家店铺介绍:欢迎光临手机网,我们的宗旨：诚信经营、服务客户！\r\n<MARQUEE onmouseover=this.stop() onmouseout=this.start() \r\nscrollAmount=3><U><FONT color=red>\r\n<P>咨询电话010-10124444  010-21252454 8465544</P></FONT></U></MARQUEE>', 1, ".$_SESSION['supplier_id']."),
+				(121, 1, 'shop_notice', 'textarea', '', '', '商家店铺介绍:欢迎光临惠农谷商城,我们的宗旨：诚信经营、服务客户！\r\n<MARQUEE onmouseover=this.stop() onmouseout=this.start() \r\nscrollAmount=3><U><FONT color=red>\r\n<P>咨询电话4000303392</P></FONT></U></MARQUEE>', 1, ".$_SESSION['supplier_id']."),
 				(122, 1, 'shop_reg_closed', 'hidden', '1,0', '', '0', 1, ".$_SESSION['supplier_id']."),
 				(123, 1, 'shop_index_num', 'textarea', '', '', '8\r\n6\r\n4', 1, ".$_SESSION['supplier_id']."),
 				(124, 1, 'shop_search_price', 'textarea', '', '', '0-1000元\r\n1000-2000元\r\n2000-4000元', 1, ".$_SESSION['supplier_id']."),

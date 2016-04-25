@@ -626,10 +626,9 @@ function order_fee($order, $goods, $consignee)
                     'pay_fee'          => 0,
                     'tax'              => 0);
     $weight = 0;
-
+	$cost_price = 0;
     /* 商品总价 */
-    foreach ($goods AS $val)
-    {
+    foreach ($goods AS $val){
         /* 统计实体商品的个数 */
         if ($val['is_real'])
         {
@@ -638,8 +637,8 @@ function order_fee($order, $goods, $consignee)
 
         $total['goods_price']  += $val['goods_price'] * $val['goods_number'];
         $total['market_price'] += $val['market_price'] * $val['goods_number'];
+        $cost_price += $val['cost_price'] * $val['goods_number'];
     }
-
     $total['saving']    = $total['market_price'] - $total['goods_price'];
     $total['save_rate'] = $total['market_price'] ? round($total['saving'] * 100 / $total['market_price']) . '%' : 0;
 
@@ -829,7 +828,7 @@ function order_fee($order, $goods, $consignee)
     // 红包和积分最多能支付的金额为商品总额
     //$max_amount = $total['goods_price'] == 0 ? $total['goods_price'] : $total['goods_price'] - $bonus_amount;
 	$max_amount = $total['goods_price'] == 0 ? $total['goods_price'] : ($total['goods_price'] - $bonus_amount) > 0 ? $total['goods_price'] - $bonus_amount : 0 ;
-    
+
 	/* 计算订单总额 */
 	if ($order['extension_code'] == GROUP_BUY_CODE && $group_buy['deposit'] > 0)
     {
@@ -845,8 +844,8 @@ function order_fee($order, $goods, $consignee)
             $total['shipping_fee'] + $total['shipping_insure'] + $total['cod_fee'];
 
         // 减去红包金额
-		
-        $use_bonus        = min($total['bonus'], $max_amount); // 实际减去的红包金额
+        $use_bonus        = min($total['bonus'],$cost_price, $max_amount); // 实际减去的红包金额
+		$cost_price = $cost_price >= $use_bonus ? $cost_price-$use_bonus : 0;	//	新的分销金额 = 分销金额 - 红包金额
         if(isset($total['bonus_kill']))
         {
             $use_bonus_kill   = min($total['bonus_kill'], $max_amount);
@@ -888,9 +887,8 @@ function order_fee($order, $goods, $consignee)
     if ($total['amount'] > 0 && $max_amount > 0 && $order['integral'] > 0)
     {
         $integral_money = value_of_integral($order['integral']);
-
         // 使用积分支付
-        $use_integral            = min($total['amount'], $max_amount, $integral_money); // 实际使用积分支付的金额
+        $use_integral            = min($total['amount'], $cost_price,$max_amount, $integral_money); // 实际使用积分支付的金额
         $total['amount']        -= $use_integral;
         $total['integral_money'] = $use_integral;
         $order['integral']       = integral_of_value($use_integral);
@@ -977,9 +975,9 @@ function update_order($order_id, $order)
 function get_order_sn()
 {
     /* 选择一个随机的方案 */
+	usleep(200);
     mt_srand((double) microtime() * 1000000);
-
-    return date('YmdHis') . str_shuffle(str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT));
+    return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
 }
 
 /**
@@ -998,7 +996,7 @@ function cart_goods($type = CART_GENERAL_GOODS)
 	}
 /* 代码增加_end  By www.68ecshop.com */
 $sql_where = $_SESSION['user_id']>0 ? "c.user_id='". $_SESSION['user_id'] ."' " : "c.session_id = '" . SESS_ID . "' AND c.user_id=0 ";
-    $sql = "SELECT c.rec_id, c.user_id, c.goods_id, c.goods_name, c.goods_sn, c.goods_number, c.market_price, " .
+    $sql = "SELECT c.rec_id, c.user_id, c.goods_id, c.goods_name, c.goods_sn, c.goods_number, c.market_price,c.cost_price, " .
 			" c.goods_price, c.goods_attr, c.is_real, c.extension_code, c.parent_id, c.is_gift, c.is_shipping, " .
 			" package_attr_id, c.goods_price * c.goods_number AS subtotal, " .
 			" IF(ga.act_id, ga.supplier_id, g.supplier_id) as supplier_id, " .

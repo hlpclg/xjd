@@ -121,8 +121,7 @@ class core_lib_wechat
 	 * For weixin server validation 
 	 * @param bool $return 是否返回
 	 */
-	public function valid($return=false)
-    {
+	public function valid($return=false){
         $echoStr = isset($_GET["echostr"]) ? $_GET["echostr"]: '';
         if ($return) {
         		if ($echoStr) {
@@ -134,15 +133,17 @@ class core_lib_wechat
         			return $this->checkSignature();
         } else {
 	        	if ($echoStr) {
-	        		if ($this->checkSignature())
-	        			die($echoStr);
-	        		else 
-	        			die('no access');
+	        		if ($this->checkSignature()){
+						die($echoStr);
+					}else{
+						die('no access');
+					}
 	        	}  else {
-	        		if ($this->checkSignature())
-	        			return true;
-	        		else
-	        			die('no access');
+	        		if ($this->checkSignature()){
+						return true;
+					}else{
+						die('no access');
+					}	
 	        	}
         }
         return false;

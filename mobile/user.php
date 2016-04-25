@@ -341,14 +341,14 @@ function action_default()
 			$smarty->assign('next_rank_name', sprintf($_LANG['next_level'], $rank['next_rank'], $rank['next_rank_name']));
 		}
 	}
-	$sql = "select headimgurl from " . $GLOBALS['ecs']->table('weixin_user') . " where ecuid = '$user_id'";
-	$headimgurl = $GLOBALS['db']->getOne($sql);
-	$smarty->assign('headimgurl', $headimgurl);
+	$sql = "select headimgurl,nickname,isfollow,createymd from " . $GLOBALS['ecs']->table('weixin_user') . " where ecuid = '$user_id'";
+	$wx_info = $GLOBALS['db']->getRow($sql);
+	$smarty->assign('headimgurl', $wx_info['headimgurl']);
 	
 	$recomm = $db->getOne("SELECT is_recomm FROM " . $GLOBALS['ecs']->table('user_rank') . " r" . " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON r.rank_id = u.user_rank" . " WHERE u.user_id = '$user_id'");
 	
 	$smarty->assign('recomm', $recomm);
-	
+	$smarty->assign('wx_info', $wx_info);
 	$smarty->assign('info', get_user_default($user_id));
 	$smarty->assign('user_notice', $_CFG['user_notice']);
 	$smarty->assign('prompt', get_user_prompt($user_id));
@@ -1476,9 +1476,6 @@ function action_send_email_code ()
 	$GLOBALS['smarty']->assign('send_date', date($GLOBALS['_CFG']['date_format']));
 	
 	$content = $GLOBALS['smarty']->fetch('str:' . $template['template_content']);
-file_put_contents('a_code',$email_code);	
-$_SESSION[VT_EMAIL_VALIDATE] = $email;
-save_validate_record($email, $email_code, VT_EMAIL_VALIDATE, time(), time() + 30 * 60);
 	/* 发送激活验证邮件 */
 	$result = send_mail($email, $email, $template['template_subject'], $content, $template['is_html']);
 	if($result)
@@ -4439,9 +4436,14 @@ function action_affirm_received()
 	include_once (ROOT_PATH . 'includes/lib_transaction.php');
 	
 	$order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
-	
-	if(affirm_received($order_id, $user_id))
-	{
+	if($_CFG['auto_divided']){
+		affiliate_ck($order_id);
+	}
+	if(affirm_received($order_id, $user_id)){
+		//	自动分成
+		if($_CFG['auto_divided']){
+			affiliate_ck($order_id);
+		}
 		ecs_header("Location: user.php?act=order_list\n");
 		exit();
 	}
@@ -5390,6 +5392,172 @@ function action_group_buy_detail()
 	
 	// 待议
 	$smarty->display('user_transaction.dwt');
+}
+
+function affiliate_ck($oid){
+	if(!$oid) return false;
+
+    include_once(ROOT_PATH . 'includes/lib_order.php');
+    $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
+    empty($affiliate) && $affiliate = array();
+    $separate_by = $affiliate['config']['separate_by'];
+	//$_LANG = $GLOBALS['_LANG'];
+	$db = $GLOBALS['db'];
+	//	获取订单分成金额
+	$split_money = $GLOBALS['db']->getOne("SELECT sum(cost_price*goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id = ".$oid);
+	$split_money = $split_money > 0 ? $split_money : 0;
+	//	获取推荐人
+    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o  LEFT JOIN " . $GLOBALS['ecs']->table('users') ." u ON o.user_id = u.user_id WHERE order_id = ".$oid);
+	if($separate_by==0){
+		$pid = $row['parent_id'];
+	}
+	else{
+		$pid = $db->getOne("SELECT parent_id FROM " . $GLOBALS['ecs']->table('order_info')." WHERE order_id = ".$oid);
+	}
+	//	获取订单所有商品
+	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
+	//	获取推荐人用户积分
+	$user_rank = $db->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users')." WHERE user_id  = ".$pid);
+	$recom_rank = $GLOBALS['_CFG']['recom_rank'];
+    $order_sn = $row['order_sn'];
+	//	订单没有分成去分成
+    if (empty($row['is_separate'])){
+        $affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
+        $affiliate['config']['level_money_all'] = (float)$affiliate['config']['level_money_all'];
+        if($affiliate['config']['level_money_all']==100){
+            for($i=0;$i<count($row1);$i++){		  
+        	  	if($row1[$i]['promote_price']==$row1[$i]['cost_price'] || $row1[$i]['cost_price']==0 || $recom_rank > $user_rank){
+        	  		$all_goods_price = 0;
+        	  		$all_cost_price  = 0;
+        	  	}
+        	  	else{
+					$all_goods_price  = $row1[$i]['goods_price'] * $row1[$i]['goods_number'];	//	商品总金额
+					$all_cost_price   = $row1[$i]['cost_price']  * $row1[$i]['goods_number'];	//	商品分成金额
+        	    }
+				//$money +=round($all_goods_price - $all_cost_price,2);
+        	}
+        	if ($affiliate['config']['level_point_all']) {
+				$affiliate['config']['level_point_all'] /= 100;
+            }
+        	$integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));	//	取得某订单应该赠送的积分数
+        	$point  = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);		//	取得某订单应该赠送的积分分成总额
+        }
+        else{ 
+	        if ($affiliate['config']['level_point_all']){
+	            $affiliate['config']['level_point_all'] /= 100;
+	        }
+	        if ($affiliate['config']['level_money_all']){
+	            $affiliate['config']['level_money_all'] /= 100;
+	        }	
+	        //$money = round($affiliate['config']['level_money_all'] * $row['goods_amount'],2);
+	        $integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));	//	取得某订单应该赠送的积分数
+	        $point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);	//	取得某订单应该赠送的积分分成总额
+        }
+	
+		//推荐注册分成
+        if(empty($separate_by)){
+            $num = count($affiliate['item']);
+            for ($i=0; $i < $num; $i++){
+                $affiliate['item'][$i]['level_point'] = (float)$affiliate['item'][$i]['level_point'];
+                $affiliate['item'][$i]['level_money'] = (float)$affiliate['item'][$i]['level_money'];
+                if($affiliate['config']['level_money_all']==100 ){
+               			$setmoney = $split_money;
+                    	//$setmoney=$money;
+				        if ($affiliate['item'][$i]['level_point']){
+                            $affiliate['item'][$i]['level_point'] /= 100;
+                        }
+                }
+                else{
+	                if ($affiliate['item'][$i]['level_point']){
+	                    $affiliate['item'][$i]['level_point'] /= 100;
+	                }
+	                if ($affiliate['item'][$i]['level_money']){
+	                    $affiliate['item'][$i]['level_money'] /= 100;
+	                }
+	                $setmoney = round($split_money * $affiliate['item'][$i]['level_money'], 2);
+                }
+                $setpoint = round($point * $affiliate['item'][$i]['level_point'], 0);
+                $row = $db->getRow("SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id WHERE o.user_id = '$row[user_id]'");
+                $up_uid = $row['user_id'];
+                if (empty($up_uid) || empty($row['user_name'])){
+                    break;
+                }
+                else{
+                    $info = sprintf($_LANG['separate_info'], $order_sn, $setmoney, $setpoint);
+					push_user_msg($up_uid,$order_sn,$setmoney);
+                    log_account_change($up_uid, $setmoney, 0, $setpoint, 0, $info);
+                    write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
+					//插入到分成记录表
+					if($setmoney > 0){
+						$GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('distrib_sort') . "(`money`,`user_id`,`order_id`) values('" . $setmoney . "','" . $up_uid . "','" . $oid . "')");
+					}
+                }
+            }
+        }
+		//推荐订单分成
+        else{
+            $row = $db->getRow("SELECT o.parent_id, u.user_name FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
+                    " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id".
+                    " WHERE o.order_id = '$oid'"
+                );
+            $up_uid = $row['parent_id'];
+            if(!empty($up_uid) && $up_uid > 0){
+                $info = sprintf($_LANG['separate_info'], $order_sn, $money, $point);
+				push_user_msg($up_uid,$order_sn,$money);
+                log_account_change($up_uid, $money, 0, $point, 0, $info);
+                write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
+				if($money > 0){
+					$GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('distrib_sort') . "(`money`,`user_id`,`order_id`) values('" . $money . "','" . $up_uid . "','" . $oid . "')");
+				}
+            }
+            else{
+				return '';
+                //$links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
+                //sys_msg($_LANG['edit_fail'], 1 ,$links);
+            }
+        }
+		
+        $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') . " SET is_separate = 1 WHERE order_id = '$oid'";
+		$db->query($sql);
+    }
+	
+    //$links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
+	$_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : "/mobile/";
+    $autoUrl = str_replace($_SERVER['REQUEST_URI'],"",$GLOBALS['ecs']->url());
+    $a = @file_get_contents($autoUrl."/weixin/auto_do.php?type=1&is_affiliate=1");
+    //sys_msg($_LANG['edit_ok'], 0 ,$links);
+
+}
+
+function write_affiliate_log($oid, $uid, $username, $money, $point, $separate_by){
+	if($oid){
+		$time = gmtime();
+		$sql = "INSERT INTO " . $GLOBALS['ecs']->table('affiliate_log') . "( order_id, user_id, user_name, time, money, point, separate_type) VALUES ( '$oid', '$uid', '$username', '$time', '$money', '$point', $separate_by)";
+        $GLOBALS['db']->query($sql);
+    }
+}
+
+//分成后，推送到各个上级分销商微信
+function push_user_msg($ecuid,$order_sn,$split_money){
+	if(!$ecuid) return false;
+	$type = 1;
+	$text = "订单".$order_sn."分成，您得到的分成金额为".$split_money;
+	$user = $GLOBALS['db']->getRow("select * from " . $GLOBALS['ecs']->table('weixin_user') . " where ecuid='{$ecuid}'");
+	if($user && $user['fake_id']){
+		$content = array(
+			'touser'=>$user['fake_id'],
+			'msgtype'=>'text',
+			'text'=>array('content'=>$text)
+		);
+		$content = serialize($content);
+		$sendtime = $sendtime ? $sendtime : time();
+		$createtime = time();
+		$sql = "insert into ".$GLOBALS['ecs']->table('weixin_corn')." (`ecuid`,`content`,`createtime`,`sendtime`,`issend`,`sendtype`) value ({$ecuid},'{$content}','{$createtime}','{$sendtime}','0',{$type})";
+		$GLOBALS['db']->query($sql);
+		return true;
+	}else{
+		return false;
+	}
 }
 
 // 用户推荐页面
