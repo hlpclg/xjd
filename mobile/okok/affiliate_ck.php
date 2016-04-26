@@ -130,17 +130,17 @@ elseif ($_REQUEST['act'] == 'separate')
 	//获取订单分成金额
 	$split_money = get_split_money_by_orderid($oid);
 
-    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
+    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
                     " LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id".
             " WHERE order_id = '$oid'");
-	if($separate_by==0)
-	{
+	if($separate_by==0){
 		$pid = $row['parent_id'];
 	}
-	else
-	{
+	else{
 		$pid = $db->getOne("SELECT parent_id FROM " . $GLOBALS['ecs']->table('order_info')." WHERE order_id = '$oid'");
 	}
+	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
+	$split_money -= $discount_price;	//	实际分成金额
 	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
 	$user_rank = $db->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users')." WHERE user_id  = '$pid'");
 	$recom_rank = $GLOBALS['_CFG']['recom_rank'];

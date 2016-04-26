@@ -330,14 +330,16 @@ function rebate_list($act='')
 		$endtime = $row['rebate_paytime_end'];//+$GLOBALS['_CFG']['tuihuan_days_qianshou']*3600*24;
 		$row['rebate_paytime_end'] = local_date('Y.m.d', $endtime);
 		//$row['all_money'] = $GLOBALS['db']->getOne("select sum(money_paid + surplus) from ". $GLOBALS['ecs']->table('order_info') ." where rebate_id=". $row['rebate_id'] ." and rebate_ispay=2");
-		$row['all_money'] = $GLOBALS['db']->getOne("select sum(" . order_amount_field() . ") from ". $GLOBALS['ecs']->table('order_info') ." where rebate_id=". $row['rebate_id'] ." and rebate_ispay=2");
-		
+		$info = $GLOBALS['db']->getRow("select sum(" . order_amount_field() . ") as all_money,(bonus+integral_money) as discount_pirce from ". $GLOBALS['ecs']->table('order_info') ." where rebate_id=". $row['rebate_id'] ." and rebate_ispay=2");
+
+		$row['all_money'] = $info['all_money'];
+		$discount_pirce = price_format($info['discount_pirce']);
 		$order_id = $GLOBALS['db']->getOne("select group_concat(order_id) as order_id from ". $GLOBALS['ecs']->table('order_info') ." where rebate_id=". $row['rebate_id'] ." and rebate_ispay=2");		// 获取已返现订单	
 		if($order_id) $all_cost_price = $GLOBALS['db']->getOne("select sum(cost_price*goods_number) as all_cost_price from ".$GLOBALS['ecs']->table('order_goods')." where order_id in (".$order_id.")");	// 查询订单所有分成金额的和
 
 		$row['all_money_formated'] = price_format($row['all_money']);
 		//$row['rebate_money'] = round(($row['all_money'] * $row['supplier_rebate'])/100, 2);
-		$row['rebate_money'] = $all_cost_price;
+		$row['rebate_money'] = price_format($all_cost_price-$discount_pirce);
 		$row['rebate_money_formated'] =  price_format($row['rebate_money']);
 		$row['pay_money'] = $row['all_money'] - $row['rebate_money'];
 		$row['pay_money_formated'] = price_format($row['pay_money']);

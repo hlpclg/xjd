@@ -48,17 +48,19 @@ if ($_REQUEST['act']== 'view')
 				//获取退货订单中相关订单
 				$back_and = "and order_id not in(".implode(',',$back_order_id).")";
 			}
-			$query = $db->query("select (" . order_amount_field() . ") AS total_fee,order_id,pay_id from ".$ecs->table('order_info')." where rebate_id=".$id." $back_and and rebate_ispay=2");
+			$query = $db->query("select (" . order_amount_field() . ") AS total_fee,order_id,pay_id,(bonus+integral_money) as discount_pirce from ".$ecs->table('order_info')." where rebate_id=".$id." $back_and and rebate_ispay=2");
 			$online = $onout = $online_cpirce = $onout_cprice = 0;
 			while($row = $db->fetchRow($query)){
 				if($row['pay_id'] == $pay_id){
 					//货到付款
 					$onout += $row['total_fee'];
 					$onout_cprice += $GLOBALS['db']->getOne("select sum(cost_price*goods_number) as all_cost_price from ".$GLOBALS['ecs']->table('order_goods')." where order_id in (".$row['order_id'].")");
+					$onout_cprice -= $row['discount_pirce'];
 				}else{
 					//在线支付
 					$online += $row['total_fee'];
 					$online_cpirce += $GLOBALS['db']->getOne("select sum(cost_price*goods_number) as all_cost_price from ".$GLOBALS['ecs']->table('order_goods')." where order_id in (".$row['order_id'].")");
+					$online_cpirce -= $row['discount_pirce'];
 				}
 			}
 			$money_info['online']['allmoney'] = price_format($online);
@@ -292,7 +294,7 @@ function getOkOrder(){
 		//记录
 		$sql = "select order_id, order_sn, add_time, order_status, shipping_status, order_amount, money_paid,goods_amount,".
 				"pay_status, consignee, address, email, tel, extension_code, extension_id, shipping_time, " .
-				"(" . order_amount_field() . ") AS total_fee " .
+				"(" . order_amount_field() . ") AS total_fee,(bonus+integral_money) as discount_pirce " .
 			"from ".$ecs->table('order_info')." where ".$and." LIMIT " . ($filter['page'] - 1) * $filter['page_size'] . ",$filter[page_size]";
 		//echo $sql;die;
 		set_filter($filter, $sql);
@@ -307,7 +309,7 @@ function getOkOrder(){
 	while($row = $db->fetchRow($query)){
 		$result = $db->query("select sum(cost_price*goods_number) as sum_c_price from ".$ecs->table('order_goods')." where order_id = ".$row['order_id']);	// 查询订单所有分成金额的和
 		$result = $db->fetchRow($result);
-		$cost_price = $result['sum_c_price'];
+		$cost_price = $result['sum_c_price']-price_format($row['discount_pirce']);
 		$is_order = $is_shipping = $is_pay = 0;
 		$row['formated_order_amount'] = price_format($row['order_amount']);
         $row['formated_money_paid'] = price_format($row['money_paid']);
@@ -316,7 +318,6 @@ function getOkOrder(){
         $row['formated_total_fee'] = price_format($row['total_fee']);
         $row['short_order_time'] = local_date('Y-m-d H:i', $row['add_time']);
         $row['is_rebeat'] = $row['datas'] = 0;
-	//var_dump($row);die;
 		//订单状态
         if($row['order_status'] == OS_CONFIRMED || $row['order_status'] == OS_SPLITED){
         	$is_order = 1;

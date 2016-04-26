@@ -2504,7 +2504,6 @@ elseif ($_REQUEST['step'] == 'done')
 
 	    /* 订单中的总额 */
 	    $total = order_fee($order, $cart_goods, $consignee);
-
 		unset($order['shipping_pay'][$ckey]);// 去掉这条信息以免影响下订单操作
 
 	    $order['bonus']        = $total['bonus'];

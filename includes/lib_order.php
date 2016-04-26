@@ -591,22 +591,16 @@ function order_weight_price($order_id)
  * @param   bool    $is_gb_deposit  是否团购保证金（如果是，应付款金额只计算商品总额和支付费用，可以获得的积分取 $gift_integral）
  * @return  array
  */
-function order_fee($order, $goods, $consignee)
-{
+function order_fee($order, $goods, $consignee){
     /* 初始化订单的扩展code */
-    if (!isset($order['extension_code']))
-    {
+    if (!isset($order['extension_code'])){
         $order['extension_code'] = '';
     }
-
-    if ($order['extension_code'] == 'group_buy')
-    {
+    if ($order['extension_code'] == 'group_buy'){
         $group_buy = group_buy_info($order['extension_id']);
     }
-    
     /* 预售活动 */
-    if ($order['extension_code'] == PRE_SALE_CODE)
-    {
+    if ($order['extension_code'] == PRE_SALE_CODE){
     	$pre_sale = pre_sale_info($order['extension_id']);
     }
 
@@ -626,94 +620,73 @@ function order_fee($order, $goods, $consignee)
                     'pay_fee'          => 0,
                     'tax'              => 0);
     $weight = 0;
-	$cost_price = 0;
     /* 商品总价 */
     foreach ($goods AS $val){
         /* 统计实体商品的个数 */
-        if ($val['is_real'])
-        {
+        if ($val['is_real']){
             $total['real_goods_count']++;
         }
-
         $total['goods_price']  += $val['goods_price'] * $val['goods_number'];
         $total['market_price'] += $val['market_price'] * $val['goods_number'];
-        $cost_price += $val['cost_price'] * $val['goods_number'];
     }
     $total['saving']    = $total['market_price'] - $total['goods_price'];
     $total['save_rate'] = $total['market_price'] ? round($total['saving'] * 100 / $total['market_price']) . '%' : 0;
-
     $total['goods_price_formated']  = price_format($total['goods_price'], false);
     $total['market_price_formated'] = price_format($total['market_price'], false);
     $total['saving_formated']       = price_format($total['saving'], false);
 
     /* 折扣 */
-    if ($order['extension_code'] != GROUP_BUY_CODE && $order['extension_code'] != PRE_SALE_CODE)
-    {
+    if ($order['extension_code'] != GROUP_BUY_CODE && $order['extension_code'] != PRE_SALE_CODE){
         $discount = compute_discount(isset($order['supplier_id']) ? $order['supplier_id'] : -1);
         $total['discount'] = $discount['discount'];
-        if ($total['discount'] > $total['goods_price'])
-        {
+        if ($total['discount'] > $total['goods_price']){
             $total['discount'] = $total['goods_price'];
         }
     }
     $total['discount_formated'] = price_format($total['discount'], false);
 
     /* 税额 */
-    if (!empty($order['need_inv']) && $order['inv_type'] != '')
-    {
+    if (!empty($order['need_inv']) && $order['inv_type'] != ''){
         /* 查税率 */
         $rate = 0;
-        foreach ($GLOBALS['_CFG']['invoice_type']['type'] as $key => $type)
-        {
-            if ($type == $order['inv_type'])
-            {
+        foreach ($GLOBALS['_CFG']['invoice_type']['type'] as $key => $type){
+            if ($type == $order['inv_type']){
                 $rate = floatval($GLOBALS['_CFG']['invoice_type']['rate'][$key]) / 100;
                 break;
             }
         }
-        if ($rate > 0)
-        {
+        if ($rate > 0){
             $total['tax'] = $rate * $total['goods_price'];
         }
     }
     $total['tax_formated'] = price_format($total['tax'], false);
 
     /* 包装费用 */
-    if (!empty($order['pack_id']))
-    {
+    if (!empty($order['pack_id'])){
         $total['pack_fee']      = pack_fee($order['pack_id'], $total['goods_price']);
     }
     $total['pack_fee_formated'] = price_format($total['pack_fee'], false);
 
     /* 贺卡费用 */
-    if (!empty($order['card_id']))
-    {
+    if (!empty($order['card_id'])){
         $total['card_fee']      = card_fee($order['card_id'], $total['goods_price']);
     }
     $total['card_fee_formated'] = price_format($total['card_fee'], false);
 
     /* 红包 */
     $total['bonus'] = 0;
-	
-    if (!empty($order['bonus_id']))
-    {
+    if (!empty($order['bonus_id'])){
         $bonus          = bonus_info($order['bonus_id']);
         $total['bonus'] = $bonus['type_money'];
     }
-    
-
     /* 线下红包 */
-     if (!empty($order['bonus_sn']))
-    {
+     if (!empty($order['bonus_sn'])){
         $bonus          = bonus_info(0,$order['bonus_sn']);
         $total['bonus'] += $bonus['type_money'];
         //$total['bonus_kill'] = $order['bonus_kill'];
         //$total['bonus_kill_formated'] = price_format($total['bonus_kill'], false);
     }
     $total['bonus_formated'] = price_format($total['bonus'], false);
-
-
-
     /* 配送费用 */
     $shipping_cod_fee = NULL;
     
@@ -769,37 +742,27 @@ function order_fee($order, $goods, $consignee)
     $total['shipping_insure_formated'] = price_format($total['shipping_insure'], false);*/
 
 	/* 代码增加_start  By  www.68ecshop.com */	
+	$supplier_cost_price = array();
 	if (count($order['shipping_pay']) > 0 && $total['real_goods_count'] > 0){
-
-		
-
-		foreach ($goods AS $val)
-		{
+		foreach ($goods AS $val){
 			$sql_supp = "select g.supplier_id, IF(g.supplier_id='0', '本网站', s.supplier_name) AS supplier_name2 from ".$GLOBALS['ecs']->table('goods').
 								  " AS g left join ".$GLOBALS['ecs']->table('supplier')." AS s on g.supplier_id=s.supplier_id where g.goods_id='". $val['goods_id'] ."' ";
 			$row_supp = $GLOBALS['db']->getRow($sql_supp);
 			$row_supp['supplier_id'] = $row_supp['supplier_id'] ? intval($row_supp['supplier_id']) :0;
-
 			$region['country']  = $consignee['country'];
 			$region['province'] = $consignee['province'];
 			$region['city']     = $consignee['city'];
 			$region['district'] = $consignee['district'];
 			$shipping_info = shipping_area_info($order['shipping_pay'][$row_supp['supplier_id']], $region);
-
 			$total['supplier_shipping'][$row_supp['supplier_id']]['supplier_name'] =$row_supp['supplier_name2'];
 			$total['supplier_shipping'][$row_supp['supplier_id']]['goods_number'] += $val['goods_number'];
-
 			$total['supplier_goodsnumber'][$row_supp['supplier_id']] += $val['goods_number'];
-
 			$total['goods_price_supplier'][$row_supp['supplier_id']]  += $val['goods_price'] * $val['goods_number'];
-
-			if ($order['extension_code'] == 'group_buy')
-			{
-					$weight_price2 = cart_weight_price2(CART_GROUP_BUY_GOODS, $row_supp['supplier_id']);
-			}
-			else
-			{
-					$weight_price2 = cart_weight_price2(CART_GENERAL_GOODS, $row_supp['supplier_id']);
+			$supplier_cost_price[$row_supp['supplier_id']] += $val['cost_price'] * $val['goods_number'];
+			if ($order['extension_code'] == 'group_buy'){
+				$weight_price2 = cart_weight_price2(CART_GROUP_BUY_GOODS, $row_supp['supplier_id']);
+			}else{
+				$weight_price2 = cart_weight_price2(CART_GENERAL_GOODS, $row_supp['supplier_id']);
 			}
 
 			// 查看购物车中是否全为免运费商品，若是则把运费赋为零
@@ -810,17 +773,31 @@ function order_fee($order, $goods, $consignee)
 		   $total['supplier_shipping'][$row_supp['supplier_id']]['shipping_fee'] = ($shipping_count_supp == 0 AND $weight_price2['free_shipping'] == 1) ?0 :  shipping_fee($shipping_info['shipping_code'],$shipping_info['configure'], $weight_price2['weight'], $total['goods_price_supplier'][$row_supp['supplier_id']], $weight_price2['number']);
 		   $total['supplier_shipping'][$row_supp['supplier_id']]['formated_shipping_fee'] = price_format($total['supplier_shipping'][$row_supp['supplier_id']]['shipping_fee'], false);
 		}
-	
+		
 		krsort($total['supplier_shipping']);
 		
 		$total['shipping_fee']    = 0;
-		foreach($total['supplier_shipping'] AS $supp_shipping)
-		{
+		foreach($total['supplier_shipping'] AS $supp_shipping){
 			$total['shipping_fee'] += $supp_shipping['shipping_fee'];
 		}
 		$total['shipping_fee_formated']    = price_format($total['shipping_fee'], false);
 	}
+
 	
+	/* 2016-4-26 */
+	$cost_price = 0;
+	if($supplier_cost_price){
+		$bonus_id_info = $order['bonus_id_info'];
+		$bonus_sn_info = $order['bonus_sn_info'];
+		foreach($supplier_cost_price as $key =>$val){
+			if($bonus_id_info[$key] || $bonus_sn_info[$key]){
+				$cost_price += $val;
+			}
+			elseif($order['supplier_id']){
+				$cost_price += $val;
+			}
+		}
+	}	
 	/* 代码增加_end  By  www.68ecshop.com */
 
     // 购物车中的商品能享受红包支付的总额

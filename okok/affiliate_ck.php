@@ -119,8 +119,7 @@ elseif ($_REQUEST['act'] == 'separate')
     $oid = (int)$_REQUEST['oid'];
 	//获取订单分成金额
 	$split_money = get_split_money_by_orderid($oid);
-
-    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
+    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money , o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
                     " LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id".
             " WHERE order_id = '$oid'");
 	/* if($separate_by==0)
@@ -136,6 +135,8 @@ elseif ($_REQUEST['act'] == 'separate')
 	$recom_rank = $GLOBALS['_CFG']['recom_rank']; */
 
     $order_sn = $row['order_sn'];
+    $discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
+	$split_money -= $discount_price;	//	实际分成金额
     if (empty($row['is_separate']))
     {
          /* $affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
@@ -183,8 +184,7 @@ elseif ($_REQUEST['act'] == 'separate')
         } */
 		$integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));
 		$point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
-        if(empty($separate_by))
-        {
+        if(empty($separate_by)){
             //推荐注册分成
             $num = count($affiliate['item']);
             for ($i=0; $i < $num; $i++) {
@@ -208,55 +208,43 @@ elseif ($_REQUEST['act'] == 'separate')
                 }
 		
                 $setpoint = round($point * $affiliate['item'][$i]['level_point'], 0);
-			echo "SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o" .
-                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id".
-                        " WHERE o.user_id = '$row[user_id]'";die;
                 $row = $db->getRow("SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o" .
                         " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id".
                         " WHERE o.user_id = '$row[user_id]'"
                     );
-			var_dump($row);die;
                 $up_uid = $row['user_id'];
-                if (empty($up_uid) || empty($row['user_name']))
-                {
+                if (empty($up_uid) || empty($row['user_name'])){
                     break;
                 }
-                else
-                {
+                else {
                     $info = sprintf($_LANG['separate_info'], $order_sn, $setmoney, $setpoint);
 					push_user_msg($up_uid,$order_sn,$setmoney);
                     log_account_change($up_uid, $setmoney, 0, $setpoint, 0, $info);
                     write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
-					
 					//插入到分成记录表
-					if($setmoney > 0)
-					{
+					if($setmoney > 0){
 						$GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('distrib_sort') . "(`money`,`user_id`,`order_id`) values('" . $setmoney . "','" . $up_uid . "','" . $oid . "')");
 					}
                 }
             }
         }
-        else
-        {
+        else{
             //推荐订单分成
             $row = $db->getRow("SELECT o.parent_id, u.user_name FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
                     " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id".
                     " WHERE o.order_id = '$oid'"
                 );
             $up_uid = $row['parent_id'];
-            if(!empty($up_uid) && $up_uid > 0)
-            {
+            if(!empty($up_uid) && $up_uid > 0){
                 $info = sprintf($_LANG['separate_info'], $order_sn, $money, $point);
 				push_user_msg($up_uid,$order_sn,$money);
                 log_account_change($up_uid, $money, 0, $point, 0, $info);
                 write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
-				if($money > 0)
-				{
+				if($money > 0){
 					$GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('distrib_sort') . "(`money`,`user_id`,`order_id`) values('" . $money . "','" . $up_uid . "','" . $oid . "')");
 				}
             }
-            else
-            {
+            else{
                 $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
                 sys_msg($_LANG['edit_fail'], 1 ,$links);
             }

@@ -1400,13 +1400,7 @@ elseif ($_REQUEST['act'] == 'step_post')
 
     /* 取得参数 step */
     $step_list = array('user', 'edit_goods', 'add_goods', 'goods', 'consignee', 'shipping', 'payment', 'other', 'money', 'invoice');
-    $step = isset($_REQUEST['step']) && in_array($_REQUEST['step'], $step_list) ? $_REQUEST['step'] : 'user';
-
-	
-	
-file_put_contents('./3$_REQUEST3.txt',var_export($_REQUEST,true));
-	
-	
+    $step = isset($_REQUEST['step']) && in_array($_REQUEST['step'], $step_list) ? $_REQUEST['step'] : 'user';	
     /* 取得参数 order_id */
     $order_id = isset($_REQUEST['order_id']) ? intval($_REQUEST['order_id']) : 0;
     if ($order_id > 0)

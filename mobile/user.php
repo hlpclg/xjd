@@ -4436,9 +4436,6 @@ function action_affirm_received()
 	include_once (ROOT_PATH . 'includes/lib_transaction.php');
 	
 	$order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
-	if($_CFG['auto_divided']){
-		affiliate_ck($order_id);
-	}
 	if(affirm_received($order_id, $user_id)){
 		//	自动分成
 		if($_CFG['auto_divided']){
@@ -5407,13 +5404,15 @@ function affiliate_ck($oid){
 	$split_money = $GLOBALS['db']->getOne("SELECT sum(cost_price*goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id = ".$oid);
 	$split_money = $split_money > 0 ? $split_money : 0;
 	//	获取推荐人
-    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o  LEFT JOIN " . $GLOBALS['ecs']->table('users') ." u ON o.user_id = u.user_id WHERE order_id = ".$oid);
+    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o  LEFT JOIN " . $GLOBALS['ecs']->table('users') ." u ON o.user_id = u.user_id WHERE order_id = ".$oid);
 	if($separate_by==0){
 		$pid = $row['parent_id'];
 	}
 	else{
 		$pid = $db->getOne("SELECT parent_id FROM " . $GLOBALS['ecs']->table('order_info')." WHERE order_id = ".$oid);
 	}
+	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
+	$split_money -= $discount_price;	//	实际分成金额
 	//	获取订单所有商品
 	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
 	//	获取推荐人用户积分
