@@ -988,8 +988,11 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 		if($c_price <= 0){
 			sys_msg('售价应大于供货价',1, array(), false);
 		}
-		if($is_promote &&  ($promote_price - $wholesale_price < 0)){
-			sys_msg('促销价应大于供货价',1, array(), false);
+		if($is_promote){
+			$c_price = $promote_price - $wholesale_price;
+			if($c_price < 0){
+				sys_msg('促销价应大于供货价',1, array(), false);
+			}
 		}
 		
 	}
