@@ -980,18 +980,25 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     $shop_price = !empty($_POST['shop_price']) ? $_POST['shop_price'] : 0;
     $market_price = !empty($_POST['market_price']) ? $_POST['market_price'] : 0;
 	$wholesale_price = !empty($_POST['wholesale_price']) ? $_POST['wholesale_price'] : 0;		//	供货价
+	$promote_price = !empty($_POST['promote_price']) ? floatval($_POST['promote_price'] ) : 0;
+    $is_promote = empty($promote_price) ? 0 : 1;
+var_dump($is_promote);die;
 	$c_price = 0;
 	if($shop_price > 0 && $wholesale_price > 0){
 		$c_price = $shop_price - $wholesale_price;
 		if($c_price <= 0){
 			sys_msg('售价应大于供货价',1, array(), false);
 		}
+		if($is_promote &&  ($promote_price - $wholesale_price < 0)){
+			sys_msg('促销价应大于供货价',1, array(), false);
+		}
+		
 	}
 	$cost_price = $c_price > 0 ? $c_price : 0;
 	$integral = !empty($_POST['integral']) ? $_POST['integral'] : 0;
 	if($integral > $cost_price)	sys_msg('积分购买金额应小于分成金额',1, array(), false);
-    $promote_price = !empty($_POST['promote_price']) ? floatval($_POST['promote_price'] ) : 0;
-    $is_promote = empty($promote_price) ? 0 : 1;
+    // $promote_price = !empty($_POST['promote_price']) ? floatval($_POST['promote_price'] ) : 0;
+    // $is_promote = empty($promote_price) ? 0 : 1;
     $zhekou = ($promote_price == 0 ? 10.0 : (number_format(($promote_price/$shop_price),2))*10);
     $promote_start_date = ($is_promote && !empty($_POST['promote_start_date'])) ? local_strtotime($_POST['promote_start_date']) : 0;
     $promote_end_date = ($is_promote && !empty($_POST['promote_end_date'])) ? local_strtotime($_POST['promote_end_date']) : 0;

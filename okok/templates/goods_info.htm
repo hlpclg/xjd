@@ -413,7 +413,7 @@
 						{$lang.lab_integral}
 					</td>
 					<td>
-						<input type="text" name="integral" value="{$goods.integral}" size="20" onblur="parseint_integral()" ;/>
+						<input type="text" name="integral" value="{$goods.integral}" size="20" onblur="parseint_integral()" />
 						<br />
 						<span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticPoints">{$lang.notice_integral}</span>
 					</td>
@@ -426,7 +426,7 @@
 						</label>
 					</td>
 					<td id="promote_3">
-						<input type="text" id="promote_1" name="promote_price" value="{$goods.promote_price}" size="20" />
+						<input type="text" id="promote_1" name="promote_price" value="{$goods.promote_price}" size="20" onblur="pricePromote()"/>
 					</td>
 				</tr>
 
@@ -469,7 +469,7 @@
 				<tr>
 					<td class="label" id="promote_5">{$lang.lab_cost_price}</td>
 					<td id="promote_7">
-						<input type="text" id="promote_1" name="cost_price" value="{$goods.cost_price}" size="20" disabled />
+						<input type="text" name="cost_price" value="{$goods.cost_price}" size="20" disabled />
 						<br />
 						<span class="notice-span">{$lang.notice_cost_price}</span>
 					</td>
@@ -1128,21 +1128,38 @@ function chu (result)
 	*	计算分成价格
 	*/
 	function calcPrice(){
-		document.forms['theForm'].elements['cost_price'].value = 0;
 		var wholesale_price = parseFloat(document.forms['theForm'].elements['wholesale_price'].value);
 		var shop_price = parseFloat(document.forms['theForm'].elements['shop_price'].value);
+		var promote = document.forms['theForm'].elements['promote_price'];
+		var is_promote = promote.disabled;
+		var promote_price = promote.value;
+		var cost_price = 0;
 		if(wholesale_price > 0 && shop_price > 0){
 			if(wholesale_price < shop_price){
-				var cost_price = shop_price - wholesale_price;		// 分成金额
-				cost_price = cost_price.toFixed(2);
-				document.forms['theForm'].elements['cost_price'].value = cost_price;
-				//console.log(cost_price);
+				cost_price = shop_price - wholesale_price;		// 分成金额
+				if(!is_promote && promote_price > 0){
+					if(wholesale_price < promote_price){
+						cost_price = promote_price - wholesale_price;		// 分成金额
+					}else{
+						cost_price = 0;
+						alert('促销价应大于商品供货价');
+					}
+				}
 			}else{
 				alert('本店售价应大于商品供货价');
 			}
 		}
+		cost_price = cost_price.toFixed(2);
+		document.forms['theForm'].elements['cost_price'].value = cost_price;
 	}
-  
+	
+	/**
+		改变 促销价
+	*/
+	function pricePromote(){
+		calcPrice();
+	}
+	
   /**
    * 璁剧疆浼氬憳浠锋牸娉ㄩ噴
    */
@@ -1247,6 +1264,7 @@ function chu (result)
       document.forms['theForm'].elements['promote_price'].disabled = !checked;
       document.forms['theForm'].elements['selbtn1'].disabled = !checked;
       document.forms['theForm'].elements['selbtn2'].disabled = !checked;
+	  calcPrice();
   }
 
    function handleBuy(checked)

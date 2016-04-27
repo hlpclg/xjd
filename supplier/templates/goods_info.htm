@@ -331,7 +331,7 @@ width:auto;
 
           <tr>
             <td class="label"><label for="is_promote"><input type="checkbox" id="is_promote" name="is_promote" value="1" {if $goods.is_promote}checked="checked"{/if} onclick="handlePromote(this.checked);" /> {$lang.lab_promote_price}</label></td>
-            <td id="promote_3"><input type="text" id="promote_1" name="promote_price" value="{$goods.promote_price}" size="20" /></td>
+            <td id="promote_3"><input type="text" id="promote_1" name="promote_price" value="{$goods.promote_price}" size="20" onblur="pricePromote()" /></td>
           </tr>
           <tr id="promote_4">
             <td class="label" id="promote_5">{$lang.lab_promote_date}</td>
@@ -871,19 +871,41 @@ function chu (result)
       }
   }
   
+	
 	/**
 	*	计算分成价格
 	*/
 	function calcPrice(){
 		var wholesale_price = parseFloat(document.forms['theForm'].elements['wholesale_price'].value);
 		var shop_price = parseFloat(document.forms['theForm'].elements['shop_price'].value);
+		var promote = document.forms['theForm'].elements['promote_price'];
+		var is_promote = promote.disabled;
+		var promote_price = promote.value;
+		var cost_price = 0;
 		if(wholesale_price > 0 && shop_price > 0){
 			if(wholesale_price < shop_price){
-				console.log(shop_price-wholesale_price);
+				cost_price = shop_price - wholesale_price;		// 分成金额
+				if(!is_promote && promote_price > 0){
+					if(wholesale_price < promote_price){
+						cost_price = promote_price - wholesale_price;		// 分成金额
+					}else{
+						cost_price = 0;
+						alert('促销价应大于商品供货价');
+					}
+				}
 			}else{
 				alert('本店售价应大于商品供货价');
 			}
 		}
+		cost_price = cost_price.toFixed(2);
+		document.forms['theForm'].elements['cost_price'].value = cost_price;
+	}
+	
+	/**
+		改变 促销价
+	*/
+	function pricePromote(){
+		calcPrice();
 	}
 
   /**
@@ -1005,6 +1027,7 @@ function chu (result)
       document.forms['theForm'].elements['promote_price'].disabled = !checked;
       document.forms['theForm'].elements['selbtn1'].disabled = !checked;
       document.forms['theForm'].elements['selbtn2'].disabled = !checked;
+	  calcPrice();
   }
 
   function handleBuy(checked)
