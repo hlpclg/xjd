@@ -31,11 +31,9 @@
             <!--{/foreach}-->					
 			</div>
 			<div class="subBrand">
-               <?php
-	 $cat_info = get_cat_info_ex($GLOBALS['smarty']->_var['cat']['id']);
-
-	$GLOBALS['smarty']->assign('index_image',get_advlist('导航菜单-'.$cat_info['cat_id'].'-右侧-促销专题', 5));
-	  ?>
+				<?php
+					$GLOBALS['smarty']->assign('index_image',get_advlist('导航菜单-'.$cat['id'].'-右侧-促销专题', 5));
+				?>
              <!-- {if $index_image} -->
               <dl class="categorys-promotions">
                 <dt>促销活动</dt>

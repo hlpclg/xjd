@@ -187,7 +187,7 @@ $this->assign('promotion_info1', get_promotion_info1());
   <div class="headerLayout">
     <div class="headerCon ">
       <h1 id="mallLogo" class="mall-logo"> 
-      	<a href="#" class="header-logo" title="logo"><img src="../themes/68ecshopcom_360buy/images/header/logo.jpg" /></a> 
+      	<a href="./" class="header-logo" title="logo"><img src="../themes/68ecshopcom_360buy/images/header/logo.jpg" /></a> 
       </h1>
       <div class="header-extra">
         {include file='../../68ecshopcom_360buy/library/user_header_right.lbi'} 
