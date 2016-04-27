@@ -5411,70 +5411,40 @@ function affiliate_ck($oid){
 	else{
 		$pid = $db->getOne("SELECT parent_id FROM " . $GLOBALS['ecs']->table('order_info')." WHERE order_id = ".$oid);
 	}
-	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
-	$split_money -= $discount_price;	//	实际分成金额
 	//	获取订单所有商品
 	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
 	//	获取推荐人用户积分
 	$user_rank = $db->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users')." WHERE user_id  = ".$pid);
 	$recom_rank = $GLOBALS['_CFG']['recom_rank'];
     $order_sn = $row['order_sn'];
+	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
+	$split_money = $recom_rank > $user_rank ? 0 : $split_money-$discount_price;	//	判断用户的积分是否达到积分下限，分成金额-使用红包以及积分的金额----订单分销金额
 	//	订单没有分成去分成
     if (empty($row['is_separate'])){
-        $affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
+		$affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
         $affiliate['config']['level_money_all'] = (float)$affiliate['config']['level_money_all'];
-        if($affiliate['config']['level_money_all']==100){
-            for($i=0;$i<count($row1);$i++){		  
-        	  	if($row1[$i]['promote_price']==$row1[$i]['cost_price'] || $row1[$i]['cost_price']==0 || $recom_rank > $user_rank){
-        	  		$all_goods_price = 0;
-        	  		$all_cost_price  = 0;
-        	  	}
-        	  	else{
-					$all_goods_price  = $row1[$i]['goods_price'] * $row1[$i]['goods_number'];	//	商品总金额
-					$all_cost_price   = $row1[$i]['cost_price']  * $row1[$i]['goods_number'];	//	商品分成金额
-        	    }
-				//$money +=round($all_goods_price - $all_cost_price,2);
-        	}
-        	if ($affiliate['config']['level_point_all']) {
-				$affiliate['config']['level_point_all'] /= 100;
-            }
-        	$integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));	//	取得某订单应该赠送的积分数
-        	$point  = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);		//	取得某订单应该赠送的积分分成总额
-        }
-        else{ 
-	        if ($affiliate['config']['level_point_all']){
-	            $affiliate['config']['level_point_all'] /= 100;
-	        }
-	        if ($affiliate['config']['level_money_all']){
-	            $affiliate['config']['level_money_all'] /= 100;
-	        }	
-	        //$money = round($affiliate['config']['level_money_all'] * $row['goods_amount'],2);
-	        $integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));	//	取得某订单应该赠送的积分数
-	        $point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);	//	取得某订单应该赠送的积分分成总额
-        }
-	
+		if ($affiliate['config']['level_money_all']){
+			$affiliate['config']['level_money_all'] /= 100;
+		}
+		if ($affiliate['config']['level_point_all']){
+			$affiliate['config']['level_point_all'] /= 100;
+		}
+		$money = round($split_money*$affiliate['config']['level_money_all'],2);		//	实际分成金额
+		$integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));
+		$point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
 		//推荐注册分成
         if(empty($separate_by)){
             $num = count($affiliate['item']);
             for ($i=0; $i < $num; $i++){
                 $affiliate['item'][$i]['level_point'] = (float)$affiliate['item'][$i]['level_point'];
-                $affiliate['item'][$i]['level_money'] = (float)$affiliate['item'][$i]['level_money'];
-                if($affiliate['config']['level_money_all']==100 ){
-               			$setmoney = $split_money;
-                    	//$setmoney=$money;
-				        if ($affiliate['item'][$i]['level_point']){
-                            $affiliate['item'][$i]['level_point'] /= 100;
-                        }
-                }
-                else{
-	                if ($affiliate['item'][$i]['level_point']){
-	                    $affiliate['item'][$i]['level_point'] /= 100;
-	                }
-	                if ($affiliate['item'][$i]['level_money']){
-	                    $affiliate['item'][$i]['level_money'] /= 100;
-	                }
-	                $setmoney = round($split_money * $affiliate['item'][$i]['level_money'], 2);
-                }
+                $affiliate['item'][$i]['level_money'] = (float)$affiliate['item'][$i]['level_money'];				
+				if ($affiliate['item'][$i]['level_point']){
+					$affiliate['item'][$i]['level_point'] /= 100;
+				}
+				if ($affiliate['item'][$i]['level_money']){
+					$affiliate['item'][$i]['level_money'] /= 100;
+				}
+				$setmoney = round($money * $affiliate['item'][$i]['level_money'], 2);
                 $setpoint = round($point * $affiliate['item'][$i]['level_point'], 0);
                 $row = $db->getRow("SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id WHERE o.user_id = '$row[user_id]'");
                 $up_uid = $row['user_id'];
