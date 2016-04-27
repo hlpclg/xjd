@@ -534,7 +534,7 @@ function close_gift(suitId){
 					</td>
 					<td>
 						<label id="Bonus_span_{$key}">
-							<input name="integral[{$key}]" type="text" class="txt1" id="ECS_INTEGRAL_{$key}" onblur="changeIntegral(this.value,{$key})" value="0" style="width:100px;">
+							<input name="integral[{$key}]" type="text" class="txt1" id="ECS_INTEGRAL_{$key}" onblur="changeIntegral(this.value,{$key})" value="{$order.integral_info[$key]|default:0}<?php echo $order['integral_info'][0];?>" style="width:100px;">
 						</label>
 					</td>
                 </tr> 

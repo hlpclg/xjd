@@ -742,62 +742,59 @@ function order_fee($order, $goods, $consignee)
 
     $total['shipping_fee_formated']    = price_format($total['shipping_fee'], false);
     $total['shipping_insure_formated'] = price_format($total['shipping_insure'], false);*/
-
+	$supplier_cost_price = array();
 	/* 代码增加_start  By  www.68ecshop.com */	
 	if (count($order['shipping_pay']) > 0 && $total['real_goods_count'] > 0){
-
-		
-
-		foreach ($goods AS $val)
-		{
-			$sql_supp = "select g.supplier_id, IF(g.supplier_id='0', '本网站', s.supplier_name) AS supplier_name2 from ".$GLOBALS['ecs']->table('goods').
-								  " AS g left join ".$GLOBALS['ecs']->table('supplier')." AS s on g.supplier_id=s.supplier_id where g.goods_id='". $val['goods_id'] ."' ";
+		foreach ($goods AS $val){
+			$sql_supp = "select g.supplier_id, IF(g.supplier_id='0', '本网站', s.supplier_name) AS supplier_name2 from ".$GLOBALS['ecs']->table('goods'). " AS g left join ".$GLOBALS['ecs']->table('supplier')." AS s on g.supplier_id=s.supplier_id where g.goods_id='". $val['goods_id'] ."' ";
 			$row_supp = $GLOBALS['db']->getRow($sql_supp);
 			$row_supp['supplier_id'] = $row_supp['supplier_id'] ? intval($row_supp['supplier_id']) :0;
-
 			$region['country']  = $consignee['country'];
 			$region['province'] = $consignee['province'];
 			$region['city']     = $consignee['city'];
 			$region['district'] = $consignee['district'];
 			$shipping_info = shipping_area_info($order['shipping_pay'][$row_supp['supplier_id']], $region);
-
 			$total['supplier_shipping'][$row_supp['supplier_id']]['supplier_name'] =$row_supp['supplier_name2'];
 			$total['supplier_shipping'][$row_supp['supplier_id']]['goods_number'] += $val['goods_number'];
-
 			$total['supplier_goodsnumber'][$row_supp['supplier_id']] += $val['goods_number'];
-
 			$total['goods_price_supplier'][$row_supp['supplier_id']]  += $val['goods_price'] * $val['goods_number'];
-
-			if ($order['extension_code'] == 'group_buy')
-			{
-					$weight_price2 = cart_weight_price2(CART_GROUP_BUY_GOODS, $row_supp['supplier_id']);
+			$supplier_cost_price[$row_supp['supplier_id']] += $val['cost_price'] * $val['goods_number'];
+			if ($order['extension_code'] == 'group_buy'){
+				$weight_price2 = cart_weight_price2(CART_GROUP_BUY_GOODS, $row_supp['supplier_id']);
 			}
-			else
-			{
-					$weight_price2 = cart_weight_price2(CART_GENERAL_GOODS, $row_supp['supplier_id']);
+			else{
+				$weight_price2 = cart_weight_price2(CART_GENERAL_GOODS, $row_supp['supplier_id']);
 			}
-
 			// 查看购物车中是否全为免运费商品，若是则把运费赋为零
-		   $sql_where = $_SESSION['user_id']>0 ? "c.user_id='". $_SESSION['user_id'] ."' " : "c.session_id = '" . SESS_ID . "' AND c.user_id=0 ";
-		   $sql = 'SELECT count(*) FROM ' . $GLOBALS['ecs']->table('cart') . " AS c left join ". $GLOBALS['ecs']->table('goods') ." AS g on c.goods_id=g.goods_id WHERE g.supplier_id = '". $row_supp['supplier_id'] ."' AND $sql_where AND c.extension_code != 'package_buy' AND c.is_shipping = 0 AND c.rec_id in (".$_SESSION['sel_cartgoods'].")";  //jx
-		   $shipping_count_supp = $GLOBALS['db']->getOne($sql);
-
-		   $total['supplier_shipping'][$row_supp['supplier_id']]['shipping_fee'] = ($shipping_count_supp == 0 AND $weight_price2['free_shipping'] == 1) ?0 :  shipping_fee($shipping_info['shipping_code'],$shipping_info['configure'], $weight_price2['weight'], $total['goods_price_supplier'][$row_supp['supplier_id']], $weight_price2['number']);
-		   $total['supplier_shipping'][$row_supp['supplier_id']]['formated_shipping_fee'] = price_format($total['supplier_shipping'][$row_supp['supplier_id']]['shipping_fee'], false);
+			$sql_where = $_SESSION['user_id']>0 ? "c.user_id='". $_SESSION['user_id'] ."' " : "c.session_id = '" . SESS_ID . "' AND c.user_id=0 ";
+			$sql = 'SELECT count(*) FROM ' . $GLOBALS['ecs']->table('cart') . " AS c left join ". $GLOBALS['ecs']->table('goods') ." AS g on c.goods_id=g.goods_id WHERE g.supplier_id = '". $row_supp['supplier_id'] ."' AND $sql_where AND c.extension_code != 'package_buy' AND c.is_shipping = 0 AND c.rec_id in (".$_SESSION['sel_cartgoods'].")";  //jx
+			$shipping_count_supp = $GLOBALS['db']->getOne($sql);
+			$total['supplier_shipping'][$row_supp['supplier_id']]['shipping_fee'] = ($shipping_count_supp == 0 AND $weight_price2['free_shipping'] == 1) ?0 :  shipping_fee($shipping_info['shipping_code'],$shipping_info['configure'], $weight_price2['weight'], $total['goods_price_supplier'][$row_supp['supplier_id']], $weight_price2['number']);
+			$total['supplier_shipping'][$row_supp['supplier_id']]['formated_shipping_fee'] = price_format($total['supplier_shipping'][$row_supp['supplier_id']]['shipping_fee'], false);
 		}
-	
 		krsort($total['supplier_shipping']);
-		
 		$total['shipping_fee']    = 0;
-		foreach($total['supplier_shipping'] AS $supp_shipping)
-		{
+		foreach($total['supplier_shipping'] AS $supp_shipping){
 			$total['shipping_fee'] += $supp_shipping['shipping_fee'];
 		}
 		$total['shipping_fee_formated']    = price_format($total['shipping_fee'], false);
 	}
-	
+	/* 2016-4-26 */
+	$cost_price = 0;
+	if($supplier_cost_price){
+		$bonus_id_info = $order['bonus_id_info'];
+		$bonus_sn_info = $order['bonus_sn_info'];
+		$integral_info = $order['integral_info'];
+		foreach($supplier_cost_price as $key =>$val){
+			if($bonus_id_info[$key] || $bonus_sn_info[$key] || $integral_info[$key]){
+				$cost_price += $val;
+			}
+			elseif($order['supplier_id']){
+				$cost_price += $val;
+			}
+		}
+	};	
 	/* 代码增加_end  By  www.68ecshop.com */
-
     // 购物车中的商品能享受红包支付的总额
     $bonus_amount = compute_discount_amount();
     // 红包和积分最多能支付的金额为商品总额
@@ -805,31 +802,25 @@ function order_fee($order, $goods, $consignee)
 	$max_amount = $total['goods_price'] == 0 ? $total['goods_price'] : ($total['goods_price'] - $bonus_amount) > 0 ? $total['goods_price'] - $bonus_amount : 0 ;
     
 	/* 计算订单总额 */
-	if ($order['extension_code'] == GROUP_BUY_CODE && $group_buy['deposit'] > 0)
-    {
+	if ($order['extension_code'] == GROUP_BUY_CODE && $group_buy['deposit'] > 0){
         $total['amount'] = $total['goods_price'];
     }
-    else if($order['extension_code'] == PRE_SALE_CODE && $pre_sale['deposit'] > 0)
-    {
+    else if($order['extension_code'] == PRE_SALE_CODE && $pre_sale['deposit'] > 0){
         $total['amount'] = $total['goods_price'];
     }
-    else
-    {
+    else {
         $total['amount'] = $total['goods_price'] - $total['discount'] + $total['tax'] + $total['pack_fee'] + $total['card_fee'] +
-            $total['shipping_fee'] + $total['shipping_insure'] + $total['cod_fee'];
+        $total['shipping_fee'] + $total['shipping_insure'] + $total['cod_fee'];
 
         // 减去红包金额
-		
-        $use_bonus        = min($total['bonus'], $max_amount); // 实际减去的红包金额
-        if(isset($total['bonus_kill']))
-        {
+		$use_bonus        = min($total['bonus'],$cost_price, $max_amount); // 实际减去的红包金额
+		$cost_price = $cost_price >= $use_bonus ? $cost_price-$use_bonus : 0;	//	新的分销金额 = 分销金额 - 红包金额
+        if(isset($total['bonus_kill'])){
             $use_bonus_kill   = min($total['bonus_kill'], $max_amount);
             $total['amount'] -=  $price = ($total['bonus_kill'] > 0 ? number_format($total['bonus_kill'], 2, '.', '') : 0); // 还需要支付的订单金额
         }
-
         $total['bonus']   = $use_bonus;
         $total['bonus_formated'] = price_format($total['bonus'], false);
-
         $total['amount'] -= $use_bonus; // 还需要支付的订单金额
         $max_amount      -= $use_bonus; // 积分最多还能支付的金额
 
@@ -837,77 +828,60 @@ function order_fee($order, $goods, $consignee)
 
     /* 余额 */
     $order['surplus'] = $order['surplus'] > 0 ? $order['surplus'] : 0;
-    if ($total['amount'] > 0)
-    {
-        if (isset($order['surplus']) && $order['surplus'] > $total['amount'])
-        {
+    if ($total['amount'] > 0){
+        if (isset($order['surplus']) && $order['surplus'] > $total['amount']){
             $order['surplus'] = $total['amount'];
             $total['amount']  = 0;
         }
-        else
-        {
+        else{
             $total['amount'] -= floatval($order['surplus']);
         }
     }
-    else
-    {
+    else{
         $order['surplus'] = 0;
         $total['amount']  = 0;
     }
     $total['surplus'] = $order['surplus'];
     $total['surplus_formated'] = price_format($order['surplus'], false);
-	
     /* 积分 */
     $order['integral'] = $order['integral'] > 0 ? $order['integral'] : 0;
-    if ($total['amount'] > 0 && $max_amount > 0 && $order['integral'] > 0)
-    {
-        $integral_money = value_of_integral($order['integral']);
 
+    if ($total['amount'] > 0 && $max_amount > 0 && $order['integral'] > 0){
+        $integral_money = value_of_integral($order['integral']);
         // 使用积分支付
-        $use_integral            = min($total['amount'], $max_amount, $integral_money); // 实际使用积分支付的金额
+		$use_integral            = min($total['amount'], $cost_price,$max_amount, $integral_money); // 实际使用积分支付的金额
         $total['amount']        -= $use_integral;
         $total['integral_money'] = $use_integral;
         $order['integral']       = integral_of_value($use_integral);
     }
-    else
-    {
+    else{
         $total['integral_money'] = 0;
         $order['integral']       = 0;
     }
     $total['integral'] = $order['integral'];
     $total['integral_formated'] = price_format($total['integral_money'], false);
-
     /* 保存订单信息 */
     $_SESSION['flow_order'] = $order;
-
     $se_flow_type = isset($_SESSION['flow_type']) ? $_SESSION['flow_type'] : '';
-    
     /* 支付费用 */
-    if (!empty($order['pay_id']) && ($total['real_goods_count'] > 0 || $se_flow_type != CART_EXCHANGE_GOODS))
-    {
+    if (!empty($order['pay_id']) && ($total['real_goods_count'] > 0 || $se_flow_type != CART_EXCHANGE_GOODS)){
         $total['pay_fee']      = pay_fee($order['pay_id'], $total['amount'], $shipping_cod_fee);
     }
-
     $total['pay_fee_formated'] = price_format($total['pay_fee'], false);
-
     $total['amount']           += $total['pay_fee']; // 订单总额累加上支付费用
     $total['amount_formated']  = price_format($total['amount'], false);
 
     /* 取得可以得到的积分和红包 */
-    if ($order['extension_code'] == GROUP_BUY_CODE)
-    {
+    if ($order['extension_code'] == GROUP_BUY_CODE){
     	$total['will_get_integral'] = $group_buy['gift_integral'];
     }
-    else if($order['extension_code'] == PRE_SALE_CODE)
-    {
+    else if($order['extension_code'] == PRE_SALE_CODE){
     	$total['will_get_integral'] = $pre_sale['gift_integral'];
     }
-    elseif ($order['extension_code'] == 'exchange_goods')
-    {
+    elseif ($order['extension_code'] == 'exchange_goods') {
         $total['will_get_integral'] = 0;
     }
-    else
-    {
+    else {
         $total['will_get_integral'] = get_give_integral($goods);
     }
     //$total['will_get_bonus']        = $order['extension_code'] == 'exchange_goods' ? 0 : price_format(get_total_bonus(), false);
@@ -969,7 +943,7 @@ function cart_goods($type = CART_GENERAL_GOODS)
 		$id_ext = " AND c.rec_id in (". $_SESSION['sel_cartgoods'] .") ";
 	}
 $sql_where = $_SESSION['user_id']>0 ? "c.user_id='". $_SESSION['user_id'] ."' " : "c.session_id = '" . SESS_ID . "' AND c.user_id=0 ";
-    $sql = "SELECT c.rec_id, c.user_id, c.goods_id, c.goods_name, c.goods_sn, c.goods_number, c.market_price, " .
+    $sql = "SELECT c.rec_id, c.user_id, c.goods_id, c.goods_name, c.goods_sn, c.goods_number, c.market_price,c.cost_price, " .
 			" c.goods_price, c.goods_attr, c.is_real, c.extension_code, c.parent_id, c.is_gift, c.is_shipping, " .
 			" package_attr_id, c.goods_price * c.goods_number AS subtotal, " .
 			" IF(ga.act_id, ga.supplier_id, g.supplier_id) as supplier_id, " .

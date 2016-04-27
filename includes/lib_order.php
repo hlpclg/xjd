@@ -782,15 +782,15 @@ function order_fee($order, $goods, $consignee){
 		}
 		$total['shipping_fee_formated']    = price_format($total['shipping_fee'], false);
 	}
-
 	
 	/* 2016-4-26 */
 	$cost_price = 0;
 	if($supplier_cost_price){
 		$bonus_id_info = $order['bonus_id_info'];
 		$bonus_sn_info = $order['bonus_sn_info'];
+		$integral_info = $order['integral_info'];
 		foreach($supplier_cost_price as $key =>$val){
-			if($bonus_id_info[$key] || $bonus_sn_info[$key]){
+			if($bonus_id_info[$key] || $bonus_sn_info[$key] || $integral_info[$key]){
 				$cost_price += $val;
 			}
 			elseif($order['supplier_id']){
