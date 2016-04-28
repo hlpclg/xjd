@@ -17,7 +17,19 @@ define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 include_once(ROOT_PATH. "includes/lib_comment.php");
+$user_id = $_SESSION['user_id'];
+if($user_id){
+	$u = $_GET['u'];
+	$url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'&u='.$user_id;
+	if($u){
+		if($u != $user_id){
+			ecs_header("Location: $url");
+		}
+	}else{
+		ecs_header("Location: $url");
+	}
 
+}
 if ((DEBUG_MODE & 2) != 2)
 {
     $smarty->caching = true;

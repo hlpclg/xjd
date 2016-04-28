@@ -45,7 +45,7 @@
 	background:#FFF; border-radius:5px;">
 <script type="text/javascript">
 //<![CDATA[
-	var url="{$url}";
+	var url=encodeURIComponent("{$url}");
 	var shareTitle="{$content}";
 	var pic="{$pics}";
 
