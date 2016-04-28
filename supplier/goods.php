@@ -982,15 +982,17 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 	$wholesale_price = !empty($_POST['wholesale_price']) ? $_POST['wholesale_price'] : 0;		//	供货价
 	$promote_price = !empty($_POST['promote_price']) ? floatval($_POST['promote_price'] ) : 0;
     $is_promote = empty($promote_price) ? 0 : 1;
-var_dump($is_promote);die;
 	$c_price = 0;
 	if($shop_price > 0 && $wholesale_price > 0){
 		$c_price = $shop_price - $wholesale_price;
 		if($c_price <= 0){
 			sys_msg('售价应大于供货价',1, array(), false);
 		}
-		if($is_promote &&  ($promote_price - $wholesale_price < 0)){
-			sys_msg('促销价应大于供货价',1, array(), false);
+		if($is_promote){
+			$c_price = $promote_price - $wholesale_price;
+			if($c_price < 0){
+				sys_msg('促销价应大于供货价',1, array(), false);
+			}
 		}
 		
 	}
