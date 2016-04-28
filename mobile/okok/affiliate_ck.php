@@ -139,8 +139,6 @@ elseif ($_REQUEST['act'] == 'separate')
 	else{
 		$pid = $db->getOne("SELECT parent_id FROM " . $GLOBALS['ecs']->table('order_info')." WHERE order_id = '$oid'");
 	}
-	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
-	$split_money -= $discount_price;	//	实际分成金额
 	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
 	$recom_rank = $GLOBALS['_CFG']['recom_rank'];		//	参与分成的积分下限
     $order_sn = $row['order_sn'];
@@ -150,6 +148,7 @@ elseif ($_REQUEST['act'] == 'separate')
     if (empty($row['is_separate'])){
 		$affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
         $affiliate['config']['level_money_all'] = (float)$affiliate['config']['level_money_all'];
+
 		if ($affiliate['config']['level_money_all']){
 			$affiliate['config']['level_money_all'] /= 100;
 		}
