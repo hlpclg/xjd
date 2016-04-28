@@ -122,60 +122,45 @@ elseif ($_REQUEST['act'] == 'separate')
     $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money , o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
                     " LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id".
             " WHERE order_id = '$oid'");
-	/* if($separate_by==0)
-	{
+	if($separate_by==0){
 		$pid = $row['parent_id'];
 	}
-	else
-	{
+	else{
 		$pid = $db->getOne("SELECT parent_id FROM " . $GLOBALS['ecs']->table('order_info')." WHERE order_id = '$oid'");
 	}
-	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
+	/* $row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
 	$user_rank = $db->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users')." WHERE user_id  = '$pid'");
 	$recom_rank = $GLOBALS['_CFG']['recom_rank']; */
 
     $order_sn = $row['order_sn'];
     $discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
 	$split_money -= $discount_price;	//	实际分成金额
-    if (empty($row['is_separate']))
-    {
-         /* $affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
+    if (empty($row['is_separate'])){
+        $affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
         $affiliate['config']['level_money_all'] = (float)$affiliate['config']['level_money_all'];
-       if($affiliate['config']['level_money_all']==100  )
-        {	
-	         
-            for($i=0;$i<count($row1);$i++)
-        	{		  
-        	  	if($row1[$i]['promote_price']==$row1[$i]['cost_price'] || $row1[$i]['cost_price']==0 || $recom_rank > $user_rank)
-        	  	{
+		/* if($affiliate['config']['level_money_all']==100 ){	 
+            for($i=0;$i<count($row1);$i++){		  
+        	  	if($row1[$i]['promote_price']==$row1[$i]['cost_price'] || $row1[$i]['cost_price']==0 || $recom_rank > $user_rank){
         	  		$all_goods_price = 0;
         	  		$all_cost_price  = 0;
-        	  	}
-        	  	 
-        	  	else
-        	  	{
-        	     $all_goods_price  = $row1[$i]['goods_price'] * $row1[$i]['goods_number'];
-        	     $all_cost_price   = $row1[$i]['cost_price']  * $row1[$i]['goods_number'];
+        	  	} 
+        	  	else{
+					$all_goods_price  = $row1[$i]['goods_price'] * $row1[$i]['goods_number'];
+					$all_cost_price   = $row1[$i]['cost_price']  * $row1[$i]['goods_number'];
         	    }
 				$money +=round($all_goods_price - $all_cost_price,2);
         	}
-			 
-        	if ($affiliate['config']['level_point_all'])
-            {
+        	if($affiliate['config']['level_point_all']){
 				$affiliate['config']['level_point_all'] /= 100;
             }
         	$integral = integral_to_give(array('order_id' => $oid, 'extension_code' => ''));
         	$point  = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
-           
-        	
         }
         else{ 
-	        if ($affiliate['config']['level_point_all'])
-	        {
+	        if ($affiliate['config']['level_point_all']) {
 	            $affiliate['config']['level_point_all'] /= 100;
 	        }
-	        if ($affiliate['config']['level_money_all'])
-	        {
+	        if ($affiliate['config']['level_money_all']){
 	            $affiliate['config']['level_money_all'] /= 100;
 	        }
 	        $money = round($affiliate['config']['level_money_all'] * $row['goods_amount'],2);
