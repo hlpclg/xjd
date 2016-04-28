@@ -7814,54 +7814,46 @@ function update_kuaidi_order($delivery_id, $order_sn = "")
 }
 
 //根据订单号获取订单分成信息
-function get_distrib_info_by_id($order_id)
-{
-	 $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
-     empty($affiliate) && $affiliate = array();
-	 $split_money = get_split_money($order_id);
-	 $row = $GLOBALS['db']->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
-                    " LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id".
-            " WHERE order_id = '$order_id'");
-	 $num = count($affiliate['item']);
-	 $arr = array();
-	 for ($i=0; $i < $num; $i++)
-	 {
-		 $is_separate = $row['is_separate'];
-		 $row = $GLOBALS['db']->getRow("SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o" .
-                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id".
-                        " WHERE o.user_id = '$row[user_id]'"
-         );
-		 if(empty($row['user_name']))
-		 {
-			 break;
-		 }
-		 $affiliate['item'][$i]['level_money'] = (float)$affiliate['item'][$i]['level_money'];
-		 $arr[$i]['item'] = $affiliate['item'][$i]['level_money'];
-		 if ($affiliate['item'][$i]['level_money'])
-	     {
-	         $affiliate['item'][$i]['level_money'] /= 100;
-	     } 
-		 $row['is_separate'] = $is_separate;
-		 $arr[$i]['level'] = ($i+1)."级分销商";
-		 $arr[$i]['split_money'] = round($split_money * $affiliate['item'][$i]['level_money'], 2);
-		 $arr[$i]['user_name'] = $row['user_name'];
-		 $arr[$i]['is_separate'] = $row['is_separate'];
-	 }
-	 return $arr;
+function get_distrib_info_by_id($order_id){
+	$affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
+	empty($affiliate) && $affiliate = array();
+	$split_money = get_split_money($order_id);
+	$row = $GLOBALS['db']->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o  LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id  WHERE order_id = '$order_id'");
+	$num = count($affiliate['item']);
+	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
+	$split_money -= $discount_price;	//	分成金额-使用红包以及积分的金额----订单分销金额
+	$split_money = round($split_money*$affiliate['config']['level_money_all']/100,2);		//	实际分成金额
+	$arr = array();
+	for ($i=0; $i < $num; $i++) {
+		$is_separate = $row['is_separate'];
+		$row = $GLOBALS['db']->getRow("SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o  LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id  WHERE o.user_id = '$row[user_id]'" );
+		if(empty($row['user_name'])) {
+			break;
+		}
+		$affiliate['item'][$i]['level_money'] = (float)$affiliate['item'][$i]['level_money'];
+		$arr[$i]['item'] = $affiliate['item'][$i]['level_money'];
+		if ($affiliate['item'][$i]['level_money']){
+			$affiliate['item'][$i]['level_money'] /= 100;
+		} 
+		$row['is_separate'] = $is_separate;
+		$arr[$i]['level'] = ($i+1)."级分销商";
+		$arr[$i]['split_money'] = round($split_money * $affiliate['item'][$i]['level_money'], 2);
+		$arr[$i]['user_name'] = $row['user_name'];
+		$arr[$i]['is_separate'] = $row['is_separate'];
+	}
+	return $arr;
 }
 
 //获取某一个订单的分成金额
-function get_split_money($order_id)
-{
-	 $sql = "SELECT sum(split_money*goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id = '$order_id'";
-	 $split_money = $GLOBALS['db']->getOne($sql);
-	 if($split_money > 0)
-	 {
-		 return $split_money; 
-	 }
-	 else
-	 {
-		 return 0; 
-	 }
+function get_split_money($order_id){
+	//$sql = "SELECT sum(split_money*goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id = '$order_id'";
+	$sql = "SELECT sum(cost_price*goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id = '$order_id'";
+	$split_money = $GLOBALS['db']->getOne($sql);
+	if($split_money > 0){
+		return $split_money; 
+	}
+	else{
+		return 0; 
+	}
 }
 ?>
