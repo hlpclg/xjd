@@ -91,35 +91,36 @@ class weixinapi{
 		}
 	}
 	
-	function bind_distrib($wxid,$uid)
-	{
+	function bind_distrib($wxid,$uid){
 		//根据微信id获取绑定的会员id
-		 $sql = "SELECT ecuid FROM " . $GLOBALS['ecs']->table('weixin_user') . " WHERE fake_id = '$wxid'";
-		 $user_id = $GLOBALS['db']->getOne($sql);
-		 if($user_id > 0)
-		 {
-			 //是否存在上级分销商
-			 $sql = "SELECT parent_id FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$user_id'";
-			 $parent_id = $GLOBALS['db']->getOne($sql);
-			 if($parent_id == 0)
-			 {
-				 //如果不存在上级分销商，绑定上级分销商
-				 $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET parent_id = '$uid' WHERE user_id = '$user_id'";
-				 $num = $GLOBALS['db']->query($sql);
-				 if($num > 0)
-				 {
-					 return true; 
-				 } 
-				 else
-				 {
-					 return false; 
-				 }
-			 }  
-		 }
-		 else
-		 {
-			 return false; 
-		 }
+		$sql = "SELECT ecuid FROM " . $GLOBALS['ecs']->table('weixin_user') . " WHERE fake_id = '$wxid'";
+		$user_id = $GLOBALS['db']->getOne($sql);
+		if($user_id > 0){
+			//是否存在上级分销商
+			$sql = "SELECT parent_id,user_name FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$user_id'";
+			$user_info = $GLOBALS['db']->getRow($sql);
+			$parent_id = $user_info['parent_id'];
+			$username = $user_info['user_name'];
+			if($parent_id == 0){
+				//	推荐会员注册赠送积分
+				$rec_points = $GLOBALS['_CFG']['rec_points'];
+				//如果不存在上级分销商，绑定上级分销商
+				$sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET parent_id = '$uid' WHERE user_id = '$user_id'";
+				$num = $GLOBALS['db']->query($sql);
+				if($num > 0){
+					log_account_change($uid, 0, 0, 0, $rec_points, sprintf($GLOBALS['_LANG']['register_affiliate'], $user_id, $username));
+					return true; 
+				}
+				else{
+					return false; 
+				}
+			}
+		}
+		else{
+			return false; 
+		}
+		
+		
 	}
 
 	//绑定用户
