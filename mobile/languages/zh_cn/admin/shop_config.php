@@ -118,6 +118,7 @@ $_LANG['cfg_name']['show_order_type'] = '商品分类页默认显示方式';
 $_LANG['cfg_name']['goods_name_length'] = '商品名称的长度';
 $_LANG['cfg_name']['price_format'] = '商品价格显示规则';
 $_LANG['cfg_name']['register_points'] = '会员注册赠送积分';
+$_LANG['cfg_name']['rec_points'] = '推荐会员注册赠送积分';
 $_LANG['cfg_name']['shop_logo'] = '商店 Logo';
 $_LANG['cfg_name']['enable_gzip']     = '是否启用Gzip模式';
 $_LANG['cfg_name']['anonymous_buy'] = '是否允许未登录用户购物';
@@ -470,4 +471,6 @@ $_LANG['cfg_name']['auto_divided'] = '是否自动分成';
 $_LANG['cfg_range']['auto_divided'][0] = '否';
 $_LANG['cfg_range']['auto_divided'][1] = '是';
 $_LANG['cfg_desc']['auto_divided'] = '自动分成是客户确认收货之后就自动分成；手动分成是订单发货后，管理员手动去分成管理点击分成';
+
+//	赠送
 ?>
