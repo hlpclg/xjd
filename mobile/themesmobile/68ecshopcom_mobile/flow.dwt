@@ -501,12 +501,12 @@ function close_gift(suitId){
        <!-- {if $goodsinfo.zhekou} -->{$goodsinfo.zhekou.your_discount}<!-- {/if} -->
         </li>
         <!-- {/if} --> 
-        <!-- {if $allow_use_bonus  && $goodsinfo.goodlist} 是否使用红包或者积分 -->
+        <!-- {if $allow_use_bonus  && $goodsinfo.goodlist} 是否使用红包或者金币 -->
         <li class="flow_youhui_no">
          
             <div class="checkout_other"> 
-              <div class="jmbag" href="javascript:void(0);" onclick="showCheckoutOther(this);"><span class="right_arrow_flow"></span>使用店铺优惠券</div>
-              <table class="subbox_other sub_bonus" width="100%">
+				<div class="jmbag" href="javascript:void(0);" onclick="showCheckoutOther(this);"><span class="right_arrow_flow"></span>使用店铺优惠券</div>
+				<table class="subbox_other sub_bonus" width="100%">
                 <!-- {if $allow_use_bonus} 是否使用优惠券 -->
                 <tr>
 					<td  colspan="2">
@@ -527,10 +527,19 @@ function close_gift(suitId){
 						</label>
 					</td>
 				</tr>
-				 
+				<!-- {/if} --> 
+				</table>
+            </div>
+		</li>
+		<!-- {/if} --> 
+		<!-- {if $allow_use_integral} -->
+		<li class="flow_youhui_no">
+			<div class="checkout_other"> 
+              <div class="jmbag" href="javascript:void(0);" onclick="showCheckoutOther(this);"><span class="right_arrow_flow"></span>使用金币</div>
+              <table class="subbox_other sub_bonus" width="100%">			
 				<tr>
 					<td>
-						使用积分：
+						使用金币：
 					</td>
 					<td>
 						<label id="Bonus_span_{$key}">
@@ -539,7 +548,7 @@ function close_gift(suitId){
 					</td>
                 </tr> 
 				
-                <!-- {/if} --> 
+               
             
               </table>
             </div>
@@ -740,7 +749,7 @@ function close_gift(suitId){
 			*/
 		</script>
     </table>
-<!--积分余额-->
+<!--金币余额-->
 <div style="height:10px; line-height:10px; clear:both;"></div>
 </div></section>
   
@@ -783,7 +792,7 @@ function close_gift(suitId){
 
     
     
-              <!--积分余额-->
+              <!--金币余额-->
             </div>
       
       </div></section>
@@ -836,7 +845,7 @@ function close_gift(suitId){
       <div class="content ptop0">
 		<div class="panel panel-default info-box">
 
-<!--积分余额-->
+<!--金币余额-->
 <div class="con-ct fo-con"> {include file='library/order_total.lbi'} </div>
 <div class="panel panel-default info-box">
     <div class="pay-btn">

@@ -985,7 +985,7 @@ elseif ($_REQUEST['step'] == 'checkout')
     {
         $smarty->assign('is_group_buy', 1);
     }
-    /* 积分兑换商品 */
+    /* 金币兑换商品 */
     elseif ($flow_type == CART_EXCHANGE_GOODS)
     {
         $smarty->assign('is_exchange_goods', 1);
@@ -997,7 +997,7 @@ elseif ($_REQUEST['step'] == 'checkout')
     }
 
     if($flow_type != CART_EXCHANGE_GOODS){
-    	//非积分兑换形式的商品
+    	//非金币兑换形式的商品
     	/* 代码增加_start  By  www.68ecshop.com */
 		$sel_cartgoods_count = count($_REQUEST['sel_cartgoods']);
 		$_SESSION['sel_cartgoods'] =  $sel_cartgoods_count>0 ? (implode(",", $_REQUEST['sel_cartgoods'])) : $_SESSION['sel_cartgoods'];
@@ -1324,21 +1324,21 @@ $consignee['region'] = $db->getOne($sql);
         $smarty->assign('your_surplus', $user_info['user_money']);
     }
 
-    /* 如果使用积分，取得用户可用积分及本订单最多可以使用的积分 */
+    /* 如果使用金币，取得用户可用金币及本订单最多可以使用的金币 */
     if ((!isset($_CFG['use_integral']) || $_CFG['use_integral'] == '1')
         && $_SESSION['user_id'] > 0
         && $user_info['pay_points'] > 0
         && ($flow_type != CART_GROUP_BUY_GOODS && $flow_type != CART_EXCHANGE_GOODS))
     {
-        // 能使用积分
-        $keyong = flow_available_points();// 可用积分
+        // 能使用金币
+        $keyong = flow_available_points();// 可用金币
         foreach($keyong as $k=>$v){
         	$cart_goods_new[$k]['jifen'] = $v;
         }
 
         $smarty->assign('allow_use_integral', 1);
         //$smarty->assign('order_max_integral', $keyong);
-        $smarty->assign('your_integral',      $user_info['pay_points']); // 用户积分
+        $smarty->assign('your_integral',      $user_info['pay_points']); // 用户金币
     }
 
     /* 如果使用红包，取得用户可以使用的红包及用户选择的红包 */
@@ -1545,7 +1545,7 @@ elseif ($_REQUEST['step'] == 'select_shipping')
         /* 计算订单的费用 */
         $total = order_fee($order, $cart_goods, $consignee);
         $smarty->assign('total', $total);
-        /* 取得可以得到的积分和红包 */
+        /* 取得可以得到的金币和红包 */
         $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
         $smarty->assign('total_bonus',    price_format(get_total_bonus(), false));
 
@@ -1631,7 +1631,7 @@ elseif ($_REQUEST['step'] == 'select_insure')
         $total = order_fee($order, $cart_goods, $consignee);
         $smarty->assign('total', $total);
 
-        /* 取得可以得到的积分和红包 */
+        /* 取得可以得到的金币和红包 */
         $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
         $smarty->assign('total_bonus',    price_format(get_total_bonus(), false));
 
@@ -1692,7 +1692,7 @@ elseif ($_REQUEST['step'] == 'select_payment')
         $smarty->assign('total', $total);
 	$smarty->assign('real_goods_count', $total['real_goods_count']);
 
-        /* 取得可以得到的积分和红包 */
+        /* 取得可以得到的金币和红包 */
         $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
         $smarty->assign('total_bonus',    price_format(get_total_bonus(), false));
 
@@ -1803,7 +1803,7 @@ elseif ($_REQUEST['step'] == 'select_pack')
         $total = order_fee($order, $cart_goods, $consignee);
         $smarty->assign('total', $total);
 
-        /* 取得可以得到的积分和红包 */
+        /* 取得可以得到的金币和红包 */
         $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
         $smarty->assign('total_bonus',    price_format(get_total_bonus(), false));
 
@@ -1860,7 +1860,7 @@ elseif ($_REQUEST['step'] == 'select_card')
         $total = order_fee($order, $cart_goods, $consignee);
         $smarty->assign('total', $total);
 
-        /* 取得可以得到的积分和红包 */
+        /* 取得可以得到的金币和红包 */
         $smarty->assign('total_integral', cart_amount(false, $flow_type) - $order['bonus'] - $total['integral_money']);
         $smarty->assign('total_bonus',    price_format(get_total_bonus(), false));
 
@@ -1951,7 +1951,7 @@ elseif ($_REQUEST['step'] == 'change_surplus')
 elseif ($_REQUEST['step'] == 'change_integral')
 {
     /*------------------------------------------------------ */
-    //-- 改变积分
+    //-- 改变金币
     /*------------------------------------------------------ */
     include_once('includes/cls_json.php');
 
@@ -1967,10 +1967,10 @@ elseif ($_REQUEST['step'] == 'change_integral')
 
     $order['integral_info'] = $integral_info;
 
-    $flow_points = flow_available_points();  // 该订单允许使用的积分
-    $user_points = $user_info['pay_points']; // 用户的积分总数
+    $flow_points = flow_available_points();  // 该订单允许使用的金币
+    $user_points = $user_info['pay_points']; // 用户的金币总数
 
-    //所有订单的总积分
+    //所有订单的总金币
     $points_all = array_sum($integral_info);
 
     if ($points_all > $user_points)
@@ -2189,8 +2189,8 @@ elseif ($_REQUEST['step'] == 'check_integral')
     /*------------------------------------------------------ */
     $points      = floatval($_GET['integral']);
     $user_info   = user_info($_SESSION['user_id']);
-    $flow_points = flow_available_points();  // 该订单允许使用的积分
-    $user_points = $user_info['pay_points']; // 用户的积分总数
+    $flow_points = flow_available_points();  // 该订单允许使用的金币
+    $user_points = $user_info['pay_points']; // 用户的金币总数
 
     if ($points > $user_points)
     {
@@ -2435,7 +2435,7 @@ elseif ($_REQUEST['step'] == 'done')
 	    }
         }
 
-	    /* 检查积分余额是否合法 */
+	    /* 检查金币余额是否合法 */
 	    $user_id = $_SESSION['user_id'];
 	    if ($user_id > 0){
 	        $user_info = user_info($user_id);
@@ -2443,9 +2443,9 @@ elseif ($_REQUEST['step'] == 'done')
 	        if ($order['surplus'] < 0){
 	            $order['surplus'] = 0;
 	        }
-	        // 查询用户有多少积分
-	        $flow_points = flow_available_points();  // 该订单允许使用的积分
-	        $user_points = $user_info['pay_points']; // 用户的积分总数
+	        // 查询用户有多少金币
+	        $flow_points = flow_available_points();  // 该订单允许使用的金币
+	        $user_points = $user_info['pay_points']; // 用户的金币总数
 	        $order['integral'] = min($order['integral'], $user_points, $flow_points[$ckey]);
 	        if ($order['integral'] < 0){
 	            $order['integral'] = 0;
@@ -2539,7 +2539,7 @@ elseif ($_REQUEST['step'] == 'done')
 	    // 购物车中的商品能享受红包支付的总额
 	    $discount_amout = compute_discount_amount($ckey);
 
-	    // 红包和积分最多能支付的金额为商品总额
+	    // 红包和金币最多能支付的金额为商品总额
 	    $temp_amout = $order['goods_amount'] - $discount_amout;
 
 	    if ($temp_amout <= 0)
@@ -2626,7 +2626,7 @@ elseif ($_REQUEST['step'] == 'done')
 	        }
 	    }
 
-	    /* 如果订单金额为0（使用余额或积分或红包支付），修改订单状态为已确认、已付款 */
+	    /* 如果订单金额为0（使用余额或金币或红包支付），修改订单状态为已确认、已付款 */
 	    if ($order['order_amount'] <= 0)
 	    {
 	        $order['order_status'] = OS_CONFIRMED;
@@ -2783,7 +2783,7 @@ elseif ($_REQUEST['step'] == 'done')
 	        $db->query($sql);
 	    }
 
-	    /* 处理余额、积分、红包 */
+	    /* 处理余额、金币、红包 */
 	    if ($order['user_id'] > 0 && $order['surplus'] > 0)
 	    {
 	        log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf($_LANG['pay_order'], $order['order_sn']));
@@ -2900,7 +2900,7 @@ elseif ($_REQUEST['step'] == 'done')
                             $content = sprintf($_LANG['mobile_virtual_template'], $supplier_name, $val['goods_name'], $card_sn,local_date('Y-m-d',$val['valid_date']));
                             $result = sendSMS($_REQUEST['mobile_phone'],$content);
                         }
-	                /* 如果没有实体商品，修改发货状态，送积分和红包 */
+	                /* 如果没有实体商品，修改发货状态，送金币和红包 */
 	                $sql = "SELECT COUNT(*)" .
 	                        " FROM " . $ecs->table('order_goods') .
 	                        " WHERE order_id = '$order[order_id]' " .
@@ -2911,7 +2911,7 @@ elseif ($_REQUEST['step'] == 'done')
 
 	                    /* 修改订单状态 */
 	                    update_order($order['order_id'], array('shipping_status' => SS_SHIPPED, 'shipping_time' => gmtime()));
-	                    /* 如果订单用户不为空，计算积分，并发给用户；发红包 */
+	                    /* 如果订单用户不为空，计算金币，并发给用户；发红包 */
 
 
 	                    if ($order['user_id'] > 0)
@@ -2919,7 +2919,7 @@ elseif ($_REQUEST['step'] == 'done')
 	                        /* 取得用户信息 */
 	                        $user = user_info($order['user_id']);
 
-	                        /* 计算并发放积分 */
+	                        /* 计算并发放金币 */
 	                        $integral = integral_to_give($order);
 	                        log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($_LANG['order_gift_integral'], $order['order_sn']));
 
@@ -3637,7 +3637,7 @@ else
 /*------------------------------------------------------ */
 
 /**
- * 获得用户的可用积分
+ * 获得用户的可用金币
  *
  * @access  private
  * @return  integral

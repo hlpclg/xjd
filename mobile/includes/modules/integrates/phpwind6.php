@@ -207,7 +207,7 @@ class phpwind6 extends integrate
 
 
     /**
-     *  获取论坛有效积分及单位
+     *  获取论坛有效金币及单位
      *
      * @access  public
      * @param
@@ -249,7 +249,7 @@ class phpwind6 extends integrate
     }
 
     /**
-     *  获取用户积分
+     *  获取用户金币
      *
      * @access  public
      * @param
@@ -280,7 +280,7 @@ class phpwind6 extends integrate
     }
 
     /**
-     * 积分设置
+     * 金币设置
      *
      * @access  public
      * @param

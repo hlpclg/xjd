@@ -61,7 +61,7 @@ define('CART_GENERAL_GOODS',        0); // 普通商品
 define('CART_GROUP_BUY_GOODS',      1); // 团购商品
 define('CART_AUCTION_GOODS',        2); // 拍卖商品
 define('CART_SNATCH_GOODS',         3); // 夺宝奇兵
-define('CART_EXCHANGE_GOODS',       4); // 积分商城
+define('CART_EXCHANGE_GOODS',       4); // 金币商城
 
 /* 订单状态 */
 define('OS_UNCONFIRMED',            0); // 未确认
@@ -213,11 +213,11 @@ define('ENCRYPT_UC',                2); //uc加密方式
 define('G_REAL',                    1); //实体商品
 define('G_CARD',                    0); //虚拟卡
 
-/* 积分兑换 */
-define('TO_P',                      0); //兑换到商城消费积分
-define('FROM_P',                    1); //用商城消费积分兑换
-define('TO_R',                      2); //兑换到商城等级积分
-define('FROM_R',                    3); //用商城等级积分兑换
+/* 金币兑换 */
+define('TO_P',                      0); //兑换到商城消费金币
+define('FROM_P',                    1); //用商城消费金币兑换
+define('TO_R',                      2); //兑换到商城等级金币
+define('FROM_R',                    3); //用商城等级金币兑换
 
 /* 支付宝商家账户 */
 define('ALIPAY_AUTH', 'gh0bis45h89m5mwcoe85us4qrwispes0');

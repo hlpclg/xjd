@@ -181,7 +181,7 @@ if ($_REQUEST['act'] == 'bid')
         die($json->encode($result));
     }
 
-    /* 检查用户积分是否足够 */
+    /* 检查用户金币是否足够 */
     $sql = 'SELECT pay_points FROM ' .$ecs->table('users'). " WHERE user_id = '" . $_SESSION['user_id']. "'";
     $pay_points = $db->getOne($sql);
     if ($row['cost_points'] > $pay_points)
@@ -191,7 +191,7 @@ if ($_REQUEST['act'] == 'bid')
         die($json->encode($result));
     }
 
-    log_account_change($_SESSION['user_id'], 0, 0, 0, 0-$row['cost_points'],sprintf($_LANG['snatch_log'], $row['snatch_name'])); //扣除用户积分
+    log_account_change($_SESSION['user_id'], 0, 0, 0, 0-$row['cost_points'],sprintf($_LANG['snatch_log'], $row['snatch_name'])); //扣除用户金币
     $sql = 'INSERT INTO ' .$ecs->table('snatch_log'). '(snatch_id, user_id, bid_price, bid_time) VALUES'.
            "('$id', '" .$_SESSION['user_id']. "', '" .$price."', " .gmtime(). ")";
     $db->query($sql);

@@ -944,7 +944,7 @@ function get_user_gouwuche($user_id)
 }
 /*
  *
- *获取当前积分商城的数据
+ *获取当前金币商城的数据
  *
  */
 function get_user_jifen()

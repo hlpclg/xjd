@@ -187,7 +187,7 @@ if (!defined('INIT_NO_USERS'))
     {
         if ($user->get_cookie())
         {
-            /* 如果会员已经登录并且还没有获得会员的帐户余额、积分以及优惠券 */
+            /* 如果会员已经登录并且还没有获得会员的帐户余额、金币以及优惠券 */
             if ($_SESSION['user_id'] > 0)
             {
                 update_user_info();

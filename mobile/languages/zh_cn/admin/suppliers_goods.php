@@ -72,7 +72,7 @@ $_LANG['goods_number'] = '库存';
 
 $_LANG['copy'] = '复制';
 
-$_LANG['integral'] = '积分额度';
+$_LANG['integral'] = '金币额度';
 $_LANG['on_sale'] = '上架';
 $_LANG['not_on_sale'] = '下架';
 $_LANG['best'] = '精品';
@@ -127,9 +127,9 @@ $_LANG['unit_g'] = '克';
 $_LANG['unit_kg'] = '千克';
 $_LANG['lab_goods_number'] = '商品库存数量：';
 $_LANG['lab_warn_number'] = '库存警告数量：';
-$_LANG['lab_integral'] = '积分购买额度：';
-$_LANG['lab_give_integral'] = '赠送消费积分数：';
-$_LANG['lab_rank_integral'] = '赠送等级积分数：';
+$_LANG['lab_integral'] = '金币购买额度：';
+$_LANG['lab_give_integral'] = '赠送消费金币数：';
+$_LANG['lab_rank_integral'] = '赠送等级金币数：';
 $_LANG['lab_intro'] = '加入推荐：';
 $_LANG['lab_is_on_sale'] = '上架：';
 $_LANG['lab_is_alone_sale'] = '能作为普通商品销售：';
@@ -137,9 +137,9 @@ $_LANG['lab_is_alone_sale'] = '能作为普通商品销售：';
 $_LANG['compute_by_mp'] = '按市场价计算';
 
 $_LANG['notice_goods_sn'] = '如果您不输入商品货号，系统将自动生成一个唯一的货号。';
-$_LANG['notice_integral'] = '购买该商品时最多可以使用多少钱的积分';
-$_LANG['notice_give_integral'] = '购买该商品时赠送消费积分数,-1表示按商品价格赠送';
-$_LANG['notice_rank_integral'] = '购买该商品时赠送等级积分数,-1表示按商品价格赠送';
+$_LANG['notice_integral'] = '购买该商品时最多可以使用多少钱的金币';
+$_LANG['notice_give_integral'] = '购买该商品时赠送消费金币数,-1表示按商品价格赠送';
+$_LANG['notice_rank_integral'] = '购买该商品时赠送等级金币数,-1表示按商品价格赠送';
 $_LANG['notice_seller_note'] = '仅供商家自己看的信息';
 $_LANG['notice_keywords'] = '用空格分隔';
 $_LANG['notice_user_price'] = '会员价格为-1时表示会员价格按会员等级折扣率计算。你也可以为每个等级指定一个固定价格';

@@ -111,13 +111,13 @@ function get_linked_tags($tag_data)
 }
 
 /**
- * 兑换积分
+ * 兑换金币
  *
  * @param  integer $uid 用户ID
- * @param  integer $fromcredits 原积分
- * @param  integer $tocredits 目标积分
+ * @param  integer $fromcredits 原金币
+ * @param  integer $tocredits 目标金币
  * @param  integer $toappid 目标应用ID
- * @param  integer $netamount 积分数额
+ * @param  integer $netamount 金币数额
  *
  * @return boolean
  */

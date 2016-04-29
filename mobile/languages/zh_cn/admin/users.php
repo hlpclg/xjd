@@ -14,8 +14,8 @@
 */
 /* 列表页面 */
 $_LANG['label_user_name'] = '会员名称';
-$_LANG['label_pay_points_gt'] = '会员积分大于';
-$_LANG['label_pay_points_lt'] = '会员积分小于';
+$_LANG['label_pay_points_gt'] = '会员金币大于';
+$_LANG['label_pay_points_lt'] = '会员金币小于';
 $_LANG['label_rank_name'] = '会员等级';
 $_LANG['all_option'] = '所有等级';
 
@@ -41,8 +41,8 @@ $_LANG['birthday'] = '出生日期';
 $_LANG['sex'][0] = '保密';
 $_LANG['sex'][1] = '男';
 $_LANG['sex'][2] = '女';
-$_LANG['pay_points'] = '消费积分';
-$_LANG['rank_points'] = '等级积分';
+$_LANG['pay_points'] = '消费金币';
+$_LANG['rank_points'] = '等级金币';
 $_LANG['user_money'] = '可用资金';
 $_LANG['frozen_money'] = '冻结资金';
 $_LANG['credit_line'] = '信用额度';
@@ -67,8 +67,8 @@ $_LANG['home_phone'] = '家庭电话';
 $_LANG['office_phone'] = '办公电话';
 $_LANG['mobile_phone'] = '手机';
 
-$_LANG['notice_pay_points'] = '消费积分是一种站内货币，允许用户在购物时支付一定比例的积分。';
-$_LANG['notice_rank_points'] = '等级积分是一种累计的积分，系统根据该积分来判定用户的会员等级。';
+$_LANG['notice_pay_points'] = '消费金币是一种站内货币，允许用户在购物时支付一定比例的金币。';
+$_LANG['notice_rank_points'] = '等级金币是一种累计的金币，系统根据该金币来判定用户的会员等级。';
 $_LANG['notice_user_money'] = '用户在站内预留下的金额';
 
 /* 提示信息 */
@@ -88,7 +88,7 @@ $_LANG['remove_success'] = '会员账号 %s 已经删除成功。';
 $_LANG['add_success'] = '会员账号 %s 已经添加成功。';
 $_LANG['batch_remove_success'] = '已经成功删除了 %d 个会员账号。';
 $_LANG['no_select_user'] = '您现在没有需要删除的会员！';
-$_LANG['register_points'] = '注册送积分';
+$_LANG['register_points'] = '注册送金币';
 $_LANG['username_not_allow'] = '用户名不允许注册';
 $_LANG['username_invalid'] = '无效的用户名';
 $_LANG['email_invalid'] = '无效的email地址';
@@ -113,7 +113,7 @@ $_LANG['js_languages']['less_password'] = '输入的密码不能少于六位。'
 $_LANG['js_languages']['passwd_balnk'] = '密码中不能包含空格';
 $_LANG['js_languages']['no_confirm_password'] = '没有输入确认密码。';
 $_LANG['js_languages']['password_not_same'] = '输入的密码和确认密码不一致。';
-$_LANG['js_languages']['invalid_pay_points'] = '消费积分数不是一个整数。';
-$_LANG['js_languages']['invalid_rank_points'] = '等级积分数不是一个整数。';
+$_LANG['js_languages']['invalid_pay_points'] = '消费金币数不是一个整数。';
+$_LANG['js_languages']['invalid_rank_points'] = '等级金币数不是一个整数。';
 $_LANG['js_languages']['password_len_err'] = '新密码和确认密码的长度不能小于6';
 ?>

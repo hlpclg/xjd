@@ -92,7 +92,7 @@ $_LANG['detail'] = '查看';
 $_LANG['phone'] = '电话';
 $_LANG['group_buy'] = '（团购）';
 $_LANG['error_get_goods_info'] = '获取订单商品信息错误';
-$_LANG['exchange_goods'] = '（积分兑换）';
+$_LANG['exchange_goods'] = '（金币兑换）';
 
 $_LANG['js_languages']['remove_confirm'] = '删除订单将清除该订单的所有信息。您确定要这么做吗？';
 
@@ -185,7 +185,7 @@ $_LANG['label_pack_fee'] = '包装费用：';
 $_LANG['label_card_fee'] = '贺卡费用：';
 $_LANG['label_money_paid'] = '已付款金额：';
 $_LANG['label_surplus'] = '使用余额：';
-$_LANG['label_integral'] = '使用积分：';
+$_LANG['label_integral'] = '使用金币：';
 $_LANG['label_bonus'] = '使用红包：';
 $_LANG['label_order_amount'] = '订单总金额：';
 $_LANG['label_money_dues'] = '应付款金额：';
@@ -210,14 +210,14 @@ $_LANG['return_list'] = '返回订单列表';
 
 /* 订单处理提示 */
 $_LANG['surplus_not_enough'] = '该订单使用 %s 余额支付，现在用户余额不足';
-$_LANG['integral_not_enough'] = '该订单使用 %s 积分支付，现在用户积分不足';
+$_LANG['integral_not_enough'] = '该订单使用 %s 金币支付，现在用户金币不足';
 $_LANG['bonus_not_available'] = '该订单使用红包支付，现在红包不可用';
 
 /* 购货人信息 */
 $_LANG['display_buyer'] = '显示购货人信息';
 $_LANG['buyer_info'] = '购货人信息';
-$_LANG['pay_points'] = '消费积分';
-$_LANG['rank_points'] = '等级积分';
+$_LANG['pay_points'] = '消费金币';
+$_LANG['rank_points'] = '等级金币';
 $_LANG['user_money'] = '账户余额';
 $_LANG['email'] = '电子邮件';
 $_LANG['rank_name'] = '会员等级';
@@ -297,14 +297,14 @@ $_LANG['no_card'] = '不要贺卡';
 $_LANG['add_to_order'] = '加入订单';
 $_LANG['calc_order_amount'] = '计算订单金额';
 $_LANG['available_surplus'] = '可用余额：';
-$_LANG['available_integral'] = '可用积分：';
+$_LANG['available_integral'] = '可用金币：';
 $_LANG['available_bonus'] = '可用红包：';
 $_LANG['admin'] = '管理员添加';
 $_LANG['search_goods'] = '按商品编号或商品名称或商品货号搜索';
 $_LANG['category'] = '分类';
 $_LANG['brand'] = '品牌';
 $_LANG['user_money_not_enough'] = '用户余额不足';
-$_LANG['pay_points_not_enough'] = '用户积分不足';
+$_LANG['pay_points_not_enough'] = '用户金币不足';
 $_LANG['money_paid_enough'] = '已付款金额比商品总金额和各种费用之和还多，请先退款';
 $_LANG['price_note'] = '备注：商品价格中已包含属性加价';
 $_LANG['select_pack'] = '选择包装';
@@ -325,11 +325,11 @@ $_LANG['address_list'] = '从已有收货地址中选择：';
 $_LANG['order_amount_change'] = '订单总金额由 %s 变为 %s';
 $_LANG['shipping_note'] = '说明：因为订单已发货，修改配送方式将不会改变配送费和保价费。';
 $_LANG['change_use_surplus'] = '编辑订单 %s ，改变使用预付款支付的金额';
-$_LANG['change_use_integral'] = '编辑订单 %s ，改变使用积分支付的数量';
+$_LANG['change_use_integral'] = '编辑订单 %s ，改变使用金币支付的数量';
 $_LANG['return_order_surplus'] = '由于取消、无效或退货操作，退回支付订单 %s 时使用的预付款';
-$_LANG['return_order_integral'] = '由于取消、无效或退货操作，退回支付订单 %s 时使用的积分';
-$_LANG['order_gift_integral'] = '订单 %s 赠送的积分';
-$_LANG['return_order_gift_integral'] = '由于退货或未发货操作，退回订单 %s 赠送的积分';
+$_LANG['return_order_integral'] = '由于取消、无效或退货操作，退回支付订单 %s 时使用的金币';
+$_LANG['order_gift_integral'] = '订单 %s 赠送的金币';
+$_LANG['return_order_gift_integral'] = '由于退货或未发货操作，退回订单 %s 赠送的金币';
 $_LANG['invoice_no_mall'] = '&nbsp;&nbsp;&nbsp;&nbsp;多个发货单号，请用英文逗号（“,”）隔开。';
 
 $_LANG['js_languages']['input_price'] = '自定义价格';

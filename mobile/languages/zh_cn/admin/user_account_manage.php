@@ -31,7 +31,7 @@ $_LANG['order_by_surplus'] = '订单列表';
 $_LANG['label_user_name'] = '会员名称';
 $_LANG['order_sn'] = '订单号';
 $_LANG['surplus'] = '使用余额';
-$_LANG['integral_money'] = '积分使用余额';
+$_LANG['integral_money'] = '金币使用余额';
 $_LANG['add_time'] = '订单时间';
 $_LANG['view_order'] = '查看订单';
 $_LANG['user_account_info'] = '会员账户信息';
@@ -41,7 +41,7 @@ $_LANG['user_money'] = '用户可用资金';
 $_LANG['frozen_money'] = '用户冻结资金';
 $_LANG['surplus_info'] = '余额使用信息';
 $_LANG['order_surplus'] = '交易使用余额';
-$_LANG['integral_money'] = '积分使用余额';
+$_LANG['integral_money'] = '金币使用余额';
 $_LANG['view'] = '查看';
 
 ?>

@@ -207,7 +207,7 @@ function _register ($username, $password, $email_or_mobile, $other = array(), $r
 		$GLOBALS['user']->set_session($username);
 		$GLOBALS['user']->set_cookie($username);
 
-		/* 注册送积分 */
+		/* 注册送金币 */
 		if(! empty($GLOBALS['_CFG']['register_points']))
 		{
 			log_account_change($_SESSION['user_id'], 0, 0, $GLOBALS['_CFG']['register_points'], $GLOBALS['_CFG']['register_points'], $GLOBALS['_LANG']['register_points']);
@@ -378,7 +378,7 @@ function register($username, $password, $email, $other = array())
         $GLOBALS['user']->set_session($username);
         $GLOBALS['user']->set_cookie($username);
 
-        /* 注册送积分 */
+        /* 注册送金币 */
         if (!empty($GLOBALS['_CFG']['register_points']))
         {
             log_account_change($_SESSION['user_id'], 0, 0, $GLOBALS['_CFG']['register_points'], $GLOBALS['_CFG']['register_points'], $GLOBALS['_LANG']['register_points']);

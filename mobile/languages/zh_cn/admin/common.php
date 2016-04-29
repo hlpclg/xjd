@@ -304,9 +304,9 @@ $_LANG['magazine_list'] = '杂志管理';
 $_LANG['attention_list'] = '关注管理';
 $_LANG['view_sendlist'] = '邮件队列管理';
 
-/* 积分兑换管理 */
-$_LANG['15_exchange_goods'] = '积分商城商品';
-$_LANG['15_exchange_goods_list'] = '积分商城商品列表';
+/* 金币兑换管理 */
+$_LANG['15_exchange_goods'] = '金币商城商品';
+$_LANG['15_exchange_goods_list'] = '金币商城商品列表';
 $_LANG['exchange_goods_add'] = '添加新商品';
 
 /* cls_image类的语言项 */

@@ -35,7 +35,7 @@ $_LANG['label_group_buy'] = '我的团购';
 $_LANG['label_booking'] = '缺货登记';
 $_LANG['label_user_surplus'] = '资金管理';
 $_LANG['label_track_packages'] = '跟踪包裹';
-$_LANG['label_transform_points'] = '积分兑换';
+$_LANG['label_transform_points'] = '金币兑换';
 $_LANG['label_logout'] = '退出';
 
 /* 会员余额(预付款) */
@@ -111,8 +111,8 @@ $_LANG['booking_js']['contact_phone_empty'] = '请输入联系人的电话！';
 $_LANG['confirm_submit'] = '　确 定　';
 $_LANG['member_rank'] = '会员等级';
 $_LANG['member_discount'] = '会员折扣';
-$_LANG['rank_integral'] = '等级积分';
-$_LANG['consume_integral'] = '消费积分';
+$_LANG['rank_integral'] = '等级金币';
+$_LANG['consume_integral'] = '消费金币';
 $_LANG['account_balance'] = '账户余额';
 $_LANG['user_bonus'] = '用户红包';
 $_LANG['user_bonus_info'] = '共计 %d 个,价值 %s';
@@ -281,13 +281,13 @@ $_LANG['order_sn_empty'] = '合并主订单号不能为空';
 $_LANG['merge_order_notice'] = '订单合并是在发货前将相同状态的订单合并成一新的订单。<br />收货地址，送货方式等以主定单为准。';
 $_LANG['order_exist'] = '该订单不存在！';
 $_LANG['order_is_group_buy'] = '[团购]';
-$_LANG['order_is_exchange'] = '[积分商城]';
+$_LANG['order_is_exchange'] = '[金币商城]';
 $_LANG['gb_deposit'] = '（保证金）';
 $_LANG['notice_gb_order_amount'] = '（备注：团购如果有保证金，第一次只需支付保证金和相应的支付费用）';
 $_LANG['business_message'] = '发送/查看商家留言';
 $_LANG['pay_order_by_surplus'] = '追加使用余额支付订单：%s';
 $_LANG['return_surplus_on_cancel'] = '取消订单 %s，退回支付订单时使用的预付款';
-$_LANG['return_integral_on_cancel'] = '取消订单 %s，退回支付订单时使用的积分';
+$_LANG['return_integral_on_cancel'] = '取消订单 %s，退回支付订单时使用的金币';
 
 /* 订单状态 */
 $_LANG['os'][OS_UNCONFIRMED] = '未确认';
@@ -454,9 +454,9 @@ $_LANG['credit_line'] = '信用额度';
 $_LANG['your_bonus'] = '红包';
 $_LANG['your_message'] = '留言';
 $_LANG['your_order'] = '订单';
-$_LANG['your_integral'] = '积分';
+$_LANG['your_integral'] = '金币';
 $_LANG['your_level'] = '您的等级是 %s ';
-$_LANG['next_level'] = '您还差 %s 积分达到 %s ';
+$_LANG['next_level'] = '您还差 %s 金币达到 %s ';
 $_LANG['attention'] = '关注';
 $_LANG['no_attention'] = '取消关注';
 $_LANG['del_attention'] = '确认取消此商品的关注么？';
@@ -605,8 +605,8 @@ $_LANG['affiliate_intro'][0] = '　　本网店为鼓励推荐新用户注册，
 
 　　１、将本站提供给您的推荐代码，发送到论坛、博客上。
 　　２、访问者点击链接，访问网店。
-　　３、在访问者点击链接的 <b>%d%s</b> 内，若该访问者在本站注册，即认定该用户是您推荐的，您将获得等级积分 <b>%d</b> 的奖励 (当您的等级积分超过 <b>%d</b> 时，不再获得奖励)。
-　　４、该用户今后在本站的一切消费，您均能获得一定比例的提成。目前实行的提成总额为订单金额的 <b>%s</b> 、积分的 <b>%s</b> ，分配给您、推荐您的人等，具体分配规则请参阅 <b><a href="#myrecommend">我推荐的会员</a></b>。
+　　３、在访问者点击链接的 <b>%d%s</b> 内，若该访问者在本站注册，即认定该用户是您推荐的，您将获得等级金币 <b>%d</b> 的奖励 (当您的等级金币超过 <b>%d</b> 时，不再获得奖励)。
+　　４、该用户今后在本站的一切消费，您均能获得一定比例的提成。目前实行的提成总额为订单金额的 <b>%s</b> 、金币的 <b>%s</b> ，分配给您、推荐您的人等，具体分配规则请参阅 <b><a href="#myrecommend">我推荐的会员</a></b>。
 　　５、提成由管理员人工审核发放，请您耐心等待。
 　　６、您可以通过分成明细来查看您的介绍、分成情况。';
 $_LANG['affiliate_intro'][1] = '　　本网店为鼓励推荐新用户注册，现开展<b>推荐订单分成</b>活动，活动流程如下：
@@ -614,14 +614,14 @@ $_LANG['affiliate_intro'][1] = '　　本网店为鼓励推荐新用户注册，
 　　１、在浏览商品时，点击推荐此商品，获得推荐代码，将其发送到论坛、博客上。
 　　２、访问者点击链接，访问网店。
 　　３、在访问者点击链接的 <b>%d%s</b> 内，若该访问者在本站有订单，即认定该订单是您推荐的。
-　　４、您将获得该订单金额的 <b>%s</b> 、积分的 <b>%s</b>的奖励。
+　　４、您将获得该订单金额的 <b>%s</b> 、金币的 <b>%s</b>的奖励。
 　　５、提成由管理员人工审核发放，请您耐心等待。
 　　６、您可以通过分成明细来查看您的介绍、分成情况。';
 
-$_LANG['level_point_all'] = '积分分成总额百分比';
+$_LANG['level_point_all'] = '金币分成总额百分比';
 $_LANG['level_money_all'] = '现金分成总额百分比';
-$_LANG['level_register_all'] = '注册积分分成数';
-$_LANG['level_register_up'] = '等级积分分成上限';
+$_LANG['level_register_all'] = '注册金币分成数';
+$_LANG['level_register_up'] = '等级金币分成上限';
 
 $_LANG['affiliate_stats'][0] = '等待处理';
 $_LANG['affiliate_stats'][1] = '已分成';
@@ -629,12 +629,12 @@ $_LANG['affiliate_stats'][2] = '取消分成';
 $_LANG['affiliate_stats'][3] = '已撤销';
 $_LANG['affiliate_stats'][4] = '等待买家付款';
 
-$_LANG['level_point'] = '积分分成百分比';
+$_LANG['level_point'] = '金币分成百分比';
 $_LANG['level_money'] = '现金分成百分比';
 
 $_LANG['affiliate_status'] = '分成状态';
 
-$_LANG['affiliate_point'] = '积分分成';
+$_LANG['affiliate_point'] = '金币分成';
 $_LANG['affiliate_money'] = '现金分成';
 
 $_LANG['affiliate_expire'] = '有效时间';
@@ -645,8 +645,8 @@ $_LANG['affiliate_num'] = '人数';
 $_LANG['affiliate_view'] = '效果';
 $_LANG['affiliate_code'] = '代码';
 
-$_LANG['register_affiliate'] = '推荐会员ID %s ( %s ) 注册送积分';
-$_LANG['register_points'] = '注册送积分';
+$_LANG['register_affiliate'] = '推荐会员ID %s ( %s ) 注册送金币';
+$_LANG['register_points'] = '注册送金币';
 
 $_LANG['validate_ok'] = '%s 您好，您email %s 已通过验证';
 $_LANG['validate_fail'] = '验证失败，请确认你的验证链接是否正确';
@@ -673,16 +673,16 @@ $_LANG['code_copy'] = '复制代码';
 $_LANG['show_good_to_you'] = '推荐给你一个好东西';
 
 
-/* 积分兑换 */
-$_LANG['transform_points'] = '积分兑换';
-$_LANG['invalid_points'] = '你输入的积分是不一个合法值';
+/* 金币兑换 */
+$_LANG['transform_points'] = '金币兑换';
+$_LANG['invalid_points'] = '你输入的金币是不一个合法值';
 $_LANG['invalid_input'] = '无效';
-$_LANG['overflow_points'] = '您输入的兑换积分超过您的实际积分';
-$_LANG['to_pay_points'] = '恭喜您， 你%s论坛%s兑换了%s的商城消费积分';
-$_LANG['to_rank_points'] = '恭喜您， 你%s论坛%s兑换了%s的商城等级积分';
-$_LANG['from_pay_points'] = '恭喜您， 你%s的商城消费积分兑换%s论坛%s';
-$_LANG['from_rank_points'] = '恭喜您， 你%s论坛%s兑换了%s的商城消费积分';
-$_LANG['cur_points'] = '您的当前积分';
+$_LANG['overflow_points'] = '您输入的兑换金币超过您的实际金币';
+$_LANG['to_pay_points'] = '恭喜您， 你%s论坛%s兑换了%s的商城消费金币';
+$_LANG['to_rank_points'] = '恭喜您， 你%s论坛%s兑换了%s的商城等级金币';
+$_LANG['from_pay_points'] = '恭喜您， 你%s的商城消费金币兑换%s论坛%s';
+$_LANG['from_rank_points'] = '恭喜您， 你%s论坛%s兑换了%s的商城消费金币';
+$_LANG['cur_points'] = '您的当前金币';
 $_LANG['rule_list'] = '兑换规则';
 $_LANG['transform'] = '兑换';
 $_LANG['rate_is'] = '比例为';
@@ -693,16 +693,16 @@ $_LANG['bbs'] = '论坛';
 $_LANG['exchange_amount'] = '支出';
 $_LANG['exchange_desamount'] = '收入';
 $_LANG['exchange_ratio'] = '兑换比率';
-$_LANG['exchange_points'][0] = '商城等级积分';
-$_LANG['exchange_points'][1] = '商城消费积分';
+$_LANG['exchange_points'][0] = '商城等级金币';
+$_LANG['exchange_points'][1] = '商城消费金币';
 $_LANG['exchange_action'] = '换';
 $_LANG['exchange_js']['deny'] = '禁止兑换';
 $_LANG['exchange_js']['balance'] = '您的{%s}余额不足，请重新输入';
-$_LANG['exchange_deny'] = '该积分不允许兑换';
+$_LANG['exchange_deny'] = '该金币不允许兑换';
 $_LANG['exchange_success'] = '恭喜您， 你用%s个%s兑换了%s个%s';
-$_LANG['exchange_error_1'] = 'UCenter提交积分兑换时发生错误';
-$_LANG['rank_points'] = '商城等级积分';
-$_LANG['pay_points'] = '商城消费积分';
+$_LANG['exchange_error_1'] = 'UCenter提交金币兑换时发生错误';
+$_LANG['rank_points'] = '商城等级金币';
+$_LANG['pay_points'] = '商城消费金币';
 
 /* 密码强度 */
 $_LANG['pwd_lower'] = '弱';
@@ -715,7 +715,7 @@ $_LANG['user_reg_info'][8] = '不注册为会员不可以在本店购买商品';
 $_LANG['user_reg_info'][3] = '但注册之后您可以';
 $_LANG['user_reg_info'][4] = '保存您的个人资料';
 $_LANG['user_reg_info'][5] = '收藏您关注的商品';
-$_LANG['user_reg_info'][6] = '享受会员积分制度';
+$_LANG['user_reg_info'][6] = '享受会员金币制度';
 $_LANG['user_reg_info'][7] = '订阅本店商品信息';
 $_LANG['add_bonus'] = '添加红包';
 

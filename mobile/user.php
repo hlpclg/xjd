@@ -105,7 +105,7 @@ if(in_array($action, $ui_arr)){
 	$row = $db->getRow($sql);
 	$car_off = $row['value'];
 	$smarty->assign('car_off', $car_off);
-	/* 是否显示积分兑换 */
+	/* 是否显示金币兑换 */
 	if(! empty($_CFG['points_rule']) && unserialize($_CFG['points_rule'])){
 		$smarty->assign('show_transform_points', 1);
 	}
@@ -3661,12 +3661,12 @@ function action_shaidan_save()
 		// 图片数量
 		$imgnum = count($img_srcs);
 		
-		// 是否赠送积分
+		// 是否赠送金币
 		if($info['is_points'] == 0 && $weizhi <= $_CFG['shaidan_pre_num'] && $imgnum >= $_CFG['shaidan_img_num'])
 		{
 			$pay_points = $_CFG['shaidan_pay_points'];
 			$db->query("UPDATE " . $ecs->table('shaidan') . " SET pay_points = '$pay_points', is_points = 1 WHERE shaidan_id = '$shaidan_id'");
-			$db->query("INSERT INTO " . $ecs->table('account_log') . "(user_id, rank_points, pay_points, change_time, change_desc, change_type) " . "VALUES ('$info[user_id]', 0, '" . $pay_points . "', " . gmtime() . ", '晒单获得积分', '99')");
+			$db->query("INSERT INTO " . $ecs->table('account_log') . "(user_id, rank_points, pay_points, change_time, change_desc, change_type) " . "VALUES ('$info[user_id]', 0, '" . $pay_points . "', " . gmtime() . ", '晒单获得金币', '99')");
 			$log = $db->getRow("SELECT SUM(rank_points) AS rank_points, SUM(pay_points) AS pay_points FROM " . $ecs->table("account_log") . " WHERE user_id = '$info[user_id]'");
 			$db->query("UPDATE " . $ecs->table('users') . " SET rank_points = '" . $log['rank_points'] . "', pay_points = '" . $log['pay_points'] . "' WHERE user_id = '$info[user_id]'");
 		}
@@ -5413,12 +5413,12 @@ function affiliate_ck($oid){
 	}
 	//	获取订单所有商品
 	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
-	//	获取推荐人用户积分
+	//	获取推荐人用户金币
 	$user_rank = $db->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users')." WHERE user_id  = ".$pid);
 	$recom_rank = $GLOBALS['_CFG']['recom_rank'];
     $order_sn = $row['order_sn'];
-	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
-	$split_money = $recom_rank > $user_rank ? 0 : $split_money-$discount_price;	//	判断用户的积分是否达到积分下限，分成金额-使用红包以及积分的金额----订单分销金额
+	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及金币的金额
+	$split_money = $recom_rank > $user_rank ? 0 : $split_money-$discount_price;	//	判断用户的金币是否达到金币下限，分成金额-使用红包以及金币的金额----订单分销金额
 	//	订单没有分成去分成
     if (empty($row['is_separate'])){
 		$affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
@@ -6003,7 +6003,7 @@ function action_order_query()
 }
 
 /* 
- *	调整论坛积分页面
+ *	调整论坛金币页面
  */
 function action_transform_points()
 {
@@ -6060,7 +6060,7 @@ function action_transform_points()
 		$bbs_points_name = $user->get_points_name();
 		$total_bbs_points = $user->get_points($row['user_name']);
 		
-		/* 论坛积分 */
+		/* 论坛金币 */
 		$bbs_points = array();
 		foreach($bbs_points_name as $key => $val)
 		{
@@ -6108,7 +6108,7 @@ function action_transform_points()
 }
 
 /* 
- *	调整论坛积分
+ *	调整论坛金币
  */
 function action_act_transform_points()
 {
@@ -6164,7 +6164,7 @@ function action_act_transform_points()
 			$max_points = $row['rank_points'];
 	}
 	
-	/* 检查积分是否超过最大值 */
+	/* 检查金币是否超过最大值 */
 	if($max_points <= 0 || $num > $max_points)
 	{
 		show_message($_LANG['overflow_points'], $_LANG['transform_points'], 'user.php?act=transform_points');
@@ -6176,7 +6176,7 @@ function action_act_transform_points()
 			$result_points = floor($num * $to / $from);
 			$user->set_points($row['user_name'], array(
 				$bbs_key => 0 - $num
-			)); // 调整论坛积分
+			)); // 调整论坛金币
 			log_account_change($row['user_id'], 0, 0, 0, $result_points, $_LANG['transform_points'], ACT_OTHER);
 			show_message(sprintf($_LANG['to_pay_points'], $num, $points_name[$bbs_key]['title'], $result_points), $_LANG['transform_points'], 'user.php?act=transform_points');
 		
@@ -6184,24 +6184,24 @@ function action_act_transform_points()
 			$result_points = floor($num * $to / $from);
 			$user->set_points($row['user_name'], array(
 				$bbs_key => 0 - $num
-			)); // 调整论坛积分
+			)); // 调整论坛金币
 			log_account_change($row['user_id'], 0, 0, $result_points, 0, $_LANG['transform_points'], ACT_OTHER);
 			show_message(sprintf($_LANG['to_rank_points'], $num, $points_name[$bbs_key]['title'], $result_points), $_LANG['transform_points'], 'user.php?act=transform_points');
 		
 		case FROM_P:
 			$result_points = floor($num * $to / $from);
-			log_account_change($row['user_id'], 0, 0, 0, 0 - $num, $_LANG['transform_points'], ACT_OTHER); // 调整商城积分
+			log_account_change($row['user_id'], 0, 0, 0, 0 - $num, $_LANG['transform_points'], ACT_OTHER); // 调整商城金币
 			$user->set_points($row['user_name'], array(
 				$bbs_key => $result_points
-			)); // 调整论坛积分
+			)); // 调整论坛金币
 			show_message(sprintf($_LANG['from_pay_points'], $num, $result_points, $points_name[$bbs_key]['title']), $_LANG['transform_points'], 'user.php?act=transform_points');
 		
 		case FROM_R:
 			$result_points = floor($num * $to / $from);
-			log_account_change($row['user_id'], 0, 0, 0 - $num, 0, $_LANG['transform_points'], ACT_OTHER); // 调整商城积分
+			log_account_change($row['user_id'], 0, 0, 0 - $num, 0, $_LANG['transform_points'], ACT_OTHER); // 调整商城金币
 			$user->set_points($row['user_name'], array(
 				$bbs_key => $result_points
-			)); // 调整论坛积分
+			)); // 调整论坛金币
 			show_message(sprintf($_LANG['from_rank_points'], $num, $result_points, $points_name[$bbs_key]['title']), $_LANG['transform_points'], 'user.php?act=transform_points');
 	}
 }

@@ -413,10 +413,10 @@ class shopex46
                 $goods['goods_img'] = $row['bigimgremote'];
             }
 
-            /* 积分：根据商店设置 */
+            /* 金币：根据商店设置 */
             if ($config['offer_pointtype'] == '0')
             {
-                /* 不使用积分 */
+                /* 不使用金币 */
                 $goods['integral'] = '0';
             }
             elseif ($config['offer_pointtype'] == '1')

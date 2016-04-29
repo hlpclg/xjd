@@ -344,7 +344,7 @@ elseif($_REQUEST['act'] = 'done')
         $order['extension_id'] = 0;
     }
 
-    /* 检查积分余额是否合法 */
+    /* 检查金币余额是否合法 */
     $user_id = $_SESSION['user_id'];
     if ($user_id > 0)
     {
@@ -356,9 +356,9 @@ elseif($_REQUEST['act'] = 'done')
             $order['surplus'] = 0;
         }
 
-        // 查询用户有多少积分
-        $flow_points = flow_available_points();  // 该订单允许使用的积分
-        $user_points = $user_info['pay_points']; // 用户的积分总数
+        // 查询用户有多少金币
+        $flow_points = flow_available_points();  // 该订单允许使用的金币
+        $user_points = $user_info['pay_points']; // 用户的金币总数
 
         $order['integral'] = min($order['integral'], $user_points, $flow_points);
         if ($order['integral'] < 0)
@@ -449,7 +449,7 @@ elseif($_REQUEST['act'] = 'done')
         }
     }
     
-     /* 如果订单金额为0（使用余额或积分或红包支付），修改订单状态为已确认、已付款 */
+     /* 如果订单金额为0（使用余额或金币或红包支付），修改订单状态为已确认、已付款 */
     if ($order['order_amount'] <= 0)
     {
         $order['order_status'] = OS_CONFIRMED;
@@ -511,7 +511,7 @@ elseif($_REQUEST['act'] = 'done')
     $db->query($sql);
 
 
-    /* 处理余额、积分、红包 */
+    /* 处理余额、金币、红包 */
     if ($order['user_id'] > 0 && $order['surplus'] > 0)
     {
         log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf('支付订单 %s', $order['order_sn']));

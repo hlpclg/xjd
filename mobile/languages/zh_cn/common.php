@@ -194,7 +194,7 @@ $_LANG['no_keywords'] = "请输入搜索关键词！";
 
 /* 分页排序 */
 $_LANG['exchange_sort']['goods_id'] = '按上架时间排序';
-$_LANG['exchange_sort']['exchange_integral'] = '按积分排序';
+$_LANG['exchange_sort']['exchange_integral'] = '按金币排序';
 $_LANG['exchange_sort']['last_update'] = '按更新时间排序';
 $_LANG['sort']['goods_id'] = '按上架时间排序';
 $_LANG['sort']['shop_price'] = '按价格排序';
@@ -259,7 +259,7 @@ $_LANG['snatch_js']['price_not_number'] = '价格只能是数字';
 $_LANG['snatch_list'] = '夺宝奇兵列表';
 $_LANG['not_in_range'] = '你只能在%d到%d之间出价';
 $_LANG['also_bid'] = '你已经出过价格 %s 了';
-$_LANG['lack_pay_points'] = '你积分不够，不能出价';
+$_LANG['lack_pay_points'] = '你金币不够，不能出价';
 $_LANG['snatch'] = '夺宝奇兵';
 $_LANG['snatch_is_end'] = '活动已经结束';
 $_LANG['snatch_start_time'] = '本次活动从 %s 到 %s 截止';
@@ -272,7 +272,7 @@ $_LANG['or_can'] = '则能以';
 $_LANG['shopping_product'] = '购买该款奖品';
 $_LANG['victory_price_product'] = '获胜用户将能按当期竞拍价购得该款奖品.';
 $_LANG['now_not_snatch'] = '当前没有活动';
-$_LANG['my_integral'] = '我的积分';
+$_LANG['my_integral'] = '我的金币';
 $_LANG['bid'] = '出价';
 $_LANG['me_bid'] = '我要出价';
 $_LANG['me_now_bid'] = '我的出价';
@@ -299,8 +299,8 @@ $_LANG['img'] = '图片';
 $_LANG['no_pack'] = '不要包装';
 $_LANG['no_card'] = '不要贺卡';
 $_LANG['bless_note'] = '祝福语';
-$_LANG['use_integral'] = '使用积分';
-$_LANG['can_use_integral'] = '您当前的可用积分为';
+$_LANG['use_integral'] = '使用金币';
+$_LANG['can_use_integral'] = '您当前的可用金币为';
 $_LANG['noworder_can_integral'] = '本订单最多可以使用';
 $_LANG['use_surplus'] = '使用余额';
 $_LANG['your_surplus'] = '您当前的可用余额为';
@@ -331,7 +331,7 @@ $_LANG['pack_fee'] = '包装费用';
 $_LANG['card_fee'] = '贺卡费用';
 $_LANG['total_fee'] = '应付款金额';
 $_LANG['self_site'] = '本站';
-$_LANG['order_gift_integral'] = '订单 %s 赠送的积分';
+$_LANG['order_gift_integral'] = '订单 %s 赠送的金币';
 
 $_LANG['order_payed_sms'] = '订单 %s 付款了。收货人：%s；电话：%s。';
 
@@ -407,7 +407,7 @@ $_LANG['gb_ladder_amount'] = '数量';
 $_LANG['gb_ladder_price'] = '价格';
 $_LANG['gb_deposit'] = '保证金：';
 $_LANG['gb_restrict_amount'] = '限购数量：';
-$_LANG['gb_gift_integral'] = '赠送积分：';
+$_LANG['gb_gift_integral'] = '赠送金币：';
 $_LANG['gb_cur_price'] = '当前价格：';
 $_LANG['gb_valid_goods'] = '当前定购数量：';
 $_LANG['gb_final_price'] = '成交价格：';
@@ -477,14 +477,14 @@ $_LANG['ws_remark'] = '请输入您的联系方式、付款方式和配送方式
 $_LANG['ws_order_submitted'] = '您的订单已提交成功，请记住您的订单号: %s。';
 $_LANG['ws_price_list'] = '价格单';
 
-/* 积分兑换部分语言项 */
-$_LANG['exchange'] = '积分商城';
-$_LANG['exchange_integral'] = '消耗积分：';
+/* 金币兑换部分语言项 */
+$_LANG['exchange'] = '金币商城';
+$_LANG['exchange_integral'] = '消耗金币：';
 $_LANG['exchange_goods'] = '立刻兑换';
 $_LANG['eg_error_login'] = '对不起，您没有登录，不能参加兑换，请您先登录！';
 $_LANG['eg_error_status'] = '对不起，该商品已经取消，现在不能兑换！';
-$_LANG['eg_error_integral'] = '对不起，您现有的积分值不够兑换本商品！';
-$_LANG['notice_eg_integral'] = '积分商城商品需要消耗积分：';
+$_LANG['eg_error_integral'] = '对不起，您现有的金币值不够兑换本商品！';
+$_LANG['notice_eg_integral'] = '金币商城商品需要消耗金币：';
 $_LANG['eg_error_number'] = '对不起，该商品库存不足，现在不能兑换！';
 
 /* 会员登录注册 */
@@ -720,7 +720,7 @@ $_LANG['fat_discount'] = '享受价格折扣';
 $_LANG['orgtotal'] = '原始价格';
 $_LANG['heart_buy'] = '心动不如行动';
 $_LANG['user_hello'] = '免费成为会员,畅享超多优惠！';
-$_LANG['user_h1'] = '注册送积分，还在等什么，快快成为我们的会员吧';
+$_LANG['user_h1'] = '注册送金币，还在等什么，快快成为我们的会员吧';
 $_LANG['login_hello'] = '登录会员账号，畅享更多优惠！';
 $_LANG['login_h1'] = '随时了解账户状况';
 /* 其他模板涉及常用语言项 */

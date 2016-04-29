@@ -903,7 +903,7 @@ elseif ($_REQUEST['act'] == 'delivery_ship')
     /* 如果当前订单已经全部发货 */
     if ($order_finish)
     {
-        /* 如果订单用户不为空，计算积分，并发给用户；发红包 */
+        /* 如果订单用户不为空，计算金币，并发给用户；发红包 */
         if ($order['user_id'] > 0)
         {
 		pushUserMsg($order['user_id'],array('order_sn'=>$order['order_sn'],'shoping_code'=>$invoice_no,'shoping_type'=>$order['shipping_name']),2);
@@ -913,7 +913,7 @@ elseif ($_REQUEST['act'] == 'delivery_ship')
         	/* 取得用户信息 */
             	$user = user_info($order['user_id']);
 
-            	/* 计算并发放积分 */
+            	/* 计算并发放金币 */
             	$integral = integral_to_give($order);
 
 	        log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($_LANG['order_gift_integral'], $order['order_sn']));
@@ -1087,13 +1087,13 @@ elseif ($_REQUEST['act'] == 'delivery_cancel_ship')
     /* 发货单全退回时，退回其它 */
     if ($order['order_status'] == SS_SHIPPED_ING)
     {
-        /* 如果订单用户不为空，计算积分，并退回 */
+        /* 如果订单用户不为空，计算金币，并退回 */
         if ($order['user_id'] > 0)
         {
             /* 取得用户信息 */
             $user = user_info($order['user_id']);
 
-            /* 计算并退回积分 */
+            /* 计算并退回金币 */
             $integral = integral_to_give($order);
             log_account_change($order['user_id'], 0, 0, (-1) * intval($integral['rank_points']), (-1) * intval($integral['custom_points']), sprintf($_LANG['return_order_gift_integral'], $order['order_sn']));
 
@@ -1922,10 +1922,10 @@ elseif ($_REQUEST['act'] == 'step_post')
                 {
                     if($old_order['extension_code']!='exchange_goods')
                     {
-                    /* 如果设置了积分，再使用积分支付 */
+                    /* 如果设置了金币，再使用金币支付 */
                        if (isset($_POST['integral']) && intval($_POST['integral']) > 0)
                          {
-                           /* 检查积分是否足够 */
+                           /* 检查金币是否足够 */
                            $order['integral']          = intval($_POST['integral']);
                            $order['integral_money']    = value_of_integral(intval($_POST['integral']));
                            if ($old_order['integral'] + $user['pay_points'] < $order['integral'])
@@ -1956,7 +1956,7 @@ elseif ($_REQUEST['act'] == 'step_post')
                                 sys_msg($_LANG['user_money_not_enough']);
                             }
 
-                            /* 如果红包和积分和余额足以支付，把待付款金额改为0，退回部分积分余额 */
+                            /* 如果红包和金币和余额足以支付，把待付款金额改为0，退回部分金币余额 */
                             $order['order_amount'] -= $order['surplus'];
                             if ($order['order_amount'] < 0)
                             {
@@ -1967,7 +1967,7 @@ elseif ($_REQUEST['act'] == 'step_post')
                     }
                     else
                     {
-                        /* 如果红包和积分足以支付，把待付款金额改为0，退回部分积分 */
+                        /* 如果红包和金币足以支付，把待付款金额改为0，退回部分金币 */
                         $order['integral_money']    += $order['order_amount'];
                         $order['integral']          = integral_of_value($order['integral_money']);
                         $order['order_amount']      = 0;
@@ -1995,7 +1995,7 @@ elseif ($_REQUEST['act'] == 'step_post')
         }
         admin_log($sn, 'edit', 'order');
 
-        /* 如果余额、积分、红包有变化，做相应更新 */
+        /* 如果余额、金币、红包有变化，做相应更新 */
         if ($old_order['user_id'] > 0)
         {
             $user_money_change = $old_order['surplus'] - $order['surplus'];
@@ -2381,7 +2381,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit')
             /* 计算可用余额 */
             $smarty->assign('available_user_money', $order['surplus'] + $user['user_money']);
 
-            /* 计算可用积分 */
+            /* 计算可用金币 */
             $smarty->assign('available_pay_points', $order['integral'] + $user['pay_points']);
 
             /* 取得用户可用红包 */
@@ -2960,7 +2960,7 @@ elseif ($_REQUEST['act'] == 'operate')
 		/* 如果当前订单已经全部发货 */
 		if ($order_finish)
 		{
-			/* 如果订单用户不为空，计算积分，并发给用户；发红包 */
+			/* 如果订单用户不为空，计算金币，并发给用户；发红包 */
 			if ($order['user_id'] > 0)
 			{
 			pushUserMsg($order['user_id'],array('order_sn'=>$order['order_sn'],'shoping_code'=>$invoice_no,'shoping_type'=>$order['shipping_name']),2);
@@ -2970,7 +2970,7 @@ elseif ($_REQUEST['act'] == 'operate')
 				/* 取得用户信息 */
 					$user = user_info($order['user_id']);
 
-					/* 计算并发放积分 */
+					/* 计算并发放金币 */
 					$integral = integral_to_give($order);
 
 				log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($_LANG['order_gift_integral'], $order['order_sn']));
@@ -3263,13 +3263,13 @@ elseif ($_REQUEST['act'] == 'operate')
     /* 如果当前订单已经全部发货 */
     if ($order_finish)
     {
-        /* 如果订单用户不为空，计算积分，并发给用户；发红包 */
+        /* 如果订单用户不为空，计算金币，并发给用户；发红包 */
         if ($order['user_id'] > 0)
         {
             /* 取得用户信息 */
             $user = user_info($order['user_id']);
 
-            /* 计算并发放积分 */
+            /* 计算并发放金币 */
             $integral = integral_to_give($order);
 
             log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($_LANG['order_gift_integral'], $order['order_sn']));
@@ -4026,7 +4026,7 @@ elseif ($_REQUEST['act'] == 'batch_operate_post')
                     send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html']);
                 }
 
-                /* 退还用户余额、积分、红包 */
+                /* 退还用户余额、金币、红包 */
                 return_user_surplus_integral_bonus($order);
 
                 $sn_list[] = $order['order_sn'];
@@ -4084,7 +4084,7 @@ elseif ($_REQUEST['act'] == 'batch_operate_post')
                     send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html']);
                 }
 
-                /* 退还用户余额、积分、红包 */
+                /* 退还用户余额、金币、红包 */
                 return_user_surplus_integral_bonus($order);
 
                 $sn_list[] = $order['order_sn'];
@@ -4687,13 +4687,13 @@ elseif ($_REQUEST['act'] == 'operate_post')
         /* 记录log */
         order_action($order['order_sn'], $order['order_status'], SS_UNSHIPPED, $order['pay_status'], $action_note);
 
-        /* 如果订单用户不为空，计算积分，并退回 */
+        /* 如果订单用户不为空，计算金币，并退回 */
         if ($order['user_id'] > 0)
         {
             /* 取得用户信息 */
             $user = user_info($order['user_id']);
 
-            /* 计算并退回积分 */
+            /* 计算并退回金币 */
             $integral = integral_to_give($order);
             log_account_change($order['user_id'], 0, 0, (-1) * intval($integral['rank_points']), (-1) * intval($integral['custom_points']), sprintf($_LANG['return_order_gift_integral'], $order['order_sn']));
 
@@ -4767,7 +4767,7 @@ elseif ($_REQUEST['act'] == 'operate_post')
             change_order_goods_storage($order_id, false, SDT_PLACE);
         }
 
-        /* 退还用户余额、积分、红包 */
+        /* 退还用户余额、金币、红包 */
         return_user_surplus_integral_bonus($order);
 
         /* 发送邮件 */
@@ -4817,7 +4817,7 @@ elseif ($_REQUEST['act'] == 'operate_post')
             }
         }
 
-        /* 退货用户余额、积分、红包 */
+        /* 退货用户余额、金币、红包 */
         return_user_surplus_integral_bonus($order);
     }
     /* 退货 */
@@ -4850,7 +4850,7 @@ elseif ($_REQUEST['act'] == 'operate_post')
         /* 记录log */
         order_action($order['order_sn'], OS_RETURNED, SS_UNSHIPPED, PS_UNPAYED, $action_note);
 
-        /* 如果订单用户不为空，计算积分，并退回 */
+        /* 如果订单用户不为空，计算金币，并退回 */
         if ($order['user_id'] > 0)
         {
             /* 取得用户信息 */
@@ -4864,7 +4864,7 @@ elseif ($_REQUEST['act'] == 'operate_post')
 
             if($goods_num['goods_number'] == $goods_num['send_number'])
             {
-                /* 计算并退回积分 */
+                /* 计算并退回金币 */
                 $integral = integral_to_give($order);
                 log_account_change($order['user_id'], 0, 0, (-1) * intval($integral['rank_points']), (-1) * intval($integral['custom_points']), sprintf($_LANG['return_order_gift_integral'], $order['order_sn']));
             }
@@ -4886,7 +4886,7 @@ elseif ($_REQUEST['act'] == 'operate_post')
             }
         }
 
-        /* 退货用户余额、积分、红包 */
+        /* 退货用户余额、金币、红包 */
         return_user_surplus_integral_bonus($order);
 
         /* 获取当前操作员 */
@@ -5848,12 +5848,12 @@ function get_status_list($type = 'all')
 }
 
 /**
- * 退回余额、积分、红包（取消、无效、退货时），把订单使用余额、积分、红包设为0
+ * 退回余额、金币、红包（取消、无效、退货时），把订单使用余额、金币、红包设为0
  * @param   array   $order  订单信息
  */
 function return_user_surplus_integral_bonus($order)
 {
-    /* 处理余额、积分、红包 */
+    /* 处理余额、金币、红包 */
     if ($order['user_id'] > 0 && $order['surplus'] > 0)
     {
         $surplus = $order['money_paid'] < 0 ? $order['surplus'] + $order['money_paid'] : $order['surplus'];
@@ -7820,8 +7820,8 @@ function get_distrib_info_by_id($order_id){
 	$split_money = get_split_money($order_id);
 	$row = $GLOBALS['db']->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o  LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id  WHERE order_id = '$order_id'");
 	$num = count($affiliate['item']);
-	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
-	$split_money -= $discount_price;	//	分成金额-使用红包以及积分的金额----订单分销金额
+	$discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及金币的金额
+	$split_money -= $discount_price;	//	分成金额-使用红包以及金币的金额----订单分销金额
 	$split_money = round($split_money*$affiliate['config']['level_money_all']/100,2);		//	实际分成金额
 	$arr = array();
 	for ($i=0; $i < $num; $i++) {

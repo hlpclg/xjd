@@ -616,7 +616,7 @@ class ucenter extends integrate
     }
 
     /**
-     *  获取论坛有效积分及单位
+     *  获取论坛有效金币及单位
      *
      * @access  public
      * @param

@@ -23,7 +23,7 @@ $_LANG['min_price'] = '价格下限';
 $_LANG['max_price'] = '价格上限';
 $_LANG['price'] = '最多需支付的价格';
 $_LANG['short_price'] = '价格';
-$_LANG['integral'] = '消耗积分';
+$_LANG['integral'] = '消耗金币';
 $_LANG['view_detail'] = '查看活动详情';
 $_LANG['snatch_edit'] = '编辑活动';
 $_LANG['desc'] = '活动描述';
@@ -57,7 +57,7 @@ $_LANG['notice_goodsid'] = '需要先搜索商品，生成商品列表，然后�
 $_LANG['notice_min_price'] = '用户出价范围的下限';
 $_LANG['notice_max_price'] = '用户出价范围的上限';
 $_LANG['notice_price'] = '获奖者出价高于这个价格，则以这个价格购买该商品。为0时按用户出价购买商品';
-$_LANG['notice_integral'] = '每次出价所消耗的积分值';
+$_LANG['notice_integral'] = '每次出价所消耗的金币值';
 
 /*JS 语言项*/
 $_LANG['js_languages']['no_name'] = '没有输入活动名';
@@ -65,7 +65,7 @@ $_LANG['js_languages']['no_desc'] = '没有输入活动描述';
 $_LANG['js_languages']['no_goods_id'] = '没有选择商品';
 $_LANG['js_languages']['invalid_min_price'] = '价格下限为空或不是数字';
 $_LANG['js_languages']['invalid_max_price'] = '最多需支付的价格为空或不是数字';
-$_LANG['js_languages']['invalid_integral'] = '消耗积分为空或不是整数';
+$_LANG['js_languages']['invalid_integral'] = '消耗金币为空或不是整数';
 $_LANG['js_languages']['invalid_starttime'] = '输入的起始时间格式不对，月份，时间应补足两位';
 $_LANG['js_languages']['invalid_endtime'] = '输入的结束时间格式不对，月份，时间应补足两位';
 $_LANG['js_languages']['invalid_gt'] = '输入的结束时间应大于起始日期';

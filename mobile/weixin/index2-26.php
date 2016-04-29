@@ -147,7 +147,7 @@ if ($event['event'] == "CLICK"){
 				$text = "昵称：{$reMsg['user_name']}\r\n";
 				$text .= "邮箱：{$reMsg['email']}\r\n";
 				$text .= "余额：{$reMsg['user_money']}\r\n";
-				$text .= "积分：{$reMsg['pay_points']}\r\n";
+				$text .= "金币：{$reMsg['pay_points']}\r\n";
 				$text .="<a href='{$weburl}mobile/user.php'>查看详情</a>";
 			}
 			echo $weixin->text($text)->reply();exit;
@@ -156,7 +156,7 @@ if ($event['event'] == "CLICK"){
 			if(($num = $api->userSign($wxid)) === false){
 				$text = join('', (array)$GLOBALS['err']->last_message());
 			}else{
-				$text = "签到成功！获取积分{$num}。";
+				$text = "签到成功！获取金币{$num}。";
 			}
 			echo $weixin->text($text)->reply();exit;
 			break;

@@ -2418,8 +2418,8 @@ function formated_weight($weight)
  * @param   int     $user_id        用户id
  * @param   float   $user_money     可用余额变动
  * @param   float   $frozen_money   冻结余额变动
- * @param   int     $rank_points    等级积分变动
- * @param   int     $pay_points     消费积分变动
+ * @param   int     $rank_points    等级金币变动
+ * @param   int     $pay_points     消费金币变动
  * @param   string  $change_desc    变动说明
  * @param   int     $change_type    变动类型：参见常量文件
  * @return  void

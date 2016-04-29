@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ECSHOP 积分商城
+ * ECSHOP 金币商城
  * ============================================================================
  * * 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.68ecshop.com;
@@ -35,7 +35,7 @@ if (empty($_REQUEST['act']))
 /*------------------------------------------------------ */
 
 /*------------------------------------------------------ */
-//-- 积分兑换商品列表
+//-- 金币兑换商品列表
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
@@ -85,7 +85,7 @@ if ($_REQUEST['act'] == 'list')
         $smarty->assign('helps',            get_shop_help());              // 网店帮助
         $smarty->assign('top_goods',        get_top10());                  // 销售排行
         $smarty->assign('promotion_info',   get_promotion_info());         // 促销活动信息
-        $smarty->assign('wap_exchange_ad',  get_wap_advlist('wap积分商城幻灯广告', 5));  //wap首页幻灯广告位
+        $smarty->assign('wap_exchange_ad',  get_wap_advlist('wap金币商城幻灯广告', 5));  //wap首页幻灯广告位
 
 
         /* 调查 */
@@ -132,7 +132,7 @@ if ($_REQUEST['act'] == 'list')
 }
 
 /*------------------------------------------------------ */
-//-- 积分兑换商品详情
+//-- 金币兑换商品详情
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'view')
 {
@@ -258,7 +258,7 @@ elseif ($_REQUEST['act'] == 'buy')
     }
 
     $user_info   = get_user_info($_SESSION['user_id']);
-    $user_points = $user_info['pay_points']; // 用户的积分总数
+    $user_points = $user_info['pay_points']; // 用户的金币总数
     if ($goods['exchange_integral'] > $user_points)
     {
         show_message($_LANG['eg_error_integral'], array($_LANG['back_up_page']), array($back_act), 'error');
@@ -472,8 +472,8 @@ function get_exchange_goods_count($children, $min = 0, $max = 0, $ext='')
  * @access  public
  * @param   string      $type       推荐类型，可以是 best, new, hot, promote
  * @param   string      $cats       分类的ID
- * @param   integer     $min        商品积分下限
- * @param   integer     $max        商品积分上限
+ * @param   integer     $min        商品金币下限
+ * @param   integer     $max        商品金币上限
  * @param   string      $ext        商品扩展查询
  * @return  array
  */
@@ -536,7 +536,7 @@ function get_exchange_recommend_goods($type = '', $cats = '', $min =0,  $max = 0
 }
 
 /**
- * 获得积分兑换商品的详细信息
+ * 获得金币兑换商品的详细信息
  *
  * @access  public
  * @param   integer     $goods_id

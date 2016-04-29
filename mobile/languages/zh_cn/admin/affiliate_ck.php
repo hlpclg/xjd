@@ -21,7 +21,7 @@ $_LANG['affiliate_rollback'] = '撤销';
 $_LANG['log_info'] = '操作信息';
 $_LANG['edit_ok'] = '操作成功';
 $_LANG['edit_fail'] = '操作失败';
-$_LANG['separate_info'] = '订单号 %s, 分成:金钱 %s 积分 %s';
+$_LANG['separate_info'] = '订单号 %s, 分成:金钱 %s 金币 %s';
 $_LANG['separate_info2'] = '用户ID %s ( %s ), 获得的分成金额： %s元';
 $_LANG['sch_order'] = '搜索订单号';
 $_LANG['add_time'] = '下单时间';
@@ -46,7 +46,7 @@ $_LANG['js_languages']['rollback_confirm'] = '您确定要撤销此次分成吗�
 $_LANG['js_languages']['separate_confirm'] = '您确定要分成吗？';
 $_LANG['loginfo'][0] = '用户id:';
 $_LANG['loginfo'][1] = '现金:';
-$_LANG['loginfo'][2] = '积分:';
+$_LANG['loginfo'][2] = '金币:';
 $_LANG['loginfo']['cancel'] = '分成被管理员取消！';
 
 $_LANG['separate_type'] = '分成类型';

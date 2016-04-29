@@ -58,7 +58,7 @@ $_LANG['goods_number'] = '库存';
 
 $_LANG['copy'] = '复制';
 
-$_LANG['integral'] = '积分额度';
+$_LANG['integral'] = '金币额度';
 $_LANG['on_sale'] = '上架';
 $_LANG['not_on_sale'] = '下架';
 $_LANG['best'] = '精品';

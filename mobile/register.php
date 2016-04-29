@@ -36,7 +36,7 @@ if(true)
 	$row = $db->getRow($sql);
 	$car_off = $row['value'];
 	$smarty->assign('car_off', $car_off);
-	/* 是否显示积分兑换 */
+	/* 是否显示金币兑换 */
 	if(! empty($_CFG['points_rule']) && unserialize($_CFG['points_rule']))
 	{
 		$smarty->assign('show_transform_points', 1);

@@ -121,7 +121,7 @@ $_LANG['group_by'] = '团购活动';
 $_LANG['favourable'] = '优惠活动';
 $_LANG['whole_sale'] = '批发管理';
 $_LANG['package_manage'] = '超值礼包';
-$_LANG['exchange_goods'] = '积分商城商品';
+$_LANG['exchange_goods'] = '金币商城商品';
 
 //邮件管理
 $_LANG['attention_list'] = '关注管理';

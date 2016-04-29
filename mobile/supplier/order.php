@@ -692,7 +692,7 @@ elseif($act == 'edit')
             /* 计算可用余额 */
             $smarty->assign('available_user_money', $order['surplus'] + $user['user_money']);
 
-            /* 计算可用积分 */
+            /* 计算可用金币 */
             $smarty->assign('available_pay_points', $order['integral'] + $user['pay_points']);
 
             /* 取得用户可用红包 
@@ -1405,10 +1405,10 @@ elseif ($act == 'step_post')
                 {
                     if($old_order['extension_code']!='exchange_goods')
                     {
-                    /* 如果设置了积分，再使用积分支付 */
+                    /* 如果设置了金币，再使用金币支付 */
                        if (isset($_POST['integral']) && intval($_POST['integral']) > 0)
                          {
-                           /* 检查积分是否足够 */
+                           /* 检查金币是否足够 */
                            $order['integral']          = intval($_POST['integral']);
                            $order['integral_money']    = value_of_integral(intval($_POST['integral']));
                            if ($old_order['integral'] + $user['pay_points'] < $order['integral'])
@@ -1439,7 +1439,7 @@ elseif ($act == 'step_post')
                                 sys_msg($_LANG['user_money_not_enough']);
                             }
 
-                            /* 如果红包和积分和余额足以支付，把待付款金额改为0，退回部分积分余额 */
+                            /* 如果红包和金币和余额足以支付，把待付款金额改为0，退回部分金币余额 */
                             $order['order_amount'] -= $order['surplus'];
                             if ($order['order_amount'] < 0)
                             {
@@ -1450,7 +1450,7 @@ elseif ($act == 'step_post')
                     }
                     else
                     {
-                        /* 如果红包和积分足以支付，把待付款金额改为0，退回部分积分 */
+                        /* 如果红包和金币足以支付，把待付款金额改为0，退回部分金币 */
                         $order['integral_money']    += $order['order_amount'];
                         $order['integral']          = integral_of_value($order['integral_money']);
                         $order['order_amount']      = 0;
@@ -1478,7 +1478,7 @@ elseif ($act == 'step_post')
         }
         admin_log($sn, 'edit', 'order');
 
-        /* 如果余额、积分、红包有变化，做相应更新 */
+        /* 如果余额、金币、红包有变化，做相应更新 */
         if ($old_order['user_id'] > 0)
         {
             $user_money_change = $old_order['surplus'] - $order['surplus'];
@@ -2763,13 +2763,13 @@ function quick_delivery($order_id,$invoice_no,$action_note='Wap端一键发货')
     /* 如果当前订单已经全部发货 */
     if ($order_finish)
     {
-        /* 如果订单用户不为空，计算积分，并发给用户；发红包 */
+        /* 如果订单用户不为空，计算金币，并发给用户；发红包 */
         if ($order['user_id'] > 0)
         {
             /* 取得用户信息 */
             $user = user_info($order['user_id']);
 
-            /* 计算并发放积分 */
+            /* 计算并发放金币 */
             $integral = integral_to_give($order);
 
             log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($_LANG['order_gift_integral'], $order['order_sn']));
@@ -2972,13 +2972,13 @@ function delivery($order_id,$deliery_id,$express_no)
     /* 如果当前订单已经全部发货 */
     if ($order_finish)
     {
-        /* 如果订单用户不为空，计算积分，并发给用户；发红包 */
+        /* 如果订单用户不为空，计算金币，并发给用户；发红包 */
         if ($order['user_id'] > 0)
         {
             /* 取得用户信息 */
             $user = user_info($order['user_id']);
 
-            /* 计算并发放积分 */
+            /* 计算并发放金币 */
             $integral = integral_to_give($order);
 
             log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($GLOBALS['_LANG']['order_gift_integral'], $order['order_sn']));
@@ -3125,13 +3125,13 @@ function cancel_delivery($order_id,$delivery_id)
     /* 发货单全退回时，退回其它 */
     if ($order['order_status'] == SS_SHIPPED_ING)
     {
-        /* 如果订单用户不为空，计算积分，并退回 */
+        /* 如果订单用户不为空，计算金币，并退回 */
         if ($order['user_id'] > 0)
         {
             /* 取得用户信息 */
             $user = user_info($order['user_id']);
 
-            /* 计算并退回积分 */
+            /* 计算并退回金币 */
             $integral = integral_to_give($order);
             log_account_change($order['user_id'], 0, 0, (-1) * intval($integral['rank_points']), (-1) * intval($integral['custom_points']), sprintf($GLOBALS['_LANG']['return_order_gift_integral'], $order['order_sn']));
 

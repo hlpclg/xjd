@@ -24,7 +24,7 @@ $_LANG['start_date'] = '开始时间';
 $_LANG['end_date'] = '结束时间';
 $_LANG['deposit'] = '保证金';
 $_LANG['restrict_amount'] = '限购';
-$_LANG['gift_integral'] = '赠送积分';
+$_LANG['gift_integral'] = '赠送金币';
 $_LANG['valid_order'] = '订单';
 $_LANG['valid_goods'] = '订购商品';
 $_LANG['current_price'] = '当前价格';
@@ -45,7 +45,7 @@ $_LANG['notice_datetime'] = '（年月日－时）';
 $_LANG['label_deposit'] = '保证金：';
 $_LANG['label_restrict_amount'] = '限购数量：';
 $_LANG['notice_restrict_amount']= '达到此数量，团购活动自动结束。0表示没有数量限制。';
-$_LANG['label_gift_integral'] = '赠送积分数：';
+$_LANG['label_gift_integral'] = '赠送金币数：';
 $_LANG['label_price_ladder'] = '价格阶梯：';
 $_LANG['notice_ladder_amount'] = '数量达到';
 $_LANG['notice_ladder_price'] = '享受价格';
@@ -91,7 +91,7 @@ $_LANG['error_restrict_amount'] = '限购数量不能小于价格阶梯中的最
 $_LANG['js_languages']['error_goods_null'] = '您没有选择团购商品！';
 $_LANG['js_languages']['error_deposit'] = '您输入的保证金不是数字！';
 $_LANG['js_languages']['error_restrict_amount'] = '您输入的限购数量不是整数！';
-$_LANG['js_languages']['error_gift_integral'] = '您输入的赠送积分数不是整数！';
+$_LANG['js_languages']['error_gift_integral'] = '您输入的赠送金币数不是整数！';
 $_LANG['js_languages']['search_is_null'] = '没有搜索到任何商品，请重新搜索';
 
 /* 删除团购活动 */

@@ -607,7 +607,7 @@ function get_goods_info($goods_id)
         /* 是否显示商品库存数量 */
         $row['goods_number']  = ($GLOBALS['_CFG']['use_storage'] == 1) ? $row['goods_number'] : '';
 
-        /* 修正积分：转换为可使用多少积分（原来是可以使用多少钱的积分） */
+        /* 修正金币：转换为可使用多少金币（原来是可以使用多少钱的金币） */
         $row['integral']      = $GLOBALS['_CFG']['integral_scale'] ? round($row['integral'] * 100 / $GLOBALS['_CFG']['integral_scale']) : 0;
 
         /* 修正优惠券 */

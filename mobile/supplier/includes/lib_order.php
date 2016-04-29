@@ -542,7 +542,7 @@ function order_weight_price($order_id)
  * @param   array   $order
  * @param   array   $goods
  * @param   array   $consignee
- * @param   bool    $is_gb_deposit  是否团购保证金（如果是，应付款金额只计算商品总额和支付费用，可以获得的积分取 $gift_integral）
+ * @param   bool    $is_gb_deposit  是否团购保证金（如果是，应付款金额只计算商品总额和支付费用，可以获得的金币取 $gift_integral）
  * @return  array
  */
 function order_fee($order, $goods, $consignee)
@@ -757,7 +757,7 @@ function order_fee($order, $goods, $consignee)
 
     // 购物车中的商品能享受红包支付的总额
     $bonus_amount = compute_discount_amount();
-    // 红包和积分最多能支付的金额为商品总额
+    // 红包和金币最多能支付的金额为商品总额
     $max_amount = $total['goods_price'] == 0 ? $total['goods_price'] : $total['goods_price'] - $bonus_amount;
 
     /* 计算订单总额 */
@@ -782,7 +782,7 @@ function order_fee($order, $goods, $consignee)
         $total['bonus_formated'] = price_format($total['bonus'], false);
 
         $total['amount'] -= $use_bonus; // 还需要支付的订单金额
-        $max_amount      -= $use_bonus; // 积分最多还能支付的金额
+        $max_amount      -= $use_bonus; // 金币最多还能支付的金额
 
     }
 
@@ -808,14 +808,14 @@ function order_fee($order, $goods, $consignee)
     $total['surplus'] = $order['surplus'];
     $total['surplus_formated'] = price_format($order['surplus'], false);
 	
-    /* 积分 */
+    /* 金币 */
     $order['integral'] = $order['integral'] > 0 ? $order['integral'] : 0;
     if ($total['amount'] > 0 && $max_amount > 0 && $order['integral'] > 0)
     {
         $integral_money = value_of_integral($order['integral']);
 
-        // 使用积分支付
-        $use_integral            = min($total['amount'], $max_amount, $integral_money); // 实际使用积分支付的金额
+        // 使用金币支付
+        $use_integral            = min($total['amount'], $max_amount, $integral_money); // 实际使用金币支付的金额
         $total['amount']        -= $use_integral;
         $total['integral_money'] = $use_integral;
         $order['integral']       = integral_of_value($use_integral);
@@ -844,7 +844,7 @@ function order_fee($order, $goods, $consignee)
     $total['amount']           += $total['pay_fee']; // 订单总额累加上支付费用
     $total['amount_formated']  = price_format($total['amount'], false);
 
-    /* 取得可以得到的积分和红包 */
+    /* 取得可以得到的金币和红包 */
     if ($order['extension_code'] == 'group_buy')
     {
         $total['will_get_integral'] = $group_buy['gift_integral'];
@@ -1603,9 +1603,9 @@ function unuse_bonus($bonus_id)
 }
 
 /**
- * 计算积分的价值（能抵多少钱）
- * @param   int     $integral   积分
- * @return  float   积分价值
+ * 计算金币的价值（能抵多少钱）
+ * @param   int     $integral   金币
+ * @return  float   金币价值
  */
 function value_of_integral($integral)
 {
@@ -1615,7 +1615,7 @@ function value_of_integral($integral)
 }
 
 /**
- * 计算指定的金额需要多少积分
+ * 计算指定的金额需要多少金币
  *
  * @access  public
  * @param   integer $value  金额
@@ -2127,7 +2127,7 @@ function flow_order_info()
     }
     if (!isset($order['integral']))
     {
-        $order['integral'] = 0; // 初始化积分
+        $order['integral'] = 0; // 初始化金币
     }
     if (!isset($order['surplus']))
     {
@@ -2262,7 +2262,7 @@ function merge_order($from_order_sn, $to_order_sn)
         $order['card_fee'] = $card['free_money'] > $order['goods_amount'] ? $card['card_fee'] : 0;
     }
 
-    // 红包不变，合并积分、余额、已付款金额
+    // 红包不变，合并金币、余额、已付款金额
     $order['integral']      += $from_order['integral'];
     $order['integral_money'] = value_of_integral($order['integral']);
     $order['surplus']       += $from_order['surplus'];
@@ -2746,8 +2746,8 @@ function compute_discount($supplierid=-1)
 }
 
 /**
- * 取得购物车该赠送的积分数
- * @return  int     积分数
+ * 取得购物车该赠送的金币数
+ * @return  int     金币数
  */
 function get_give_integral()
 {
@@ -2767,9 +2767,9 @@ function get_give_integral()
 }
 
 /**
- * 取得某订单应该赠送的积分数
+ * 取得某订单应该赠送的金币数
  * @param   array   $order  订单
- * @return  int     积分数
+ * @return  int     金币数
  */
 function integral_to_give($order)
 {

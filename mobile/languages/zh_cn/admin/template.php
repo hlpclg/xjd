@@ -58,7 +58,7 @@ $_LANG['template_files']['auction_list'] = '拍卖活动列表';
 $_LANG['template_files']['auction'] = '拍卖活动详情';
 $_LANG['template_files']['message_board'] = '留言板';
 //$_LANG['template_files']['quotation'] = '报价单';
-$_LANG['template_files']['exchange_list'] = '积分商城列表';
+$_LANG['template_files']['exchange_list'] = '金币商城列表';
 
 $_LANG['template_files']['v_shop'] = '微分销店铺';//微分销店铺
 
@@ -121,8 +121,8 @@ $_LANG['template_libs']['myship'] = '配送方式';
 $_LANG['template_libs']['online'] = '统计在线人数';
 $_LANG['template_libs']['relatetag'] = '其他应用关联标签数据';
 $_LANG['template_libs']['message_list'] = '留言列表';
-$_LANG['template_libs']['exchange_hot'] = '积分商城热卖商品';
-$_LANG['template_libs']['exchange_list'] = '积分商城列表商品';
+$_LANG['template_libs']['exchange_hot'] = '金币商城热卖商品';
+$_LANG['template_libs']['exchange_list'] = '金币商城列表商品';
 
 $_LANG['template_files']['v_shop'] = '微分销店铺';//微分销店铺
 

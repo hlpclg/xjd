@@ -445,7 +445,7 @@ function cancel_order($order_id, $user_id = 0)
     {
         /* 记录log */
         order_action($order['order_sn'], OS_CANCELED, $order['shipping_status'], PS_UNPAYED,$GLOBALS['_LANG']['buyer_cancel'],'buyer');
-        /* 退货用户余额、积分、红包 */
+        /* 退货用户余额、金币、红包 */
         if ($order['user_id'] > 0 && $order['surplus'] > 0)
         {
             $change_desc = sprintf($GLOBALS['_LANG']['return_surplus_on_cancel'], $order['order_sn']);

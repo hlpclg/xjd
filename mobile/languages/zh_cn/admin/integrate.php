@@ -22,7 +22,7 @@ $_LANG['update_success'] = '设置会员数据整合插件已经成功。';
 $_LANG['install_confirm'] = '您确定要安装该会员数据整合插件吗？';
 $_LANG['need_not_setup'] = '当您采用ECSHOP会员系统时，无须进行设置。';
 $_LANG['different_domain'] = '您设置的整合对象和 ECSHOP 不在同一域下。<br />您将只能共享该系统的会员数据，但无法实现同时登录。';
-$_LANG['points_set'] = '积分兑换设置';
+$_LANG['points_set'] = '金币兑换设置';
 $_LANG['view_user_list'] = '查看论坛用户';
 $_LANG['view_install_log'] = '查看安装日志';
 
@@ -124,11 +124,11 @@ $_LANG['sync_ok'] = '恭喜您。整合成功';
 
 $_LANG['save_ok'] = '保存成功';
 
-/* 积分设置 */
-$_LANG['no_points'] = '没有检测到论坛有可以兑换的积分';
+/* 金币设置 */
+$_LANG['no_points'] = '没有检测到论坛有可以兑换的金币';
 $_LANG['bbs'] = '论坛';
-$_LANG['shop_pay_points'] = '商城消费积分';
-$_LANG['shop_rank_points'] = '商城等级积分';
+$_LANG['shop_pay_points'] = '商城消费金币';
+$_LANG['shop_rank_points'] = '商城等级金币';
 $_LANG['add_rule'] = '新增规则';
 $_LANG['modify'] = '修改';
 $_LANG['rule_name'] = '兑换规则';
@@ -167,8 +167,8 @@ $_LANG['ucenter_lab_db_pass'] = 'UCenter 数据库密码:';
 $_LANG['ucenter_lab_db_name'] = 'UCenter 数据库名:';
 $_LANG['ucenter_lab_db_pre'] = 'UCenter 表前缀:';
 $_LANG['ucenter_lab_tag_number'] = 'TAG 标签显示数量:';
-$_LANG['ucenter_lab_credit_0'] = '等级积分名称:';
-$_LANG['ucenter_lab_credit_1'] = '消费积分名称:';
+$_LANG['ucenter_lab_credit_0'] = '等级金币名称:';
+$_LANG['ucenter_lab_credit_1'] = '消费金币名称:';
 $_LANG['ucenter_opt_database'] = '数据库方式';
 $_LANG['ucenter_opt_interface'] = '接口方式';
 
@@ -196,14 +196,14 @@ $_LANG['uc_members_merge_way1'] = '将与UC用户名和密码相同的用户强�
 $_LANG['uc_members_merge_way2'] = '将与UC用户名和密码相同的用户不导入UC用户';
 $_LANG['start_import'] = '开始导入';
 $_LANG['import_user_success'] = '成功将会员数据导入到 UCenter';
-$_LANG['uc_points'] = 'UCenter的积分兑换设置需要在UCenter管理后台进行';
-$_LANG['uc_set_credits'] = '设置积分兑换方案';
+$_LANG['uc_points'] = 'UCenter的金币兑换设置需要在UCenter管理后台进行';
+$_LANG['uc_set_credits'] = '设置金币兑换方案';
 $_LANG['uc_client_not_exists'] = 'uc_client目录不存在，请先把uc_client目录上传到商城根目录下再进行整合';
 $_LANG['uc_client_not_write'] = 'uc_client/data目录不可写，请先把uc_client/data目录权限设置为777';
-$_LANG['uc_lang']['credits'][0][0] = '等级积分';
+$_LANG['uc_lang']['credits'][0][0] = '等级金币';
 $_LANG['uc_lang']['credits'][0][1] = '';
-$_LANG['uc_lang']['credits'][1][0] = '消费积分';
+$_LANG['uc_lang']['credits'][1][0] = '消费金币';
 $_LANG['uc_lang']['credits'][1][1] = '';
-$_LANG['uc_lang']['exchange'] = 'UCenter积分兑换';
+$_LANG['uc_lang']['exchange'] = 'UCenter金币兑换';
 
 ?>

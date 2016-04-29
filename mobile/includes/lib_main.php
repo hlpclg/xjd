@@ -64,7 +64,7 @@ function update_user_info()
         /* 取得用户等级和折扣 */
         if ($row['user_rank'] == 0)
         {
-            // 非特殊等级，根据等级积分计算用户等级（注意：不包括特殊等级）
+            // 非特殊等级，根据等级金币计算用户等级（注意：不包括特殊等级）
             $sql = 'SELECT rank_id, discount FROM ' . $GLOBALS['ecs']->table('user_rank') . " WHERE special_rank = '0' AND min_points <= " . intval($row['rank_points']) . ' AND max_points > ' . intval($row['rank_points']);
             if ($row = $GLOBALS['db']->getRow($sql))
             {
@@ -241,7 +241,7 @@ function assign_ur_here($cat = 0, $str = '')
                 $ur_here   .= ' <code>&gt;</code> <a href="wholesale.php">' .
                                 $GLOBALS['_LANG']['wholesale'] . '</a>';
             }
-            /* 积分兑换 */
+            /* 金币兑换 */
             elseif ('exchange' == $filename)
             {
                 $page_title = $GLOBALS['_LANG']['exchange'] . '_' . $page_title;

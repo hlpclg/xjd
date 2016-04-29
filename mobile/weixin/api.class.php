@@ -102,7 +102,7 @@ class weixinapi{
 			$parent_id = $user_info['parent_id'];
 			$username = $user_info['user_name'];
 			if($parent_id == 0){
-				//	推荐会员注册赠送积分
+				//	推荐会员注册赠送金币
 				$rec_points = $GLOBALS['_CFG']['rec_points'];
 				//如果不存在上级分销商，绑定上级分销商
 				$sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET parent_id = '$uid' WHERE user_id = '$user_id'";
@@ -199,7 +199,7 @@ class weixinapi{
 		return false;
 	}
 	
-	//赠送积分
+	//赠送金币
 	//$key 基于什么互动赠送
 	function sendIntegral($wxid,$num=0,$key=""){
 		$uid = $this->isBindUser($wxid);
@@ -221,7 +221,7 @@ class weixinapi{
 				}
 			}
 			if($num > 0){
-				log_account_change($uid, 0, 0, 0 ,$num, "微信活动赠送积分");
+				log_account_change($uid, 0, 0, 0 ,$num, "微信活动赠送金币");
 				$createtime = time();
 				$createymd = date('Y-m-d');
 				$GLOBALS['db']->query("insert into ".$GLOBALS['ecs']->table('weixin_jflog')." (`fake_id`,`jf_type`,`key_id`,`createtime`,`createymd`,`num`) value (

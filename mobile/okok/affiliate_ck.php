@@ -140,10 +140,10 @@ elseif ($_REQUEST['act'] == 'separate')
 		$pid = $db->getOne("SELECT parent_id FROM " . $GLOBALS['ecs']->table('order_info')." WHERE order_id = '$oid'");
 	}
 	$row1=$db->getAll("SELECT order_id,goods_number,goods_price FROM " . $GLOBALS['ecs']->table('order_goods')." WHERE order_id = '$oid'");
-	$recom_rank = $GLOBALS['_CFG']['recom_rank'];		//	参与分成的积分下限
+	$recom_rank = $GLOBALS['_CFG']['recom_rank'];		//	参与分成的金币下限
     $order_sn = $row['order_sn'];
-    $discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及积分的金额
-	$split_money = $recom_rank > $user_rank ? 0 : $split_money-$discount_price;	//	判断用户的积分是否达到积分下限，分成金额-使用红包以及积分的金额----订单分销金额
+    $discount_price = $row['bonus'] + $row['integral_money'];	//	使用红包以及金币的金额
+	$split_money = $recom_rank > $user_rank ? 0 : $split_money-$discount_price;	//	判断用户的金币是否达到金币下限，分成金额-使用红包以及金币的金额----订单分销金额
 		
     if (empty($row['is_separate'])){
 		$affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
