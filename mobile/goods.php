@@ -20,7 +20,8 @@ include_once(ROOT_PATH. "includes/lib_comment.php");
 $user_id = $_SESSION['user_id'];
 if($user_id){
 	$u = $_GET['u'];
-	$url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'&u='.$user_id;
+	$id = $_GET['id'];
+	$url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'?id='.$id.'&u='.$user_id;
 	if($u){
 		if($u != $user_id){
 			ecs_header("Location: $url");

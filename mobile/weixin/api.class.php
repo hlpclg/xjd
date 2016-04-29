@@ -90,35 +90,53 @@ class weixinapi{
 		}
 	}
 	
-	function bind_distrib($wxid,$uid)
-	{
+	function bind_distrib($wxid,$uid){
 		//根据微信id获取绑定的会员id
-		 $sql = "SELECT ecuid FROM " . $GLOBALS['ecs']->table('weixin_user') . " WHERE fake_id = '$wxid'";
-		 $user_id = $GLOBALS['db']->getOne($sql);
-		 if($user_id > 0)
-		 {
-			 //是否存在上级分销商
-			 $sql = "SELECT parent_id FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$user_id'";
-			 $parent_id = $GLOBALS['db']->getOne($sql);
-			 if($parent_id == 0)
-			 {
-				 //如果不存在上级分销商，绑定上级分销商
-				 $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET parent_id = '$uid' WHERE user_id = '$user_id'";
-				 $num = $GLOBALS['db']->query($sql);
-				 if($num > 0)
-				 {
-					 return true; 
-				 } 
-				 else
-				 {
-					 return false; 
-				 }
-			 }  
-		 }
-		 else
-		 {
-			 return false; 
-		 }
+		$sql = "SELECT ecuid FROM " . $GLOBALS['ecs']->table('weixin_user') . " WHERE fake_id = '$wxid'";
+		$user_id = $GLOBALS['db']->getOne($sql);
+		if($user_id > 0){
+			//是否存在上级分销商
+			$sql = "SELECT parent_id,username FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$user_id'";
+			$user_info = $GLOBALS['db']->getRow($sql);
+			$parent_id = $user_info['parent_id'];
+			$username = $user_info['username'];
+			if($parent_id == 0){
+				/* 推荐处理 */
+				$affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
+				if(isset($affiliate['on']) && $affiliate['on'] == 1){
+					// 推荐开关开启
+					empty($affiliate) && $affiliate = array();
+					$affiliate['config']['level_register_all'] = intval($affiliate['config']['level_register_all']);
+					$affiliate['config']['level_register_up'] = intval($affiliate['config']['level_register_up']);
+					if($uid){
+						if(! empty($affiliate['config']['level_register_all'])){
+							if(! empty($affiliate['config']['level_register_up'])){
+								$rank_points = $GLOBALS['db']->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$uid'");
+								if($rank_points + $affiliate['config']['level_register_all'] <= $affiliate['config']['level_register_up']){
+									log_account_change($uid, 0, 0, $affiliate['config']['level_register_all'], 0, sprintf($GLOBALS['_LANG']['register_affiliate'], $user_id, $username));
+								}
+							}
+							else{
+								log_account_change($uid, 0, 0, $affiliate['config']['level_register_all'], 0, $GLOBALS['_LANG']['register_affiliate']);
+							}
+						}
+					}
+				}
+				//如果不存在上级分销商，绑定上级分销商
+				$sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET parent_id = '$uid' WHERE user_id = '$user_id'";
+				$num = $GLOBALS['db']->query($sql);
+				if($num > 0){
+					return true; 
+				} 
+				else {
+					return false; 
+				}
+			}
+			
+		}
+		else {
+			return false; 
+		}
 	}
 
 	//绑定用户
