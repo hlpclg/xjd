@@ -392,6 +392,7 @@ function changeIntegralResponse(obj){
 			document.getElementById('ECS_INTEGRAL_NOTICE_'+obj.suppid).innerHTML = '';
 		}
 		catch (ex) { }
+		checkboxOnclick();
 		orderSelectedResponse(obj.content);
 	}
 }
@@ -399,72 +400,60 @@ function changeIntegralResponse(obj){
 /* *
  * 改变红包
  */
-function changeBonus(val,suppid)
-{
-  if (selectedBonus == val)
-  {
-    //return;
-  }
-  else
-  {
-    //selectedBonus = val;
-  }
-
-  Ajax.call('flow.php?step=change_bonus', 'bonus=' + val + '&suppid=' + suppid, changeBonusResponse, 'GET', 'JSON');
+function changeBonus(val,suppid){
+	if (selectedBonus == val){
+	//return;
+	}
+	else{
+	//selectedBonus = val;
+	}
+	Ajax.call('flow.php?step=change_bonus', 'bonus=' + val + '&suppid=' + suppid, changeBonusResponse, 'GET', 'JSON');
 }
 
 /* *
  * 改变红包的回调函数
  */
-function changeBonusResponse(obj)
-{
-  if (obj.error)
-  {
-    alert(obj.error);
+function changeBonusResponse(obj){
+	if (obj.error){
+		alert(obj.error);
 
-    try
-    {
-      document.getElementById('ECS_BONUS_'+obj.suppid).value = '0';
-    }
-    catch (ex) { }
-  }
-  else
-  {
-	  document.getElementById('bonus_sn_'+obj.suppid).value = '';
-	orderSelectedResponse(obj.content);
-  }
+		try{
+			document.getElementById('ECS_BONUS_'+obj.suppid).value = '0';
+		}
+		catch (ex) { }
+	}
+	else{
+		document.getElementById('bonus_sn_'+obj.suppid).value = '';
+		checkboxOnclick();
+		orderSelectedResponse(obj.content);
+	}
 }
 
 /**
  * 验证红包序列号
  * @param string bonusSn 红包序列号
  */
-function validateBonus(val,suppid)
-{
-  if(val == '输入优惠券'){
-	  val = 0;
-  }
+function validateBonus(val,suppid){
+	if(val == '输入优惠券'){
+		val = 0;
+	}
 
-  Ajax.call('flow.php?step=validate_bonus', 'bonus_sn=' + val + '&suppid=' + suppid, validateBonusResponse, 'GET', 'JSON');
+	Ajax.call('flow.php?step=validate_bonus', 'bonus_sn=' + val + '&suppid=' + suppid, validateBonusResponse, 'GET', 'JSON');
 }
 
-function validateBonusResponse(obj)
-{
+function validateBonusResponse(obj){
 
-if (obj.error)
-  {
-    alert(obj.error);
-    //orderSelectedResponse(obj.content);
-    try
-    {
-      document.getElementById('bonus_sn_'+obj.suppid).value = '';
-    }
-    catch (ex) { }
-  }
-  else
-  {
-    orderSelectedResponse(obj.content);
-  }
+	if (obj.error){
+		alert(obj.error);
+		//orderSelectedResponse(obj.content);
+		try{
+			document.getElementById('bonus_sn_'+obj.suppid).value = '';
+		}
+		catch (ex) { }
+	}
+	else{
+		orderSelectedResponse(obj.content);
+	}
 }
 
 /* *

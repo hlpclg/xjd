@@ -817,23 +817,45 @@ function close_gift(suitId){
             <p><input type="checkbox" class="b_checkbox" id="issurplus" onclick="checkboxOnclick(this)" style="vertical-align:middle; cursor:pointer" /><span class="is_user_surplus">使用账户余额支付</span></p>
            <div class="clearfix"></div>
             <div id="allow_user_surplus">
-                    <span class="surplus_desc"><input name="surplus" type="text" class="surplus" id="ECS_SURPLUS"  value="0" onblur="changeSurplus(this.value);" />&nbsp;&nbsp;元</span>
+                    <span class="surplus_desc"><input name="surplus" type="text" class="surplus" id="ECS_SURPLUS"  value="{$order.surplus|default:0}" onblur="changeSurplus(this.value);" />&nbsp;&nbsp;元</span>
                   <br>
                 您当前的可用余额为:<span class="your_surplus" style="font-size:14px; font-weight:700;">{$your_surplus|default:0}</span><span id="ECS_SURPLUS_NOTICE_{$key}" class="notice"></span><br>
                 {if $is_surplus_open eq 0}<span class="open_surplus">未开通余额支付,请在电脑端登录开通</span>{/if}
             </div>
     <script type="text/javascript">
-    $('#issurplus').attr('checked',false);
+   
+	/*
+	$('#issurplus').attr('checked',false);
     function checkboxOnclick(checkbox){ 
-            var surplus = {$your_surplus|default:0};
-            if ( checkbox.checked == true){
-                    document.getElementById("allow_user_surplus").style.display = "block";
-                    changeSurplus(surplus);
-            }else{
-                    document.getElementById("allow_user_surplus").style.display = "none";
-                    changeSurplus(0);
-            }
+		var surplus = {$your_surplus|default:0};
+		if ( checkbox.checked == true){
+			document.getElementById("allow_user_surplus").style.display = "block";
+			changeSurplus(surplus);
+		}else{
+			document.getElementById("allow_user_surplus").style.display = "none";
+			changeSurplus(0);
+		}
     }
+	*/
+	var surplus = {$your_surplus|default:0};
+	var use_surplus = {$order.surplus|default:0};
+	$('#issurplus').attr('checked',false);
+	if(use_surplus > 0){
+		$('#issurplus').attr('checked',true);
+	}else{
+		$('#issurplus').attr('checked',false);
+	}
+	
+	function checkboxOnclick(){
+		var cc = $('#issurplus').attr('checked');
+		if(cc){
+			document.getElementById("allow_user_surplus").style.display = "block";
+			changeSurplus(surplus);
+		}else{
+			document.getElementById("allow_user_surplus").style.display = "none";
+			changeSurplus(0);
+		}
+	}
     </script>
     <div class="clearfix"></div>
             </div>
