@@ -826,6 +826,22 @@ function order_fee($order, $goods, $consignee)
 
     }
 
+	/* 金币 */
+    $order['integral'] = $order['integral'] > 0 ? $order['integral'] : 0;
+    if ($total['amount'] > 0 && $max_amount > 0 && $order['integral'] > 0){
+        $integral_money = value_of_integral($order['integral']);
+        // 使用金币支付
+		$use_integral            = min($total['amount'], $cost_price,$max_amount, $integral_money); // 实际使用金币支付的金额
+        $total['amount']        -= $use_integral;
+        $total['integral_money'] = $use_integral;
+        $order['integral']       = integral_of_value($use_integral);
+    }
+    else{
+        $total['integral_money'] = 0;
+        $order['integral']       = 0;
+    }
+    $total['integral'] = $order['integral'];
+    $total['integral_formated'] = price_format($total['integral_money'], false);
     /* 余额 */
     $order['surplus'] = $order['surplus'] > 0 ? $order['surplus'] : 0;
     if ($total['amount'] > 0){
@@ -843,23 +859,7 @@ function order_fee($order, $goods, $consignee)
     }
     $total['surplus'] = $order['surplus'];
     $total['surplus_formated'] = price_format($order['surplus'], false);
-    /* 金币 */
-    $order['integral'] = $order['integral'] > 0 ? $order['integral'] : 0;
-
-    if ($total['amount'] > 0 && $max_amount > 0 && $order['integral'] > 0){
-        $integral_money = value_of_integral($order['integral']);
-        // 使用金币支付
-		$use_integral            = min($total['amount'], $cost_price,$max_amount, $integral_money); // 实际使用金币支付的金额
-        $total['amount']        -= $use_integral;
-        $total['integral_money'] = $use_integral;
-        $order['integral']       = integral_of_value($use_integral);
-    }
-    else{
-        $total['integral_money'] = 0;
-        $order['integral']       = 0;
-    }
-    $total['integral'] = $order['integral'];
-    $total['integral_formated'] = price_format($total['integral_money'], false);
+    
     /* 保存订单信息 */
     $_SESSION['flow_order'] = $order;
     $se_flow_type = isset($_SESSION['flow_type']) ? $_SESSION['flow_type'] : '';

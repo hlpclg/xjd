@@ -1,7 +1,7 @@
 <?php
 define('IN_ECS', true);
 require('../includes/init.php');
-print_r($_CFG);die;
+
 class weixinapi{
 	//搜索商品
 	function getGoodsByKey($key){
