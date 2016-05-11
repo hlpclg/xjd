@@ -24,12 +24,11 @@ $config = get_affiliate();
 if ($_REQUEST['act'] == 'list')
 {
     assign_query_info();
-    if (empty($_REQUEST['is_ajax']))
-    {
+    if (empty($_REQUEST['is_ajax'])){
         $smarty->assign('full_page', 1);
     }
-$config['on'] = 1;
-        $config['config']['separate_by'] = 0;
+	$config['on'] = 1;
+	$config['config']['separate_by'] = 0;
     $smarty->assign('ur_here', $_LANG['affiliate']);
     $smarty->assign('config', $config);
     $smarty->display('affiliate.htm');
@@ -106,15 +105,26 @@ elseif ($_REQUEST['act'] == 'updata')
     }
     $_POST['level_register_all'] = intval($_POST['level_register_all']);
     $_POST['level_register_up'] = intval($_POST['level_register_up']);
+	$level_personal_maid =  $_POST['level_personal_maid'];
+	$maxmoney = 100;
+    foreach ($config['item'] as $k => $v){
+		$maxmoney -= $v['level_money'];
+    }
+    $level_personal_maid > $maxmoney && $level_personal_maid = $maxmoney;
+	if (!empty($level_personal_maid) && strpos($level_personal_maid,'%') === false){
+        $level_personal_maid .= '%';
+    }
     $temp = array();
-    $temp['config'] = array('expire'                => $_POST['expire'],        //COOKIE过期数字
-                            'expire_unit'           => $_POST['expire_unit'],   //单位：小时、天、周
-                            'separate_by'           => $separate_by,            //分成模式：0、注册 1、订单
-                            'level_point_all'       =>$_POST['level_point_all'],    //金币分成比
-                            'level_money_all'       =>$_POST['level_money_all'],    //金钱分成比
-                            'level_register_all'    =>$_POST['level_register_all'], //推荐注册奖励金币
-                            'level_register_up'     =>$_POST['level_register_up']   //推荐注册奖励金币上限
-          );
+    $temp['config'] = array(
+			'expire'                => $_POST['expire'],        //COOKIE过期数字
+			'expire_unit'           => $_POST['expire_unit'],   //单位：小时、天、周
+			'separate_by'           => $separate_by,            //分成模式：0、注册 1、订单
+			'level_point_all'       => $_POST['level_point_all'],    //金币分成比
+			'level_money_all'       => $_POST['level_money_all'],    //金钱分成比
+			'level_register_all'    => $_POST['level_register_all'], //推荐注册奖励金币
+			'level_register_up'     => $_POST['level_register_up'],   //推荐注册奖励金币上限
+			'level_personal_maid'	=> $level_personal_maid   //个人分佣百分比
+		);
     $temp['item'] = $config['item'];
     $temp['on'] = 1;
     put_affiliate($temp);
@@ -124,11 +134,8 @@ elseif ($_REQUEST['act'] == 'updata')
 /*------------------------------------------------------ */
 //-- 推荐开关
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'on')
-{
-
+elseif ($_REQUEST['act'] == 'on'){
     $on = (intval($_POST['on']) == 1) ? 1 : 0;
-
     $config['on'] = $on;
     put_affiliate($config);
     $links[] = array('text' => $_LANG['affiliate'], 'href' => 'affiliate.php?act=list');
@@ -144,16 +151,13 @@ elseif ($_REQUEST['act'] == 'edit_point')
     $key = trim($_POST['id']) - 1;
     $val = (float)trim($_POST['val']);
     $maxpoint = 100;
-    foreach ($config['item'] as $k => $v)
-    {
-        if ($k != $key)
-        {
+    foreach ($config['item'] as $k => $v){
+        if ($k != $key){
             $maxpoint -= $v['level_point'];
         }
     }
     $val > $maxpoint && $val = $maxpoint;
-    if (!empty($val) && strpos($val,'%') === false)
-    {
+    if (!empty($val) && strpos($val,'%') === false){
         $val .= '%';
     }
     $config['item'][$key]['level_point'] = $val;
@@ -169,16 +173,14 @@ elseif ($_REQUEST['act'] == 'edit_money')
     $key = trim($_POST['id']) - 1;
     $val = (float)trim($_POST['val']);
     $maxmoney = 100;
-    foreach ($config['item'] as $k => $v)
-    {
-        if ($k != $key)
-        {
+	$maxmoney -= $config['config']['level_personal_maid'];
+    foreach ($config['item'] as $k => $v){
+        if ($k != $key){
             $maxmoney -= $v['level_money'];
         }
     }
     $val > $maxmoney && $val = $maxmoney;
-    if (!empty($val) && strpos($val,'%') === false)
-    {
+    if (!empty($val) && strpos($val,'%') === false){
         $val .= '%';
     }
     $config['item'][$key]['level_money'] = $val;
@@ -206,20 +208,15 @@ elseif ($_REQUEST['act'] == 'del')
     exit;
 }
 
-function get_affiliate()
-{
+function get_affiliate(){
     $config = unserialize($GLOBALS['_CFG']['affiliate']);
     empty($config) && $config = array();
-
     return $config;
 }
 
-function put_affiliate($config)
-{
+function put_affiliate($config){
     $temp = serialize($config);
-    $sql = "UPDATE " . $GLOBALS['ecs']->table('ecsmart_shop_config',1) .
-           "SET  value = '$temp'" .
-           "WHERE code = 'affiliate'";
+    $sql = "UPDATE " . $GLOBALS['ecs']->table('ecsmart_shop_config',1) . "SET  value = '$temp' WHERE code = 'affiliate'";
     $GLOBALS['db']->query($sql);
     clear_all_files();
 }

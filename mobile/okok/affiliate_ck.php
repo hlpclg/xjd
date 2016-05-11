@@ -160,6 +160,19 @@ elseif ($_REQUEST['act'] == 'separate')
 		$point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
 		
         if(empty($separate_by)){
+			
+			$setmoney = round($money * $affiliate['config']['level_personal_maid'], 2);
+			$setpoint = 0;
+			$up_uid = $row['user_id'];
+			$info = sprintf($_LANG['separate_info'], $order_sn, $setmoney, $setpoint);
+			push_user_msg($up_uid,$order_sn,$setmoney);
+			log_account_change($up_uid, $setmoney, 0, $setpoint, 0, $info);
+			write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
+			//插入到分成记录表
+			if($setmoney > 0){
+				$GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('distrib_sort') . "(`money`,`user_id`,`order_id`) values('" . $setmoney . "','" . $up_uid . "','" . $oid . "')");
+			}
+			
             //推荐注册分成
             $num = count($affiliate['item']);
             for ($i=0; $i < $num; $i++){
