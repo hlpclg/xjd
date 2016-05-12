@@ -130,7 +130,7 @@ elseif ($_REQUEST['act'] == 'separate')
 	//获取订单分成金额
 	$split_money = get_split_money_by_orderid($oid);
 
-    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o".
+    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id,u.user_name FROM " . $GLOBALS['ecs']->table('order_info') . " o".
                     " LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id".
             " WHERE order_id = '$oid'");
 	if($separate_by==0){
@@ -161,7 +161,8 @@ elseif ($_REQUEST['act'] == 'separate')
 		
         if(empty($separate_by)){
 			
-			$setmoney = round($money * $affiliate['config']['level_personal_maid'], 2);
+			/* 个人分成 */
+			$setmoney = round($money * $affiliate['config']['level_personal_maid'] / 100, 2);
 			$setpoint = 0;
 			$up_uid = $row['user_id'];
 			$info = sprintf($_LANG['separate_info'], $order_sn, $setmoney, $setpoint);
@@ -172,6 +173,7 @@ elseif ($_REQUEST['act'] == 'separate')
 			if($setmoney > 0){
 				$GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('distrib_sort') . "(`money`,`user_id`,`order_id`) values('" . $setmoney . "','" . $up_uid . "','" . $oid . "')");
 			}
+			/* 个人分成end */
 			
             //推荐注册分成
             $num = count($affiliate['item']);
