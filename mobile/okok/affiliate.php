@@ -116,14 +116,14 @@ elseif ($_REQUEST['act'] == 'updata')
     }
     $temp = array();
     $temp['config'] = array(
-			'expire'                => $_POST['expire'],        //COOKIE过期数字
-			'expire_unit'           => $_POST['expire_unit'],   //单位：小时、天、周
-			'separate_by'           => $separate_by,            //分成模式：0、注册 1、订单
-			'level_point_all'       => $_POST['level_point_all'],    //金币分成比
-			'level_money_all'       => $_POST['level_money_all'],    //金钱分成比
-			'level_register_all'    => $_POST['level_register_all'], //推荐注册奖励金币
-			'level_register_up'     => $_POST['level_register_up'],   //推荐注册奖励金币上限
-			'level_personal_maid'	=> $level_personal_maid   //个人分佣百分比
+			'expire'                => $_POST['expire'],        		//COOKIE过期数字
+			'expire_unit'           => $_POST['expire_unit'],   		//单位：小时、天、周
+			'separate_by'           => $separate_by,           		 	//分成模式：0、注册 1、订单
+			'level_point_all'       => $_POST['level_point_all'],    	//金币分成比
+			'level_money_all'       => $_POST['level_money_all'],    	//金钱分成比
+			'level_register_all'    => $_POST['level_register_all'], 	//推荐注册奖励金币
+			'level_register_up'     => $_POST['level_register_up'],  	//推荐注册奖励金币上限
+			'level_personal_maid'	=> $level_personal_maid  		 	//个人分佣百分比
 		);
     $temp['item'] = $config['item'];
     $temp['on'] = 1;

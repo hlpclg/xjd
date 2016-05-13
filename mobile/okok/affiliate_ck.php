@@ -81,37 +81,35 @@ elseif ($_REQUEST['act'] == 'del')
 /*
     撤销某次分成，将已分成的收回来
 */
-elseif ($_REQUEST['act'] == 'rollback')
-{
-    $logid = (int)$_REQUEST['logid'];
-    $stat = $db->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('affiliate_log') . " WHERE log_id = '$logid'");
-	//获取当前用户余额
-	$user_money = $db->getOne("SELECT user_money FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '" . $stat['user_id'] . "'");
-	//判断分成金额是否大于余额
-	if($stat['money'] > $user_money)
-	{
-		sys_msg($_LANG['money_low'],0,$links); 
+elseif ($_REQUEST['act'] == 'rollback'){
+	$oid = (int)$_REQUEST['oid'];
+    $is_separate = $db->getOne("SELECT is_separate FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id = '$oid'");
+	if($is_separate == 1){
+		$log_list = $db->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('affiliate_log') . " WHERE order_id = '$oid'");
+		if($log_list){
+			foreach($log_list as $key => $val){
+				$user_money = $db->getOne("SELECT user_money FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '" . $val['user_id'] . "'");
+				//判断分成金额是否大于余额
+				if($val['money'] > $user_money){
+					sys_msg($_LANG['money_low'],0,$links); 
+					die;
+				}
+				$log_list[$key]['user_money'] = $user_money;
+			}
+			foreach($log_list as $key => $val){
+				if($val['separate_type'] == 1){
+					$flag = -2;					//推荐订单分成
+				}
+				else{
+					$flag = -1;					//推荐注册分成
+				}
+				log_account_change($val['user_id'], -$val['money'], 0, -$val['point'], 0, $_LANG['loginfo']['cancel']);			
+			}
+			$db->query("UPDATE " . $GLOBALS['ecs']->table('affiliate_log') . " SET separate_type = ".$flag." WHERE order_id = ".$oid);
+			//撤销分成，删除分成记录表的记录
+			$db->query("DELETE FROM " . $GLOBALS['ecs']->table('distrib_sort') . " WHERE order_id = ".$oid);
+		}
 	}
-    if (!empty($stat))
-    {
-        if($stat['separate_type'] == 1)
-        {
-            //推荐订单分成
-            $flag = -2;
-        }
-        else
-        {
-            //推荐注册分成
-            $flag = -1;
-        }
-        log_account_change($stat['user_id'], -$stat['money'], 0, -$stat['point'], 0, $_LANG['loginfo']['cancel']);
-        $sql = "UPDATE " . $GLOBALS['ecs']->table('affiliate_log') .
-               " SET separate_type = '$flag'" .
-               " WHERE log_id = '$logid'";
-        $db->query($sql);
-		//撤销分成，删除分成记录表的记录
-		$GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('distrib_sort') . " WHERE user_id = '" . $stat['user_id'] . "' and order_id = '" . $stat['order_id'] . "'");
-    }
     $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
     sys_msg($_LANG['edit_ok'], 0 ,$links);
 }
