@@ -349,7 +349,7 @@
     <td colspan="2">
     <!-- 如果为预售活动的订单，那么预售活动为成功处理前，不能发货 -->
     <!-- {if $is_pre_sale == 0 || $pre_sale_success == 1} -->
-    <input name="invoice_no" type="text" style="color:#00F" value="请输入快递单号" />
+	<input type="text" onblur="if(this.value=='') this.value='请输入快递单号';" onfocus="if(this.value=='请输入快递单号') this.value='';" value="请输入快递单号" name="invoice_no" style="color:#00F">
     <input name="to_shipping" type="submit" style="color:#F00" value="一键发货" class="button" />
     <!-- {/if} -->
     </td>
