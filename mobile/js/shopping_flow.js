@@ -352,11 +352,13 @@ function changeSurplusResponse(obj){
 			if(obj.show){
 				//如果余额完全支付订单金额
 				$('#pay_div').hide();
-				$('#payment_other_input').attr("checked", true).val(pay_balance_id);//默认选择余额支付方式
+				$("input[name='payment']").attr("checked", true);//默认选择余额支付方式
+				//$('#payment_other_input').attr("checked", true).val(pay_balance_id);//默认选择余额支付方式
 			}else{
+			console.log(3);
 				$('#pay_div').show();
-				$("input[type='radio']").attr("checked", false);//将之前选择的支付方式去掉
-				$('#payment_other_input').val('0');
+				//$("input[type='radio']").attr("checked", false);//将之前选择的支付方式去掉
+				//$('#payment_other_input').val('0');
 			}
 		} catch (ex) {
 		}
@@ -559,7 +561,6 @@ function check_before_submit(){
 }
 
 function is_surplus_open(result) {
-	console.log(result);return false; 
     if(result == '1'){
         open_surplus_window();
     }
@@ -569,7 +570,7 @@ function is_surplus_open(result) {
 }
 
 function open_surplus_window(){
-    document.getElementById("popup_window").style.display="";
+    document.getElementById("popup_window").style.display="block";
 }
 
 function end_input_surplus(){
@@ -713,54 +714,56 @@ function checkOrderForm(frm)
       }
     }
   }
-
+	
+	
     /*检查发票*/
-    if(document.getElementById('ECS_NEEDINV').checked)
-    {
-        if(frm.elements['inv_content'].value == '0' || frm.elements['inv_content'].value == '')
-        {
-            alert('请选择发票内容');
-            return false;
-        }
-        if(frm.elements['inv_type'].value == 'vat_invoice')
-        {
-            var check_array = new Array('vat_inv_company_name','vat_inv_taxpayer_id','vat_inv_registration_address',
-                'vat_inv_registration_phone','vat_inv_deposit_bank','vat_inv_bank_account',
-                'inv_consignee_name','inv_consignee_phone','inv_consignee_province',
-                'inv_consignee_city','inv_consignee_address');
-            for (id in check_array)
-            {
-                if(frm.elements[check_array[id]].style.display != 'none' &&
-                    (frm.elements[check_array[id]].value == '0' || frm.elements[check_array[id]].value == ''))
-                {
-                    alert('请输入增值税发票相关信息');
-                    return false;
-                }
-            }
-        }
-        else if(frm.elements['inv_type'].value == 'normal_invoice')
-        {
-            if(document.getElementById('unit_inv').checked)
-            {
-                if(frm.elements['inv_payee'].value == '')
-                {
-                    alert('请输入单位名称');
-                    return false;
-                }
-            }
-            else if(!document.getElementById('unit_inv').checked && !document.getElementById('individual_inv').checked)
-            {
-                alert('请选择发票抬头');
-                return false;
-            }
-        }
-        else
-        {
-            alert('请选择发票类型');
-            return false;
-        }
-    }
-
+	if(document.getElementById('ECS_NEEDINV')){
+		if(document.getElementById('ECS_NEEDINV').checked)
+		{
+			if(frm.elements['inv_content'].value == '0' || frm.elements['inv_content'].value == '')
+			{
+				alert('请选择发票内容');
+				return false;
+			}
+			if(frm.elements['inv_type'].value == 'vat_invoice')
+			{
+				var check_array = new Array('vat_inv_company_name','vat_inv_taxpayer_id','vat_inv_registration_address',
+					'vat_inv_registration_phone','vat_inv_deposit_bank','vat_inv_bank_account',
+					'inv_consignee_name','inv_consignee_phone','inv_consignee_province',
+					'inv_consignee_city','inv_consignee_address');
+				for (id in check_array)
+				{
+					if(frm.elements[check_array[id]].style.display != 'none' &&
+						(frm.elements[check_array[id]].value == '0' || frm.elements[check_array[id]].value == ''))
+					{
+						alert('请输入增值税发票相关信息');
+						return false;
+					}
+				}
+			}
+			else if(frm.elements['inv_type'].value == 'normal_invoice')
+			{
+				if(document.getElementById('unit_inv').checked)
+				{
+					if(frm.elements['inv_payee'].value == '')
+					{
+						alert('请输入单位名称');
+						return false;
+					}
+				}
+				else if(!document.getElementById('unit_inv').checked && !document.getElementById('individual_inv').checked)
+				{
+					alert('请选择发票抬头');
+					return false;
+				}
+			}
+			else
+			{
+				alert('请选择发票类型');
+				return false;
+			}
+		}
+	}
   frm.action = frm.action + '?step=done';
   return true;
 }
