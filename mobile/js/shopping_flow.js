@@ -151,6 +151,9 @@ function selectPayment(obj)
   else
   {
 	  selectedPayment = obj;	  
+	  if(obj.value == undefined){
+		  return ;
+	  }
   }
 
   Ajax.call('flow.php?step=select_payment', 'payment=' + obj.value, orderSelectedResponse, 'GET', 'JSON');
