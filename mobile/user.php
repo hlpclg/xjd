@@ -5404,7 +5404,7 @@ function affiliate_ck($oid){
 	$split_money = $GLOBALS['db']->getOne("SELECT sum(cost_price*goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id = ".$oid);
 	$split_money = $split_money > 0 ? $split_money : 0;
 	//	获取推荐人
-    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o  LEFT JOIN " . $GLOBALS['ecs']->table('users') ." u ON o.user_id = u.user_id WHERE order_id = ".$oid);
+    $row = $db->getRow("SELECT o.order_sn,u.parent_id, o.is_separate,(o.goods_amount - o.discount) AS goods_amount,o.bonus, o.integral_money, o.user_id,u.user_name FROM " . $GLOBALS['ecs']->table('order_info') . " o  LEFT JOIN " . $GLOBALS['ecs']->table('users') ." u ON o.user_id = u.user_id WHERE order_id = ".$oid);
 	if($separate_by==0){
 		$pid = $row['parent_id'];
 	}
@@ -5434,6 +5434,21 @@ function affiliate_ck($oid){
 		$point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
 		//推荐注册分成
         if(empty($separate_by)){
+			
+			/* 个人分成 */
+			$setmoney = round($money * $affiliate['config']['level_personal_maid'] / 100, 2);
+			$setpoint = 0;
+			$up_uid = $row['user_id'];
+			$info = sprintf($_LANG['separate_info'], $order_sn, $setmoney, $setpoint);
+			push_user_msg($up_uid,$order_sn,$setmoney);
+			log_account_change($up_uid, $setmoney, 0, $setpoint, 0, $info);
+			write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
+			//插入到分成记录表
+			if($setmoney > 0){
+				$GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('distrib_sort') . "(`money`,`user_id`,`order_id`) values('" . $setmoney . "','" . $up_uid . "','" . $oid . "')");
+			}
+			/* 个人分成end */
+			
             $num = count($affiliate['item']);
             for ($i=0; $i < $num; $i++){
                 $affiliate['item'][$i]['level_point'] = (float)$affiliate['item'][$i]['level_point'];

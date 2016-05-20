@@ -592,10 +592,11 @@ $_LANG['cfg_range']['bonus_reg_rand'][1] = '打开';
 $_LANG['cfg_name']['shop_opint'] = '店铺坐标';
 
 /* 分销设置 */
-$_LANG['cfg_name']['distribution_settings'] = '分销设置';
-$_LANG['cfg_name']['auto_devided'] = '自动分成';
-$_LANG['cfg_range']['auto_devided'][0] = '否';
-$_LANG['cfg_range']['auto_devided'][1] = '是';
+$_LANG['cfg_name']['distribe_setting'] = '分销设置';
 $_LANG['cfg_name']['min_amount'] = '最小提现金额';
-$_LANG['cfg_name']['min_overage'] = '预留金额';
+$_LANG['cfg_name']['min_overage'] = '提现预留金额';
+$_LANG['cfg_name']['auto_divided'] = '是否自动分成';
+$_LANG['cfg_range']['auto_divided'][0] = '否';
+$_LANG['cfg_range']['auto_divided'][1] = '是';
+$_LANG['cfg_desc']['auto_divided'] = '自动分成是客户确认收货之后就自动分成；手动分成是订单发货后，管理员手动去分成管理点击分成';
 ?>

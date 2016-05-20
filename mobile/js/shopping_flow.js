@@ -559,6 +559,7 @@ function check_before_submit(){
 }
 
 function is_surplus_open(result) {
+	console.log(result);return false; 
     if(result == '1'){
         open_surplus_window();
     }

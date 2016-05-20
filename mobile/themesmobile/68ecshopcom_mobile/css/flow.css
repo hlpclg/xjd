@@ -67,8 +67,8 @@ input[type="hidden" i], input[type="image" i], input[type="file" i] {
     font-weight: normal;
  }
 .page-shopping .item-list .name .ico { display: inline-block; padding: 0 .7em; background-color: #f66; -webkit-border-radius: .2em; -moz-border-radius: .2em; -ms-border-radius: .2em; -o-border-radius: .2em; border-radius: .2em; margin-right: .5em; font-size: 1em; line-height: 1.4em; color: #fff }
-.page-shopping .item-list .attr { line-height: 25px; height: 25px; }
-.page-shopping .item-list .attr span { font-size: 14px; color: #999 }
+.page-shopping .item-list .attr { line-height: 25px; height: 25px;overflow:hidden; }
+.page-shopping .item-list .attr span { font-size: 12px; color: #999 }
 .page-shopping .item-list .price { padding: 0 5px 5px 0; height: 44px; line-height: 22px; text-align: right; }
 .page-shopping .item-list .price span { font-size: 16px; color: #f23015; vertical-align: middle; font-family: Arial; }
 .page-shopping .item-list .price span.mar_price { font-size: 14px; text-decoration: line-through; color: #999; }

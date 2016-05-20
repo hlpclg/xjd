@@ -51,10 +51,25 @@
                     <td><input type="text" name="level_register_up" maxlength="150" size="10" value="{$config.config.level_register_up}" />
                     <br />
                     <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice5">{$lang.help_lru|nl2br}</span></td>
-                <tr><td></td>
+                </tr>
+				<tr>
+                    <td align="right" class="label">
+						<a href="javascript:showNotice('notice6');" title="{$lang.form_notice}">
+							<img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}" />
+						</a>
+						个人分佣百分比
+					</td>
+                    <td>
+						<input type="text" name="level_personal_maid" maxlength="150" size="10" value="{$config.config.level_personal_maid}" />
+						<br />
+						<span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice5">个人分佣百分比与现金分成百分比之和等于100%</span>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
                     <td><input type="hidden" name="act" value="updata" /><input type="submit" value="{$lang.button_submit}" class="button" /></td>
                 </tr>
-                </tr>
+                
             </table>
     </form>
 </div>

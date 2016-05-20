@@ -1453,7 +1453,8 @@ function get_goods_attr_info($arr, $type = 'pice')
 
     if (!empty($arr))
     {
-        $fmt = "%s:%s[%s] \n";
+        //$fmt = "%s:%s[%s] \n";
+        $fmt = "%s:%s \n";
 
         $sql = "SELECT a.attr_name, ga.attr_value, ga.attr_price ".
                 "FROM ".$GLOBALS['ecs']->table('goods_attr')." AS ga, ".
@@ -1464,7 +1465,8 @@ function get_goods_attr_info($arr, $type = 'pice')
         while ($row = $GLOBALS['db']->fetchRow($res))
         {
             $attr_price = round(floatval($row['attr_price']), 2);
-            $attr .= sprintf($fmt, $row['attr_name'], $row['attr_value'], $attr_price);
+            //$attr .= sprintf($fmt, $row['attr_name'], $row['attr_value'], $attr_price);
+            $attr .= sprintf($fmt, $row['attr_name'], $row['attr_value']);
         }
 
         $attr = str_replace('[0]', '', $attr);
