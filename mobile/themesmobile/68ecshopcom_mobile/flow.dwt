@@ -20,12 +20,12 @@
 <body style="background: rgb(235, 236, 237);position:relative;">
 
 <!--余额支付密码弹窗-->
-<div id="popup_window" style="background:#EFEFF4;box-shadow: 0 0 10px #ccc;border: 1px solid #ccc;border-radius: 6px;width:85%;height:auto;margin-left:-43%;margin-top:-20%;left:50%;top:50%;position:fixed;display:none;z-index:9999;">
+<div id="popup_window" style="background:#EFEFF4;box-shadow: 0 0 10px #ccc;border: 1px solid #ccc;border-radius: 6px;width:85%;height:auto;margin-left:-43%;left:50%;top:50%;position:fixed;display:none;z-index:9999;">
 	<label class="yezf_tit" style="float:left;margin:15px;width: 91%;text-align: center;"><span>请输入余额支付密码</span>
 	</label>
 	<input id="surplus_password_input" type="password" style='float:left;margin:10px 3%;width:91%;background-color:white;height:30px;border: 1px solid #ccc;padding-left: 6px;'/>
-	<input class='yezf_QRB' type="button" onclick="end_input_surplus()" style="float:left;width: 50%;margin: 5px; padding:2% 0px; background: #EFEFF4;" value="确定" />
-	<input class='yezf_QXB' type="button" onclick="cancel_input_surplus()" style="float:left; width:40%;margin: 5px; padding:2% 0px;background: #EFEFF4;" value="取消" />
+	<input class='yezf_QRB' type="button" onclick="end_input_surplus()" style="float:left;width: 50%;margin: 5px; padding:2% 0px;color:#fff; background: #4CAF50;" value="确定" />
+	<input class='yezf_QXB' type="button" onclick="cancel_input_surplus()" style="float:left; width:40%;margin: 5px; padding:2% 0px;background: #ccc;" value="取消" />
 </div>
 <!--弹窗end-->
 
@@ -816,7 +816,7 @@ function close_gift(suitId){
       
 		</div>
 	</section>
-{if $allow_use_surplus}
+{if $allow_use_surplus && $is_surplus_open neq 0}
 	<section class="order-info">
 		<div class="order-list">
 			<div class="content ptop0">
@@ -893,7 +893,7 @@ function close_gift(suitId){
 					<div class="con-ct fo-con"> {include file='library/order_total.lbi'} </div>
 					<div class="panel panel-default info-box">
 						<div class="pay-btn">
-							<input onclick="return check_before_submit()" type="submit" class="sub-btn btnRadius" value="提交订单"/>
+							<input onclick="check_before_submit()" type="submit" class="sub-btn btnRadius" value="提交订单"/>
 							<input type="hidden" name="step" value="done">
 						</div>
 					</div>
