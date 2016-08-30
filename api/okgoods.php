@@ -18,7 +18,7 @@ define('IN_ECS', true);
 require('../includes/init.php');
 
 // 自动确认收货
-$okg = $GLOBALS['db']->getAll("select order_id, add_time from " . $GLOBALS['ecs']->table('order_info') . " where shipping_status = 1 and order_status in(1,5,6)");
+/* $okg = $GLOBALS['db']->getAll("select order_id, add_time from " . $GLOBALS['ecs']->table('order_info') . " where shipping_status = 1 and order_status in(1,5,6)");
 $okgoods_time = $GLOBALS['db']->getOne("select value from " . $GLOBALS['ecs']->table('shop_config') . " where code='okgoods_time'");
 
 foreach($okg as $okg_id)
@@ -31,7 +31,7 @@ foreach($okg as $okg_id)
 	{
 		$db->query("update " . $ecs->table('order_info') . " set shipping_status = 2, shipping_time_end = " . gmtime() . "  where order_id = " . $okg_id['order_id']);
 	}
-}
+} */
 
 // 自动通过审核
 $okb = $GLOBALS['db']->getAll("select back_id, add_time, back_type from " . $GLOBALS['ecs']->table('back_order') . " where status_back = 5");

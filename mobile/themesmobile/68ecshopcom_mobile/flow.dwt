@@ -795,7 +795,7 @@ function close_gift(suitId){
 						</div>
 						<ul class="nav nav-list-sidenav" id="zhifu68" style="display:block; border-bottom:none;">
 							{foreach from=$payment_list item=payment name=pay}
-							<li onclick="selectPayment({$payment.pay_id})" class="clearfix" name="payment_name">
+							<li class="clearfix" name="payment_name">
 								<label for="payment_method_{$payment.pay_id}" >
 								<input type="radio" name="payment" value="{$payment.pay_id}" {if $order.pay_id eq $payment.pay_id} checked="checked"{/if} isCod="{$payment.is_cod}" onclick="selectPayment(this)" class="c_checkbox_t"  {if $cod_disabled and $payment.is_cod eq "1"}disabled="true"{/if} />
 								<div class="fl shipping_title">
